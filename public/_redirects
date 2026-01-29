@@ -1,2 +1,2 @@
-# Redirect www to non-www
-https://www.gigasievepages.com/* https://gigasievepages.com/:splat 301!
+# Redirect non-www to www
+https://gigasievepages.com/* https://www.gigasievepages.com/:splat 301!
