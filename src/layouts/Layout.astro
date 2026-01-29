@@ -10,6 +10,9 @@ const {
     title = "GigaSieve - Analyze Huge Files Locally",
     description = "Open and analyze 1-10GB files in your browser. No upload, 100% local processing."
 } = Astro.props;
+
+const adsenseClient = import.meta.env.PUBLIC_ADSENSE_CLIENT;
+const googleSiteVerification = import.meta.env.PUBLIC_GOOGLE_SITE_VERIFICATION;
 ---
 
 <!doctype html>
@@ -24,6 +27,12 @@ const {
         <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
         <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+        {googleSiteVerification && (
+            <meta name="google-site-verification" content={googleSiteVerification} />
+        )}
+        {adsenseClient && (
+            <script async src={`https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=${adsenseClient}`} crossorigin="anonymous"></script>
+        )}
     </head>
     <body class="min-h-screen flex flex-col bg-slate-950 text-slate-100 font-['Inter',sans-serif] antialiased">
         <header class="sticky top-0 z-50 bg-slate-900/80 backdrop-blur-md border-b border-slate-800">
