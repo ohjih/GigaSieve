@@ -1,0 +1,43 @@
+---
+import Layout from '../../layouts/Layout.astro';
+---
+
+<Layout title="Guides - GigaSieve" description="Step-by-step tutorials for analyzing large files locally in your browser.">
+    <section class="container mx-auto px-4 py-12">
+        <h1 class="text-4xl font-extrabold text-slate-200 mb-4">Guides</h1>
+        <p class="text-slate-500 mb-12 max-w-2xl">
+            Problem-solving tutorials. Learn how to analyze huge files without uploading them anywhere.
+        </p>
+
+        <div class="grid md:grid-cols-2 gap-6 max-w-4xl">
+            <a href="/guides/open-1gb-csv-in-browser" class="group bg-slate-900 hover:bg-slate-800 rounded-xl p-6 border border-slate-800 transition-all">
+                <h3 class="font-bold text-lg text-slate-300 group-hover:text-cyan-400 mb-2">How to Open 1GB CSV in Browser</h3>
+                <p class="text-sm text-slate-600">Excel crashed? Here's how to preview and filter massive CSVs without any software.</p>
+            </a>
+            <a href="/guides/analyze-nginx-access-log" class="group bg-slate-900 hover:bg-slate-800 rounded-xl p-6 border border-slate-800 transition-all">
+                <h3 class="font-bold text-lg text-slate-300 group-hover:text-cyan-400 mb-2">How to Analyze nginx Access Log</h3>
+                <p class="text-sm text-slate-600">Find 5xx errors, top IPs, and slow requests from your server logs.</p>
+            </a>
+            <a href="/guides/regex-extract-from-log" class="group bg-slate-900 hover:bg-slate-800 rounded-xl p-6 border border-slate-800 transition-all">
+                <h3 class="font-bold text-lg text-slate-300 group-hover:text-cyan-400 mb-2">Regex Extract from Huge Log File</h3>
+                <p class="text-sm text-slate-600">Pull specific fields using regex without writing scripts.</p>
+            </a>
+            <a href="/guides/remove-pii-from-logs" class="group bg-slate-900 hover:bg-slate-800 rounded-xl p-6 border border-slate-800 transition-all">
+                <h3 class="font-bold text-lg text-slate-300 group-hover:text-cyan-400 mb-2">Remove PII from Logs Locally</h3>
+                <p class="text-sm text-slate-600">Mask emails, phone numbers, and IPs before sharing logs.</p>
+            </a>
+            <a href="/guides/why-csv-is-slow" class="group bg-slate-900 hover:bg-slate-800 rounded-xl p-6 border border-slate-800 transition-all">
+                <h3 class="font-bold text-lg text-slate-300 group-hover:text-cyan-400 mb-2">Why CSV is Slow (and How to Speed Up)</h3>
+                <p class="text-sm text-slate-600">Understanding CSV parsing bottlenecks and streaming solutions.</p>
+            </a>
+            <a href="/guides/json-vs-jsonl" class="group bg-slate-900 hover:bg-slate-800 rounded-xl p-6 border border-slate-800 transition-all">
+                <h3 class="font-bold text-lg text-slate-300 group-hover:text-cyan-400 mb-2">JSON vs JSONL: Which to Use?</h3>
+                <p class="text-sm text-slate-600">For large datasets, JSONL wins. Here's why.</p>
+            </a>
+        </div>
+
+        <p class="text-slate-600 text-sm text-center mt-12">
+            More guides coming soon. <a href="/recipes" class="text-emerald-400 hover:underline">See Recipes</a> for one-click analysis.
+        </p>
+    </section>
+</Layout>

@@ -1,0 +1,26 @@
+---
+import Layout from '../layouts/Layout.astro';
+
+const contactEmail = import.meta.env.PUBLIC_CONTACT_EMAIL ?? "contact@example.com";
+const mailtoHref = `mailto:${contactEmail}`;
+---
+
+<Layout title="Contact - GigaSieve" description="Get support or ask questions about GigaSieve.">
+    <section class="container mx-auto px-4 py-12 max-w-3xl">
+        <h1 class="text-4xl font-extrabold text-slate-200 mb-6">Contact</h1>
+        <p class="text-slate-400 mb-6">
+            For questions, feedback, or support, email us and we will reply as soon as possible.
+        </p>
+
+        <div class="bg-slate-900 border border-slate-800 rounded-xl p-6 mb-8">
+            <p class="text-slate-300 text-sm mb-2">Support email</p>
+            <a href={mailtoHref} class="text-emerald-400 hover:underline text-lg font-semibold">{contactEmail}</a>
+        </div>
+
+        <h2 class="text-xl font-bold text-slate-300 mb-3">Response time</h2>
+        <p class="text-slate-400">
+            We aim to respond within 2-3 business days. Please include your browser version and a short description
+            of your file type and use case.
+        </p>
+    </section>
+</Layout>

@@ -1,0 +1,50 @@
+---
+import Layout from '../layouts/Layout.astro';
+---
+
+<Layout title="Privacy - GigaSieve" description="Your files never leave your device. 100% local processing.">
+    <section class="container mx-auto px-4 py-12 max-w-3xl">
+        <h1 class="text-4xl font-extrabold text-slate-200 mb-8">Privacy</h1>
+
+        <div class="prose prose-invert prose-slate max-w-none">
+            <div class="bg-emerald-500/10 border border-emerald-500/30 rounded-xl p-6 mb-8">
+                <h2 class="text-xl font-bold text-emerald-400 mt-0 mb-3">Your files never leave your device.</h2>
+                <p class="text-slate-400 mb-0">
+                    GigaSieve processes everything in your browser using modern web APIs. 
+                    There is no upload. No server-side processing. Your data stays on your computer.
+                </p>
+            </div>
+
+            <h2 class="text-xl font-bold text-slate-300">How it works</h2>
+            <ul class="text-slate-400 space-y-2">
+                <li>When you select a file, we use the <strong>File System Access API</strong> to read it directly from your disk.</li>
+                <li>All parsing, filtering, and analysis happens in <strong>Web Workers</strong> inside your browser.</li>
+                <li>Reports and results are generated locally - nothing is sent to any server.</li>
+            </ul>
+
+            <h2 class="text-xl font-bold text-slate-300 mt-8">What we do not collect</h2>
+            <ul class="text-slate-400 space-y-2">
+                <li>Your files or file contents</li>
+                <li>Your IP address (we do not run a backend)</li>
+                <li>Personal information of any kind</li>
+            </ul>
+
+            <h2 class="text-xl font-bold text-slate-300 mt-8">Analytics</h2>
+            <p class="text-slate-400">
+                We may use privacy-respecting analytics (like Plausible or none at all) to understand page visits. 
+                This does not include any file data or personal identifiers.
+            </p>
+
+            <h2 class="text-xl font-bold text-slate-300 mt-8">Third-party services</h2>
+            <p class="text-slate-400">
+                This site may display ads via Google AdSense. AdSense may use cookies for personalized advertising. 
+                You can opt out of personalized ads in your Google Ads settings.
+            </p>
+
+            <h2 class="text-xl font-bold text-slate-300 mt-8">Questions?</h2>
+            <p class="text-slate-400">
+                If you have any privacy concerns, please reach out via our <a href="/contact" class="text-emerald-400 hover:underline">contact page</a>.
+            </p>
+        </div>
+    </section>
+</Layout>

@@ -1,0 +1,42 @@
+---
+import Layout from '../../../layouts/Layout.astro';
+---
+
+<Layout title="Preview Huge CSV - GigaSieve Recipe" description="Preview the first and last rows of massive CSV files without loading everything.">
+    <section class="container mx-auto px-4 py-12 max-w-3xl">
+        <nav class="text-sm text-slate-500 mb-6">
+            <a href="/recipes" class="hover:text-emerald-400">Recipes</a>
+            <span class="mx-2">/</span>
+            <span class="text-slate-400">Preview Huge CSV</span>
+        </nav>
+
+        <h1 class="text-3xl font-extrabold text-slate-200 mb-4">Preview Huge CSV</h1>
+        <p class="text-slate-400 mb-8">
+            Need to quickly understand the structure of a large CSV? GigaSieve streams the file 
+            so you can see rows immediately without waiting for the full load.
+        </p>
+
+        <a href="/app" class="inline-flex items-center gap-2 bg-gradient-to-r from-emerald-500 to-cyan-500 text-white font-bold py-3 px-6 rounded-xl shadow-lg mb-8">
+            Open in App ->
+        </a>
+
+        <div class="bg-slate-900 rounded-xl border border-slate-800 p-6 mb-8">
+            <h2 class="text-lg font-bold text-slate-300 mb-4">What you get</h2>
+            <ul class="list-disc list-inside space-y-2 text-slate-400 text-sm">
+                <li>Virtual scroll through millions of rows smoothly</li>
+                <li>Line numbers for quick reference</li>
+                <li>Filter to find specific patterns</li>
+            </ul>
+        </div>
+
+        <h2 class="text-xl font-bold text-slate-300 mb-4">Related</h2>
+        <div class="grid md:grid-cols-2 gap-4">
+            <a href="/recipes/csv/top-values" class="bg-slate-900 hover:bg-slate-800 rounded-xl p-4 border border-slate-800">
+                <h3 class="font-semibold text-slate-300">Column Top Values</h3>
+            </a>
+            <a href="/recipes/csv/filter-rows" class="bg-slate-900 hover:bg-slate-800 rounded-xl p-4 border border-slate-800">
+                <h3 class="font-semibold text-slate-300">Filter Rows</h3>
+            </a>
+        </div>
+    </section>
+</Layout>

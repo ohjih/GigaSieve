@@ -1,0 +1,73 @@
+---
+import Layout from '../../layouts/Layout.astro';
+---
+
+<Layout title="Recipes - GigaSieve" description="Pre-built analysis recipes for logs, CSV, JSONL files. One-click insights.">
+    <section class="container mx-auto px-4 py-12">
+        <h1 class="text-4xl font-extrabold text-slate-200 mb-4">Recipes</h1>
+        <p class="text-slate-500 mb-12 max-w-2xl">
+            One-click analysis templates. Pick a recipe, open your file, get instant insights.
+        </p>
+
+        <!-- Logs Category -->
+        <div class="mb-12">
+            <h2 class="text-xl font-bold text-emerald-400 mb-6">Logs</h2>
+            <div class="grid md:grid-cols-3 gap-4">
+                <a href="/recipes/logs/nginx-status-codes" class="group bg-slate-900 hover:bg-slate-800 rounded-xl p-4 border border-slate-800 transition-all">
+                    <h3 class="font-semibold text-slate-300 group-hover:text-emerald-400">nginx Status Codes TopN</h3>
+                    <p class="text-xs text-slate-600 mt-1">Find 499/502/504 errors</p>
+                </a>
+                <a href="/recipes/logs/cloudflare-ray-id" class="group bg-slate-900 hover:bg-slate-800 rounded-xl p-4 border border-slate-800 transition-all">
+                    <h3 class="font-semibold text-slate-300 group-hover:text-emerald-400">Cloudflare Ray-ID Extract</h3>
+                    <p class="text-xs text-slate-600 mt-1">Trace requests by ID</p>
+                </a>
+                <a href="/recipes/logs/top-ips" class="group bg-slate-900 hover:bg-slate-800 rounded-xl p-4 border border-slate-800 transition-all">
+                    <h3 class="font-semibold text-slate-300 group-hover:text-emerald-400">Top IPs</h3>
+                    <p class="text-xs text-slate-600 mt-1">Unique visitors by IP</p>
+                </a>
+            </div>
+        </div>
+
+        <!-- CSV Category -->
+        <div class="mb-12">
+            <h2 class="text-xl font-bold text-cyan-400 mb-6">CSV</h2>
+            <div class="grid md:grid-cols-3 gap-4">
+                <a href="/recipes/csv/top-values" class="group bg-slate-900 hover:bg-slate-800 rounded-xl p-4 border border-slate-800 transition-all">
+                    <h3 class="font-semibold text-slate-300 group-hover:text-cyan-400">Column Top Values</h3>
+                    <p class="text-xs text-slate-600 mt-1">Group-by in browser</p>
+                </a>
+                <a href="/recipes/csv/preview-huge" class="group bg-slate-900 hover:bg-slate-800 rounded-xl p-4 border border-slate-800 transition-all">
+                    <h3 class="font-semibold text-slate-300 group-hover:text-cyan-400">Preview Huge CSV</h3>
+                    <p class="text-xs text-slate-600 mt-1">First/last 1000 rows</p>
+                </a>
+                <a href="/recipes/csv/filter-rows" class="group bg-slate-900 hover:bg-slate-800 rounded-xl p-4 border border-slate-800 transition-all">
+                    <h3 class="font-semibold text-slate-300 group-hover:text-cyan-400">Filter Rows</h3>
+                    <p class="text-xs text-slate-600 mt-1">Contains / matches</p>
+                </a>
+            </div>
+        </div>
+
+        <!-- JSONL Category -->
+        <div class="mb-12">
+            <h2 class="text-xl font-bold text-purple-400 mb-6">JSONL</h2>
+            <div class="grid md:grid-cols-3 gap-4">
+                <a href="/recipes/jsonl/extract-keys" class="group bg-slate-900 hover:bg-slate-800 rounded-xl p-4 border border-slate-800 transition-all">
+                    <h3 class="font-semibold text-slate-300 group-hover:text-purple-400">Extract Keys</h3>
+                    <p class="text-xs text-slate-600 mt-1">Flatten nested objects</p>
+                </a>
+                <a href="/recipes/jsonl/error-objects" class="group bg-slate-900 hover:bg-slate-800 rounded-xl p-4 border border-slate-800 transition-all">
+                    <h3 class="font-semibold text-slate-300 group-hover:text-purple-400">Error Objects Only</h3>
+                    <p class="text-xs text-slate-600 mt-1">Filter by error field</p>
+                </a>
+                <a href="/recipes/jsonl/top-values" class="group bg-slate-900 hover:bg-slate-800 rounded-xl p-4 border border-slate-800 transition-all">
+                    <h3 class="font-semibold text-slate-300 group-hover:text-purple-400">Field Top Values</h3>
+                    <p class="text-xs text-slate-600 mt-1">Count by field value</p>
+                </a>
+            </div>
+        </div>
+
+        <p class="text-slate-600 text-sm text-center mt-8">
+            More recipes coming soon. <a href="/guides" class="text-emerald-400 hover:underline">See Guides</a> for step-by-step tutorials.
+        </p>
+    </section>
+</Layout>

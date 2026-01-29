@@ -1,0 +1,54 @@
+---
+import Layout from '../../../layouts/Layout.astro';
+---
+
+<Layout title="Cloudflare Ray-ID Extract - GigaSieve Recipe" description="Extract and trace Cloudflare Ray-IDs from your logs for request debugging.">
+    <section class="container mx-auto px-4 py-12 max-w-3xl">
+        <nav class="text-sm text-slate-500 mb-6">
+            <a href="/recipes" class="hover:text-emerald-400">Recipes</a>
+            <span class="mx-2">/</span>
+            <span class="text-slate-400">Cloudflare Ray-ID</span>
+        </nav>
+
+        <h1 class="text-3xl font-extrabold text-slate-200 mb-4">Cloudflare Ray-ID Extract</h1>
+        <p class="text-slate-400 mb-8">
+            Every Cloudflare request has a unique Ray-ID. Use this recipe to extract and search Ray-IDs 
+            from your access logs for debugging specific requests.
+        </p>
+
+        <a href="/app" class="inline-flex items-center gap-2 bg-gradient-to-r from-emerald-500 to-cyan-500 text-white font-bold py-3 px-6 rounded-xl shadow-lg mb-8">
+            Open in App ->
+        </a>
+
+        <div class="bg-slate-900 rounded-xl border border-slate-800 p-6 mb-8">
+            <h2 class="text-lg font-bold text-slate-300 mb-4">What is a Ray-ID?</h2>
+            <p class="text-slate-400 text-sm mb-4">
+                Cloudflare assigns a unique identifier (Ray-ID) to every HTTP request that passes through their network. 
+                This ID appears in response headers and can be logged by your origin server.
+            </p>
+            <p class="text-slate-500 text-sm">
+                Format: <code class="bg-slate-800 px-2 py-1 rounded">ray-[hex]-[datacenter]</code> (e.g., <code class="bg-slate-800 px-2 py-1 rounded">ray-7a1b2c3d4e5f-IAD</code>)
+            </p>
+        </div>
+
+        <div class="bg-slate-900 rounded-xl border border-slate-800 p-6 mb-8">
+            <h2 class="text-lg font-bold text-slate-300 mb-4">How to use</h2>
+            <ol class="list-decimal list-inside space-y-2 text-slate-400 text-sm">
+                <li>Open your access log in GigaSieve</li>
+                <li>Use the filter: <code class="bg-slate-800 px-2 py-1 rounded">ray-</code></li>
+                <li>Lines containing Ray-IDs will appear</li>
+                <li>Copy the Ray-ID and search Cloudflare dashboard for details</li>
+            </ol>
+        </div>
+
+        <h2 class="text-xl font-bold text-slate-300 mb-4">Related</h2>
+        <div class="grid md:grid-cols-2 gap-4">
+            <a href="/recipes/logs/nginx-status-codes" class="bg-slate-900 hover:bg-slate-800 rounded-xl p-4 border border-slate-800">
+                <h3 class="font-semibold text-slate-300">nginx Status Codes</h3>
+            </a>
+            <a href="/recipes/logs/top-ips" class="bg-slate-900 hover:bg-slate-800 rounded-xl p-4 border border-slate-800">
+                <h3 class="font-semibold text-slate-300">Top IPs</h3>
+            </a>
+        </div>
+    </section>
+</Layout>

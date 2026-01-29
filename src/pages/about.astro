@@ -1,0 +1,42 @@
+---
+import Layout from '../layouts/Layout.astro';
+---
+
+<Layout title="About - GigaSieve" description="GigaSieve is a local-first web app for analyzing huge log, CSV, and JSONL files.">
+    <section class="container mx-auto px-4 py-12 max-w-3xl">
+        <h1 class="text-4xl font-extrabold text-slate-200 mb-6">About GigaSieve</h1>
+        <p class="text-slate-400 mb-6">
+            GigaSieve helps you open and analyze massive files directly in your browser. There is no upload,
+            no server-side processing, and no account required. Your data stays on your device.
+        </p>
+
+        <h2 class="text-xl font-bold text-slate-300 mb-3">What it is for</h2>
+        <ul class="list-disc list-inside space-y-2 text-slate-400 mb-6">
+            <li>Exploring huge logs (nginx, Cloudflare, app logs)</li>
+            <li>Filtering large CSVs without Excel crashes</li>
+            <li>Reading JSONL and extracting fields quickly</li>
+        </ul>
+
+        <h2 class="text-xl font-bold text-slate-300 mb-3">How it works</h2>
+        <p class="text-slate-400 mb-6">
+            Files are streamed in small chunks using modern browser APIs. Parsing and analysis run inside
+            Web Workers, keeping the UI fast even on large inputs.
+        </p>
+
+        <h2 class="text-xl font-bold text-slate-300 mb-3">Limitations</h2>
+        <ul class="list-disc list-inside space-y-2 text-slate-400 mb-8">
+            <li>Results depend on your device performance</li>
+            <li>Some features are read-only by design</li>
+            <li>Very large files may take time to index</li>
+        </ul>
+
+        <div class="flex gap-4">
+            <a href="/app" class="inline-flex items-center gap-2 bg-gradient-to-r from-emerald-500 to-cyan-500 text-white font-bold py-3 px-6 rounded-xl shadow-lg">
+                Open the App
+            </a>
+            <a href="/recipes" class="inline-flex items-center gap-2 border border-slate-700 text-slate-300 font-medium py-3 px-6 rounded-xl hover:border-emerald-400 hover:text-emerald-300 transition-all">
+                Browse Recipes
+            </a>
+        </div>
+    </section>
+</Layout>

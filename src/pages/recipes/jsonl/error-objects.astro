@@ -1,0 +1,44 @@
+---
+import Layout from '../../../layouts/Layout.astro';
+---
+
+<Layout title="JSONL Error Objects Only - GigaSieve Recipe" description="Filter JSONL files to show only objects containing error fields.">
+    <section class="container mx-auto px-4 py-12 max-w-3xl">
+        <nav class="text-sm text-slate-500 mb-6">
+            <a href="/recipes" class="hover:text-emerald-400">Recipes</a>
+            <span class="mx-2">/</span>
+            <span class="text-slate-400">Error Objects Only</span>
+        </nav>
+
+        <h1 class="text-3xl font-extrabold text-slate-200 mb-4">JSONL Error Objects Only</h1>
+        <p class="text-slate-400 mb-8">
+            Quickly isolate error records from large JSONL log files by filtering for error keywords.
+        </p>
+
+        <a href="/app" class="inline-flex items-center gap-2 bg-gradient-to-r from-emerald-500 to-cyan-500 text-white font-bold py-3 px-6 rounded-xl shadow-lg mb-8">
+            Open in App ->
+        </a>
+
+        <div class="bg-slate-900 rounded-xl border border-slate-800 p-6 mb-8">
+            <h2 class="text-lg font-bold text-slate-300 mb-4">How to filter</h2>
+            <p class="text-slate-400 text-sm mb-4">
+                Use the filter box with patterns like:
+            </p>
+            <ul class="space-y-2 text-slate-400 text-sm">
+                <li><code class="bg-slate-800 px-2 py-1 rounded">"level":"error"</code></li>
+                <li><code class="bg-slate-800 px-2 py-1 rounded">"status":"failed"</code></li>
+                <li><code class="bg-slate-800 px-2 py-1 rounded">"error":</code></li>
+            </ul>
+        </div>
+
+        <h2 class="text-xl font-bold text-slate-300 mb-4">Related</h2>
+        <div class="grid md:grid-cols-2 gap-4">
+            <a href="/recipes/jsonl/extract-keys" class="bg-slate-900 hover:bg-slate-800 rounded-xl p-4 border border-slate-800">
+                <h3 class="font-semibold text-slate-300">Extract Keys</h3>
+            </a>
+            <a href="/recipes/jsonl/top-values" class="bg-slate-900 hover:bg-slate-800 rounded-xl p-4 border border-slate-800">
+                <h3 class="font-semibold text-slate-300">Field Top Values</h3>
+            </a>
+        </div>
+    </section>
+</Layout>
