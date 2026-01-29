@@ -1,8 +1,11 @@
-const publisherId = import.meta.env.PUBLIC_ADSENSE_PUBLISHER_ID;
+import { SITE_CONFIG } from '../site.config';
 
-const body = publisherId
+const publisherId = SITE_CONFIG.adsensePublisherId?.trim();
+const isValidPublisherId = !!publisherId && /^pub-\d{16}$/.test(publisherId);
+
+const body = isValidPublisherId
     ? `google.com, ${publisherId}, DIRECT, f08c47fec0942fa0\n`
-    : `# Set PUBLIC_ADSENSE_PUBLISHER_ID to publish your ads.txt\n`;
+    : `# Set SITE_CONFIG.adsensePublisherId in src/site.config.ts to publish your ads.txt\n`;
 
 export function GET() {
     return new Response(body, {
