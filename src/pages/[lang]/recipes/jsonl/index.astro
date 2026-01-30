@@ -1,0 +1,110 @@
+---
+import Layout from '../../../../layouts/Layout.astro';
+import { ui, defaultLang } from '../../../../i18n/ui';
+import { buildLangPath } from '../../../../i18n/utils';
+
+export async function getStaticPaths() {
+    return Object.keys(ui).map((lang) => ({ params: { lang } }));
+}
+
+const { lang } = Astro.params;
+if (lang === defaultLang) {
+    return Astro.redirect('/recipes/jsonl', 301);
+}
+
+const copy = {
+    en: {
+        title: 'JSONL Analysis Recipes - GigaSieve',
+        h1: 'JSONL Analysis Recipes',
+        desc: 'Stream-parse newline-delimited JSON (JSONL/NDJSON) files of any size.',
+        crumbs: ['Recipes', 'JSONL'],
+        cards: [
+            { title: 'Extract Keys', desc: 'Discover all unique keys across objects', href: '/recipes/jsonl/extract-keys' },
+            { title: 'Error Objects Only', desc: 'Filter to error records', href: '/recipes/jsonl/error-objects' },
+            { title: 'Field Top Values', desc: 'Aggregate by any field', href: '/recipes/jsonl/top-values' },
+        ],
+        guide: 'See the JSON vs JSONL guide ->',
+        guideHref: '/guides/json-vs-jsonl',
+    },
+    ko: {
+        title: 'JSONL 분석 레시피 - GigaSieve',
+        h1: 'JSONL 분석 레시피',
+        desc: '어떤 크기든 JSONL/NDJSON을 스트리밍 파싱합니다.',
+        crumbs: ['레시피', 'JSONL'],
+        cards: [
+            { title: '키 추출', desc: '모든 객체의 고유 키 추출', href: '/recipes/jsonl/extract-keys' },
+            { title: '오류 객체만', desc: '에러 레코드만 필터링', href: '/recipes/jsonl/error-objects' },
+            { title: '필드 상위값', desc: '임의 필드 기준 집계', href: '/recipes/jsonl/top-values' },
+        ],
+        guide: 'JSON vs JSONL 가이드 보기 ->',
+        guideHref: '/guides/json-vs-jsonl',
+    },
+    es: {
+        title: 'Recetas JSONL - GigaSieve',
+        h1: 'Recetas de análisis JSONL',
+        desc: 'Parseo en streaming de JSONL/NDJSON de cualquier tamaño.',
+        crumbs: ['Recetas', 'JSONL'],
+        cards: [
+            { title: 'Extraer claves', desc: 'Descubre claves únicas', href: '/recipes/jsonl/extract-keys' },
+            { title: 'Solo objetos de error', desc: 'Filtra registros con error', href: '/recipes/jsonl/error-objects' },
+            { title: 'Top valores por campo', desc: 'Agrega por cualquier campo', href: '/recipes/jsonl/top-values' },
+        ],
+        guide: 'Ver guía JSON vs JSONL ->',
+        guideHref: '/guides/json-vs-jsonl',
+    },
+    ja: {
+        title: 'JSONL解析レシピ - GigaSieve',
+        h1: 'JSONL解析レシピ',
+        desc: 'JSONL/NDJSONをサイズ制限なしでストリーミング解析。',
+        crumbs: ['レシピ', 'JSONL'],
+        cards: [
+            { title: 'キー抽出', desc: 'ユニークなキーを抽出', href: '/recipes/jsonl/extract-keys' },
+            { title: 'エラーのみ', desc: 'エラーレコードを抽出', href: '/recipes/jsonl/error-objects' },
+            { title: 'フィールドTop値', desc: '任意フィールドで集計', href: '/recipes/jsonl/top-values' },
+        ],
+        guide: 'JSON vs JSONLガイド ->',
+        guideHref: '/guides/json-vs-jsonl',
+    },
+    zh: {
+        title: 'JSONL 分析配方 - GigaSieve',
+        h1: 'JSONL 分析配方',
+        desc: '流式解析任意大小的 JSONL/NDJSON。',
+        crumbs: ['配方', 'JSONL'],
+        cards: [
+            { title: '提取键', desc: '发现所有唯一键', href: '/recipes/jsonl/extract-keys' },
+            { title: '仅错误对象', desc: '筛选错误记录', href: '/recipes/jsonl/error-objects' },
+            { title: '字段 Top 值', desc: '按字段聚合', href: '/recipes/jsonl/top-values' },
+        ],
+        guide: '查看 JSON vs JSONL 指南 ->',
+        guideHref: '/guides/json-vs-jsonl',
+    },
+};
+
+const c = copy[lang as keyof typeof copy] ?? copy.en;
+---
+
+<Layout title={c.title} description={c.desc}>
+    <section class="container mx-auto px-4 py-12">
+        <nav class="text-sm text-slate-500 mb-6">
+            <a href={buildLangPath('/recipes', lang)} class="hover:text-emerald-400">{c.crumbs[0]}</a>
+            <span class="mx-2">/</span>
+            <span class="text-slate-400">{c.crumbs[1]}</span>
+        </nav>
+
+        <h1 class="text-4xl font-extrabold text-slate-200 mb-4">{c.h1}</h1>
+        <p class="text-slate-500 mb-12">{c.desc}</p>
+
+        <div class="grid md:grid-cols-2 gap-6 max-w-3xl">
+            {c.cards.map((card) => (
+                <a href={card.href} class="group bg-slate-900 hover:bg-slate-800 rounded-xl p-6 border border-slate-800 transition-all">
+                    <h3 class="font-bold text-lg text-slate-300 group-hover:text-purple-400 mb-2">{card.title}</h3>
+                    <p class="text-sm text-slate-600">{card.desc}</p>
+                </a>
+            ))}
+        </div>
+
+        <p class="text-slate-600 text-sm text-center mt-12">
+            <a href={c.guideHref} class="text-cyan-400 hover:underline">{c.guide}</a>
+        </p>
+    </section>
+</Layout>

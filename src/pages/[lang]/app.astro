@@ -1,0 +1,63 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import GigaSieveApp from '../../components/GigaSieveApp';
+import { ui, defaultLang } from '../../i18n/ui';
+import { useTranslations } from '../../i18n/utils';
+
+export async function getStaticPaths() {
+    return Object.keys(ui).map((lang) => ({ params: { lang } }));
+}
+
+const { lang } = Astro.params;
+const t = useTranslations(lang as keyof typeof ui);
+if (lang === defaultLang) {
+    return Astro.redirect('/app', 301);
+}
+
+const copy = {
+    en: {
+        title: 'GigaSieve App - Analyze Files',
+        subtitle: 'Streaming analysis for huge files. No upload.',
+        badges: ['Local-only', 'Streaming'],
+    },
+    ko: {
+        title: 'GigaSieve 앱 - 파일 분석',
+        subtitle: '대용량 파일 스트리밍 분석. 업로드 없음.',
+        badges: ['로컬 전용', '스트리밍'],
+    },
+    es: {
+        title: 'GigaSieve App - Analizar archivos',
+        subtitle: 'Análisis en streaming de archivos enormes. Sin subidas.',
+        badges: ['Solo local', 'Streaming'],
+    },
+    ja: {
+        title: 'GigaSieve アプリ - ファイル解析',
+        subtitle: '大容量ファイルのストリーミング解析。アップロードなし。',
+        badges: ['ローカル専用', 'ストリーミング'],
+    },
+    zh: {
+        title: 'GigaSieve 应用 - 文件分析',
+        subtitle: '超大文件流式分析。不上传。',
+        badges: ['仅本地', '流式'],
+    },
+};
+
+const c = copy[lang as keyof typeof copy] ?? copy.en;
+---
+
+<Layout title={c.title}>
+    <section class="container mx-auto px-4 py-6">
+        <div class="mb-6 flex items-center justify-between">
+            <div>
+                <h1 class="text-2xl font-bold text-slate-200">GigaSieve</h1>
+                <p class="text-slate-500 text-sm">{c.subtitle}</p>
+            </div>
+            <div class="flex gap-2 text-xs">
+                {c.badges.map((badge, i) => (
+                    <span class={`${i === 0 ? 'bg-emerald-500/20 text-emerald-400' : 'bg-cyan-500/20 text-cyan-400'} px-2 py-1 rounded`}>{badge}</span>
+                ))}
+            </div>
+        </div>
+        <GigaSieveApp client:only="react" />
+    </section>
+</Layout>

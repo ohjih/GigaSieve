@@ -1,0 +1,113 @@
+---
+import Layout from '../../../layouts/Layout.astro';
+import { ui, defaultLang } from '../../../i18n/ui';
+import { buildLangPath } from '../../../i18n/utils';
+
+export async function getStaticPaths() {
+    return Object.keys(ui).map((lang) => ({ params: { lang } }));
+}
+
+const { lang } = Astro.params;
+if (lang === defaultLang) {
+    return Astro.redirect('/guides', 301);
+}
+
+const copy = {
+    en: {
+        title: 'Guides - GigaSieve',
+        h1: 'Guides',
+        desc: 'Problem-solving tutorials. Learn how to analyze huge files without uploading them anywhere.',
+        note: 'More guides coming soon. See Recipes for one-click analysis.',
+        noteLink: 'See Recipes',
+        cards: [
+            { title: 'How to Open 1GB CSV in Browser', desc: 'Excel crashed? Here\'s how to preview and filter massive CSVs without any software.', href: '/guides/open-1gb-csv-in-browser' },
+            { title: 'How to Analyze nginx Access Log', desc: 'Find 5xx errors, top IPs, and slow requests from your server logs.', href: '/guides/analyze-nginx-access-log' },
+            { title: 'Regex Extract from Huge Log File', desc: 'Pull specific fields using regex without writing scripts.', href: '/guides/regex-extract-from-log' },
+            { title: 'Remove PII from Logs Locally', desc: 'Mask emails, phone numbers, and IPs before sharing logs.', href: '/guides/remove-pii-from-logs' },
+            { title: 'Why CSV is Slow (and How to Speed Up)', desc: 'Understanding CSV parsing bottlenecks and streaming solutions.', href: '/guides/why-csv-is-slow' },
+            { title: 'JSON vs JSONL: Which to Use?', desc: 'For large datasets, JSONL wins. Here\'s why.', href: '/guides/json-vs-jsonl' },
+        ],
+    },
+    ko: {
+        title: '가이드 - GigaSieve',
+        h1: '가이드',
+        desc: '문제 해결형 튜토리얼 모음. 업로드 없이 대용량 파일을 분석하는 방법을 배웁니다.',
+        note: '더 많은 가이드가 곧 추가됩니다. 원클릭 분석은 레시피를 확인하세요.',
+        noteLink: '레시피 보기',
+        cards: [
+            { title: '브라우저에서 1GB CSV 열기', desc: '엑셀이 죽었나요? 대용량 CSV를 소프트웨어 없이 미리보기/필터링.', href: '/guides/open-1gb-csv-in-browser' },
+            { title: 'nginx 액세스 로그 분석', desc: '5xx 에러, 상위 IP, 느린 요청을 빠르게 찾기.', href: '/guides/analyze-nginx-access-log' },
+            { title: '대용량 로그 정규식 추출', desc: '스크립트 없이 필요한 필드를 뽑아내기.', href: '/guides/regex-extract-from-log' },
+            { title: '로그에서 개인정보 제거', desc: '이메일/전화번호/IP를 마스킹 후 공유.', href: '/guides/remove-pii-from-logs' },
+            { title: 'CSV가 느린 이유와 해결법', desc: 'CSV 파싱 병목과 스트리밍 해법.', href: '/guides/why-csv-is-slow' },
+            { title: 'JSON vs JSONL', desc: '대용량에서는 JSONL이 유리한 이유.', href: '/guides/json-vs-jsonl' },
+        ],
+    },
+    es: {
+        title: 'Guías - GigaSieve',
+        h1: 'Guías',
+        desc: 'Tutoriales para resolver problemas. Aprende a analizar archivos enormes sin subirlos.',
+        note: 'Más guías próximamente. Para análisis en un clic, mira Recetas.',
+        noteLink: 'Ver Recetas',
+        cards: [
+            { title: 'Abrir CSV de 1GB en navegador', desc: 'Vista previa y filtros sin software.', href: '/guides/open-1gb-csv-in-browser' },
+            { title: 'Analizar log de nginx', desc: 'Errores 5xx, IPs y requests lentas.', href: '/guides/analyze-nginx-access-log' },
+            { title: 'Extraer con regex desde logs', desc: 'Campos específicos sin scripts.', href: '/guides/regex-extract-from-log' },
+            { title: 'Eliminar PII en logs', desc: 'Enmascara emails, teléfonos e IPs.', href: '/guides/remove-pii-from-logs' },
+            { title: 'Por qué CSV es lento', desc: 'Cuellos de botella y streaming.', href: '/guides/why-csv-is-slow' },
+            { title: 'JSON vs JSONL', desc: 'Para grandes datos, JSONL gana.', href: '/guides/json-vs-jsonl' },
+        ],
+    },
+    ja: {
+        title: 'ガイド - GigaSieve',
+        h1: 'ガイド',
+        desc: '課題解決チュートリアル。アップロードなしで大容量ファイルを解析。',
+        note: 'ガイドは順次追加予定。ワンクリック分析はレシピへ。',
+        noteLink: 'レシピを見る',
+        cards: [
+            { title: '1GB CSVをブラウザで開く', desc: 'ソフト不要でプレビュー/フィルタ。', href: '/guides/open-1gb-csv-in-browser' },
+            { title: 'nginxアクセスログ解析', desc: '5xx、IP、遅いリクエスト。', href: '/guides/analyze-nginx-access-log' },
+            { title: 'ログから正規表現抽出', desc: 'スクリプトなしで抽出。', href: '/guides/regex-extract-from-log' },
+            { title: 'ログのPII削除', desc: 'メール/電話/IPをマスク。', href: '/guides/remove-pii-from-logs' },
+            { title: 'CSVが遅い理由', desc: 'ボトルネックと対策。', href: '/guides/why-csv-is-slow' },
+            { title: 'JSON vs JSONL', desc: '大規模ならJSONL。', href: '/guides/json-vs-jsonl' },
+        ],
+    },
+    zh: {
+        title: '指南 - GigaSieve',
+        h1: '指南',
+        desc: '问题解决型教程。无需上传分析超大文件。',
+        note: '更多指南即将更新。一键分析请看配方。',
+        noteLink: '查看配方',
+        cards: [
+            { title: '浏览器打开 1GB CSV', desc: '无需软件即可预览/筛选。', href: '/guides/open-1gb-csv-in-browser' },
+            { title: '分析 nginx 访问日志', desc: '5xx、IP 与慢请求。', href: '/guides/analyze-nginx-access-log' },
+            { title: '日志正则提取', desc: '无需脚本提取字段。', href: '/guides/regex-extract-from-log' },
+            { title: '移除日志中的 PII', desc: '遮盖邮箱/电话/IP。', href: '/guides/remove-pii-from-logs' },
+            { title: 'CSV 为何缓慢', desc: '瓶颈与优化。', href: '/guides/why-csv-is-slow' },
+            { title: 'JSON vs JSONL', desc: '大数据优选 JSONL。', href: '/guides/json-vs-jsonl' },
+        ],
+    },
+};
+
+const c = copy[lang as keyof typeof copy] ?? copy.en;
+---
+
+<Layout title={c.title} description={c.desc}>
+    <section class="container mx-auto px-4 py-12">
+        <h1 class="text-4xl font-extrabold text-slate-200 mb-4">{c.h1}</h1>
+        <p class="text-slate-500 mb-4 max-w-2xl">{c.desc}</p>
+        <div class="grid md:grid-cols-2 gap-6 max-w-4xl">
+            {c.cards.map((card) => (
+                <a href={card.href} class="group bg-slate-900 hover:bg-slate-800 rounded-xl p-6 border border-slate-800 transition-all">
+                    <h3 class="font-bold text-lg text-slate-300 group-hover:text-cyan-400 mb-2">{card.title}</h3>
+                    <p class="text-sm text-slate-600">{card.desc}</p>
+                </a>
+            ))}
+        </div>
+
+        <p class="text-slate-600 text-sm text-center mt-12">
+            {c.note} <a href={buildLangPath('/recipes', lang)} class="text-emerald-400 hover:underline">{c.noteLink}</a>.
+        </p>
+    </section>
+</Layout>

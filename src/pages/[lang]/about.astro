@@ -1,0 +1,158 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import { ui, defaultLang } from '../../i18n/ui';
+import { useTranslations, buildLangPath } from '../../i18n/utils';
+
+export async function getStaticPaths() {
+    return Object.keys(ui).map((lang) => ({ params: { lang } }));
+}
+
+const { lang } = Astro.params;
+const t = useTranslations(lang as keyof typeof ui);
+if (lang === defaultLang) {
+    return Astro.redirect('/about', 301);
+}
+
+const copy = {
+    en: {
+        title: 'About - GigaSieve',
+        h1: 'About GigaSieve',
+        intro: 'GigaSieve helps you open and analyze massive files directly in your browser. There is no upload, no server-side processing, and no account required. Your data stays on your device.',
+        useTitle: 'What it is for',
+        uses: [
+            'Exploring huge logs (nginx, Cloudflare, app logs)',
+            'Filtering large CSVs without Excel crashes',
+            'Reading JSONL and extracting fields quickly',
+        ],
+        howTitle: 'How it works',
+        howDesc: 'Files are streamed in small chunks using modern browser APIs. Parsing and analysis run inside Web Workers, keeping the UI fast even on large inputs.',
+        limitTitle: 'Limitations',
+        limits: [
+            'Results depend on your device performance',
+            'Some features are read-only by design',
+            'Very large files may take time to index',
+        ],
+        openApp: 'Open the App',
+        browseRecipes: 'Browse Recipes',
+    },
+    ko: {
+        title: '소개 - GigaSieve',
+        h1: 'GigaSieve 소개',
+        intro: 'GigaSieve는 브라우저에서 바로 대용량 파일을 열고 분석할 수 있게 해줍니다. 업로드나 서버 처리 없이, 계정도 필요 없습니다. 데이터는 사용자의 기기 안에만 남습니다.',
+        useTitle: '사용 목적',
+        uses: [
+            '대용량 로그 탐색 (nginx, Cloudflare, 앱 로그)',
+            '엑셀 없이 큰 CSV 필터링',
+            'JSONL을 빠르게 읽고 필드 추출',
+        ],
+        howTitle: '동작 방식',
+        howDesc: '현대 브라우저 API로 파일을 작은 청크로 스트리밍합니다. 파싱과 분석은 Web Worker에서 수행되어 대용량 입력에서도 UI가 빠르게 유지됩니다.',
+        limitTitle: '제한 사항',
+        limits: [
+            '성능은 사용자 기기 사양에 영향을 받습니다',
+            '일부 기능은 읽기 전용으로 설계되었습니다',
+            '아주 큰 파일은 인덱싱에 시간이 걸릴 수 있습니다',
+        ],
+        openApp: '앱 열기',
+        browseRecipes: '레시피 보기',
+    },
+    es: {
+        title: 'Acerca de - GigaSieve',
+        h1: 'Acerca de GigaSieve',
+        intro: 'GigaSieve te permite abrir y analizar archivos enormes directamente en el navegador. Sin subidas, sin procesamiento en servidor y sin cuenta. Tus datos permanecen en tu dispositivo.',
+        useTitle: 'Para qué sirve',
+        uses: [
+            'Explorar logs enormes (nginx, Cloudflare, logs de apps)',
+            'Filtrar CSV grandes sin que Excel falle',
+            'Leer JSONL y extraer campos rápidamente',
+        ],
+        howTitle: 'Cómo funciona',
+        howDesc: 'Los archivos se leen en pequeños fragmentos con APIs modernas del navegador. El análisis corre en Web Workers para mantener la UI rápida.',
+        limitTitle: 'Limitaciones',
+        limits: [
+            'El rendimiento depende del dispositivo',
+            'Algunas funciones son de solo lectura',
+            'Archivos muy grandes pueden tardar en indexarse',
+        ],
+        openApp: 'Abrir la app',
+        browseRecipes: 'Ver recetas',
+    },
+    ja: {
+        title: '概要 - GigaSieve',
+        h1: 'GigaSieveについて',
+        intro: 'GigaSieveはブラウザで大容量ファイルを直接開いて解析できます。アップロードやサーバー処理は不要で、アカウントも必要ありません。データは端末内に残ります。',
+        useTitle: '用途',
+        uses: [
+            '巨大ログの探索（nginx/Cloudflare/アプリログ）',
+            'Excelが落ちるCSVのフィルタリング',
+            'JSONLの読み取りとフィールド抽出',
+        ],
+        howTitle: '仕組み',
+        howDesc: 'ファイルを小さなチャンクでストリーミング読み込みします。解析はWeb Worker内で行い、UIを高速に保ちます。',
+        limitTitle: '制限事項',
+        limits: [
+            '性能は端末のスペックに依存',
+            '一部機能は読み取り専用',
+            '非常に大きなファイルはインデックスに時間がかかる',
+        ],
+        openApp: 'アプリを開く',
+        browseRecipes: 'レシピを見る',
+    },
+    zh: {
+        title: '关于 - GigaSieve',
+        h1: '关于 GigaSieve',
+        intro: 'GigaSieve 可以在浏览器中直接打开并分析超大文件。不上传、不经过服务器，也无需账号。数据仅留在你的设备上。',
+        useTitle: '适用场景',
+        uses: [
+            '探索超大日志（nginx/Cloudflare/应用日志）',
+            '在 Excel 之外过滤大型 CSV',
+            '读取 JSONL 并快速提取字段',
+        ],
+        howTitle: '工作原理',
+        howDesc: '使用现代浏览器 API 以小块流式读取文件。解析与分析在 Web Worker 中进行，保持界面流畅。',
+        limitTitle: '限制',
+        limits: [
+            '性能取决于设备配置',
+            '部分功能为只读设计',
+            '超大文件索引可能需要时间',
+        ],
+        openApp: '打开应用',
+        browseRecipes: '浏览配方',
+    },
+};
+
+const c = copy[lang as keyof typeof copy] ?? copy.en;
+---
+
+<Layout title={c.title} description={c.intro}>
+    <section class="container mx-auto px-4 py-12 max-w-3xl">
+        <h1 class="text-4xl font-extrabold text-slate-200 mb-6">{c.h1}</h1>
+        <p class="text-slate-400 mb-6">{c.intro}</p>
+
+        <h2 class="text-xl font-bold text-slate-300 mb-3">{c.useTitle}</h2>
+        <ul class="list-disc list-inside space-y-2 text-slate-400 mb-6">
+            {c.uses.map((item) => (
+                <li>{item}</li>
+            ))}
+        </ul>
+
+        <h2 class="text-xl font-bold text-slate-300 mb-3">{c.howTitle}</h2>
+        <p class="text-slate-400 mb-6">{c.howDesc}</p>
+
+        <h2 class="text-xl font-bold text-slate-300 mb-3">{c.limitTitle}</h2>
+        <ul class="list-disc list-inside space-y-2 text-slate-400 mb-8">
+            {c.limits.map((item) => (
+                <li>{item}</li>
+            ))}
+        </ul>
+
+        <div class="flex gap-4">
+            <a href={buildLangPath('/app', lang)} class="inline-flex items-center gap-2 bg-gradient-to-r from-emerald-500 to-cyan-500 text-white font-bold py-3 px-6 rounded-xl shadow-lg">
+                {c.openApp}
+            </a>
+            <a href={buildLangPath('/recipes', lang)} class="inline-flex items-center gap-2 border border-slate-700 text-slate-300 font-medium py-3 px-6 rounded-xl hover:border-emerald-400 hover:text-emerald-300 transition-all">
+                {c.browseRecipes}
+            </a>
+        </div>
+    </section>
+</Layout>

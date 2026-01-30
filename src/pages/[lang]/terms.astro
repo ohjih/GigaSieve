@@ -1,0 +1,102 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import { ui, defaultLang } from '../../i18n/ui';
+
+export async function getStaticPaths() {
+    return Object.keys(ui).map((lang) => ({ params: { lang } }));
+}
+
+const { lang } = Astro.params;
+if (lang === defaultLang) {
+    return Astro.redirect('/terms', 301);
+}
+
+const copy = {
+    en: {
+        title: 'Terms - GigaSieve',
+        h1: 'Terms of Use',
+        intro: 'By using GigaSieve, you agree to these terms. If you do not agree, please do not use the site.',
+        useTitle: 'Use of the service',
+        useDesc: 'GigaSieve is provided as-is for local file analysis in your browser. You are responsible for the files you open and the results you generate.',
+        warrantyTitle: 'No warranties',
+        warrantyDesc: 'We provide no warranties of any kind, express or implied. We do not guarantee accuracy, completeness, or fitness for a particular purpose.',
+        liabilityTitle: 'Limitation of liability',
+        liabilityDesc: 'To the fullest extent permitted by law, GigaSieve and its operators are not liable for any damages arising from your use of the service.',
+        changesTitle: 'Changes',
+        changesDesc: 'We may update these terms from time to time. Continued use of the site means you accept the updated terms.',
+    },
+    ko: {
+        title: '약관 - GigaSieve',
+        h1: '이용 약관',
+        intro: 'GigaSieve를 사용하면 본 약관에 동의한 것으로 간주합니다. 동의하지 않으면 서비스를 이용하지 마십시오.',
+        useTitle: '서비스 이용',
+        useDesc: 'GigaSieve는 브라우저에서 로컬 파일을 분석하기 위한 서비스이며, “있는 그대로(as-is)” 제공됩니다. 사용자가 여는 파일과 생성된 결과에 대한 책임은 사용자에게 있습니다.',
+        warrantyTitle: '보증 없음',
+        warrantyDesc: '명시적 또는 묵시적인 어떠한 보증도 제공하지 않습니다. 정확성, 완전성, 특정 목적 적합성 등을 보장하지 않습니다.',
+        liabilityTitle: '책임 제한',
+        liabilityDesc: '법이 허용하는 최대 범위 내에서, GigaSieve 및 운영자는 서비스 이용으로 발생한 손해에 대해 책임을 지지 않습니다.',
+        changesTitle: '변경',
+        changesDesc: '약관은 수시로 변경될 수 있습니다. 변경 후에도 서비스를 계속 이용하면 변경 사항에 동의한 것으로 간주합니다.',
+    },
+    es: {
+        title: 'Términos - GigaSieve',
+        h1: 'Términos de uso',
+        intro: 'Al usar GigaSieve aceptas estos términos. Si no estás de acuerdo, no uses el sitio.',
+        useTitle: 'Uso del servicio',
+        useDesc: 'GigaSieve se ofrece “tal cual” para analizar archivos localmente en tu navegador. Eres responsable de los archivos y resultados.',
+        warrantyTitle: 'Sin garantías',
+        warrantyDesc: 'No ofrecemos garantías expresas o implícitas. No garantizamos exactitud, integridad o idoneidad para un fin particular.',
+        liabilityTitle: 'Limitación de responsabilidad',
+        liabilityDesc: 'En la medida permitida por la ley, GigaSieve y sus operadores no serán responsables por daños derivados del uso del servicio.',
+        changesTitle: 'Cambios',
+        changesDesc: 'Podemos actualizar estos términos. El uso continuo implica aceptación de los cambios.',
+    },
+    ja: {
+        title: '利用規約 - GigaSieve',
+        h1: '利用規約',
+        intro: 'GigaSieveを利用することで本規約に同意したものとみなします。同意できない場合は利用しないでください。',
+        useTitle: 'サービスの利用',
+        useDesc: 'GigaSieveはブラウザでのローカル解析のため「現状のまま」で提供されます。ファイルと結果の責任は利用者にあります。',
+        warrantyTitle: '保証なし',
+        warrantyDesc: '明示・黙示を問わず保証は行いません。正確性、完全性、特定目的適合性を保証しません。',
+        liabilityTitle: '責任の制限',
+        liabilityDesc: '法律で許される範囲で、GigaSieveおよび運営者は利用による損害に責任を負いません。',
+        changesTitle: '変更',
+        changesDesc: '本規約は変更されることがあります。継続利用は変更への同意を意味します。',
+    },
+    zh: {
+        title: '条款 - GigaSieve',
+        h1: '使用条款',
+        intro: '使用 GigaSieve 即表示同意本条款。如不同意，请勿使用本网站。',
+        useTitle: '服务使用',
+        useDesc: 'GigaSieve 以“现状”提供，用于在浏览器中本地分析文件。你需对文件及结果负责。',
+        warrantyTitle: '无保证',
+        warrantyDesc: '不提供任何明示或默示保证，不保证准确性、完整性或特定用途适用性。',
+        liabilityTitle: '责任限制',
+        liabilityDesc: '在法律允许范围内，GigaSieve 及其运营者不对使用服务造成的损失负责。',
+        changesTitle: '变更',
+        changesDesc: '条款可能更新，继续使用即视为接受变更。',
+    },
+};
+
+const c = copy[lang as keyof typeof copy] ?? copy.en;
+---
+
+<Layout title={c.title} description={c.intro}>
+    <section class="container mx-auto px-4 py-12 max-w-3xl">
+        <h1 class="text-4xl font-extrabold text-slate-200 mb-6">{c.h1}</h1>
+        <p class="text-slate-400 mb-6">{c.intro}</p>
+
+        <h2 class="text-xl font-bold text-slate-300 mb-3">{c.useTitle}</h2>
+        <p class="text-slate-400 mb-6">{c.useDesc}</p>
+
+        <h2 class="text-xl font-bold text-slate-300 mb-3">{c.warrantyTitle}</h2>
+        <p class="text-slate-400 mb-6">{c.warrantyDesc}</p>
+
+        <h2 class="text-xl font-bold text-slate-300 mb-3">{c.liabilityTitle}</h2>
+        <p class="text-slate-400 mb-6">{c.liabilityDesc}</p>
+
+        <h2 class="text-xl font-bold text-slate-300 mb-3">{c.changesTitle}</h2>
+        <p class="text-slate-400">{c.changesDesc}</p>
+    </section>
+</Layout>

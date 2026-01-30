@@ -1,6 +1,6 @@
 const siteUrl = (import.meta.env.PUBLIC_SITE_URL ?? 'http://localhost:4321').replace(/\/+$/, '');
 
-const routes = [
+const baseRoutes = [
     '/',
     '/app',
     '/privacy',
@@ -27,6 +27,17 @@ const routes = [
     '/guides/why-csv-is-slow',
     '/guides/json-vs-jsonl',
     '/guides/remove-pii-from-logs',
+];
+
+const localizedRoutes = baseRoutes;
+
+const extraLangs = ['ko', 'es', 'ja', 'zh'];
+
+const routes = [
+    ...baseRoutes,
+    ...extraLangs.flatMap((lang) =>
+        localizedRoutes.map((route) => (route === '/' ? `/${lang}/` : `/${lang}${route}`))
+    ),
 ];
 
 export function GET() {

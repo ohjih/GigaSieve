@@ -1,0 +1,110 @@
+---
+import Layout from '../../../../layouts/Layout.astro';
+import { ui, defaultLang } from '../../../../i18n/ui';
+import { buildLangPath } from '../../../../i18n/utils';
+
+export async function getStaticPaths() {
+    return Object.keys(ui).map((lang) => ({ params: { lang } }));
+}
+
+const { lang } = Astro.params;
+if (lang === defaultLang) {
+    return Astro.redirect('/recipes/csv', 301);
+}
+
+const copy = {
+    en: {
+        title: 'CSV Analysis Recipes - GigaSieve',
+        h1: 'CSV Analysis Recipes',
+        desc: 'Handle massive CSV files that crash Excel. Stream, filter, and aggregate locally.',
+        crumbs: ['Recipes', 'CSV'],
+        cards: [
+            { title: 'Column Top Values', desc: 'GROUP BY + ORDER BY in your browser', href: '/recipes/csv/top-values' },
+            { title: 'Preview Huge CSV', desc: 'See structure and sample rows instantly', href: '/recipes/csv/preview-huge' },
+            { title: 'Filter Rows', desc: 'Search by text pattern', href: '/recipes/csv/filter-rows' },
+        ],
+        guide: 'See the 1GB CSV guide ->',
+        guideHref: '/guides/open-1gb-csv-in-browser',
+    },
+    ko: {
+        title: 'CSV 분석 레시피 - GigaSieve',
+        h1: 'CSV 분석 레시피',
+        desc: '엑셀이 죽는 대용량 CSV를 로컬에서 스트리밍/필터/집계하세요.',
+        crumbs: ['레시피', 'CSV'],
+        cards: [
+            { title: '컬럼 상위값', desc: '브라우저에서 GROUP BY + ORDER BY', href: '/recipes/csv/top-values' },
+            { title: '대용량 CSV 미리보기', desc: '구조와 샘플 행을 즉시 확인', href: '/recipes/csv/preview-huge' },
+            { title: '행 필터링', desc: '텍스트 패턴 검색', href: '/recipes/csv/filter-rows' },
+        ],
+        guide: '1GB CSV 가이드 보기 ->',
+        guideHref: '/guides/open-1gb-csv-in-browser',
+    },
+    es: {
+        title: 'Recetas CSV - GigaSieve',
+        h1: 'Recetas de análisis CSV',
+        desc: 'Gestiona CSV enormes que hacen fallar Excel. Streaming, filtros y agregaciones locales.',
+        crumbs: ['Recetas', 'CSV'],
+        cards: [
+            { title: 'Top valores de columna', desc: 'GROUP BY + ORDER BY en el navegador', href: '/recipes/csv/top-values' },
+            { title: 'Vista previa CSV enorme', desc: 'Estructura y filas de ejemplo al instante', href: '/recipes/csv/preview-huge' },
+            { title: 'Filtrar filas', desc: 'Búsqueda por patrón de texto', href: '/recipes/csv/filter-rows' },
+        ],
+        guide: 'Ver guía de CSV de 1GB ->',
+        guideHref: '/guides/open-1gb-csv-in-browser',
+    },
+    ja: {
+        title: 'CSV解析レシピ - GigaSieve',
+        h1: 'CSV解析レシピ',
+        desc: 'Excelが落ちる大容量CSVをローカルでストリーミング/フィルタ/集計。',
+        crumbs: ['レシピ', 'CSV'],
+        cards: [
+            { title: '列のTop値', desc: 'ブラウザでGROUP BY + ORDER BY', href: '/recipes/csv/top-values' },
+            { title: '大容量CSVプレビュー', desc: '構造とサンプル行を即表示', href: '/recipes/csv/preview-huge' },
+            { title: '行フィルタ', desc: 'テキストパターン検索', href: '/recipes/csv/filter-rows' },
+        ],
+        guide: '1GB CSVガイドを見る ->',
+        guideHref: '/guides/open-1gb-csv-in-browser',
+    },
+    zh: {
+        title: 'CSV 分析配方 - GigaSieve',
+        h1: 'CSV 分析配方',
+        desc: '处理让 Excel 崩溃的超大 CSV：流式、筛选、聚合。',
+        crumbs: ['配方', 'CSV'],
+        cards: [
+            { title: '列 Top 值', desc: '浏览器内 GROUP BY + ORDER BY', href: '/recipes/csv/top-values' },
+            { title: '超大 CSV 预览', desc: '立即查看结构与样例行', href: '/recipes/csv/preview-huge' },
+            { title: '筛选行', desc: '按文本模式搜索', href: '/recipes/csv/filter-rows' },
+        ],
+        guide: '查看 1GB CSV 指南 ->',
+        guideHref: '/guides/open-1gb-csv-in-browser',
+    },
+};
+
+const c = copy[lang as keyof typeof copy] ?? copy.en;
+---
+
+<Layout title={c.title} description={c.desc}>
+    <section class="container mx-auto px-4 py-12">
+        <nav class="text-sm text-slate-500 mb-6">
+            <a href={buildLangPath('/recipes', lang)} class="hover:text-emerald-400">{c.crumbs[0]}</a>
+            <span class="mx-2">/</span>
+            <span class="text-slate-400">{c.crumbs[1]}</span>
+        </nav>
+
+        <h1 class="text-4xl font-extrabold text-slate-200 mb-4">{c.h1}</h1>
+        <p class="text-slate-500 mb-12">{c.desc}</p>
+
+        <div class="grid md:grid-cols-2 gap-6 max-w-3xl">
+            {c.cards.map((card) => (
+                <a href={card.href} class="group bg-slate-900 hover:bg-slate-800 rounded-xl p-6 border border-slate-800 transition-all">
+                    <h3 class="font-bold text-lg text-slate-300 group-hover:text-cyan-400 mb-2">{card.title}</h3>
+                    <p class="text-sm text-slate-600">{card.desc}</p>
+                </a>
+            ))}
+        </div>
+
+        <p class="text-slate-600 text-sm text-center mt-12">
+            <a href={c.guideHref} class="text-cyan-400 hover:underline">{c.guide}</a>
+        </p>
+    </section>
+</Layout>

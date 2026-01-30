@@ -1,0 +1,110 @@
+---
+import Layout from '../../../../layouts/Layout.astro';
+import { ui, defaultLang } from '../../../../i18n/ui';
+import { buildLangPath } from '../../../../i18n/utils';
+
+export async function getStaticPaths() {
+    return Object.keys(ui).map((lang) => ({ params: { lang } }));
+}
+
+const { lang } = Astro.params;
+if (lang === defaultLang) {
+    return Astro.redirect('/recipes/logs', 301);
+}
+
+const copy = {
+    en: {
+        title: 'Log Analysis Recipes - GigaSieve',
+        h1: 'Log Analysis Recipes',
+        desc: 'One-click analysis for nginx, Apache, Cloudflare, and application logs.',
+        crumbs: ['Recipes', 'Logs'],
+        cards: [
+            { title: 'nginx Status Codes TopN', desc: 'Find 499, 502, 504 errors and see distribution', href: '/recipes/logs/nginx-status-codes' },
+            { title: 'Cloudflare Ray-ID Extract', desc: 'Trace requests by unique Ray-ID', href: '/recipes/logs/cloudflare-ray-id' },
+            { title: 'Top IPs', desc: 'Identify most active IP addresses', href: '/recipes/logs/top-ips' },
+        ],
+        guide: 'See the nginx analysis guide ->',
+        guideHref: '/guides/analyze-nginx-access-log',
+    },
+    ko: {
+        title: '로그 분석 레시피 - GigaSieve',
+        h1: '로그 분석 레시피',
+        desc: 'nginx, Apache, Cloudflare, 앱 로그를 위한 원클릭 분석.',
+        crumbs: ['레시피', '로그'],
+        cards: [
+            { title: 'nginx 상태코드 TopN', desc: '499/502/504 에러 분포 확인', href: '/recipes/logs/nginx-status-codes' },
+            { title: 'Cloudflare Ray-ID 추출', desc: 'Ray-ID로 요청 추적', href: '/recipes/logs/cloudflare-ray-id' },
+            { title: '상위 IP', desc: '활성 IP 순위 확인', href: '/recipes/logs/top-ips' },
+        ],
+        guide: 'nginx 분석 가이드 보기 ->',
+        guideHref: '/guides/analyze-nginx-access-log',
+    },
+    es: {
+        title: 'Recetas de logs - GigaSieve',
+        h1: 'Recetas de análisis de logs',
+        desc: 'Análisis en un clic para nginx, Apache, Cloudflare y logs de aplicaciones.',
+        crumbs: ['Recetas', 'Logs'],
+        cards: [
+            { title: 'TopN de códigos nginx', desc: 'Detecta 499/502/504 y su distribución', href: '/recipes/logs/nginx-status-codes' },
+            { title: 'Extraer Ray-ID de Cloudflare', desc: 'Rastrea solicitudes por Ray-ID', href: '/recipes/logs/cloudflare-ray-id' },
+            { title: 'Top IPs', desc: 'Identifica las IPs más activas', href: '/recipes/logs/top-ips' },
+        ],
+        guide: 'Ver guía de análisis de nginx ->',
+        guideHref: '/guides/analyze-nginx-access-log',
+    },
+    ja: {
+        title: 'ログ解析レシピ - GigaSieve',
+        h1: 'ログ解析レシピ',
+        desc: 'nginx/Apache/Cloudflare/アプリログをワンクリック解析。',
+        crumbs: ['レシピ', 'ログ'],
+        cards: [
+            { title: 'nginx ステータスコード TopN', desc: '499/502/504の分布を確認', href: '/recipes/logs/nginx-status-codes' },
+            { title: 'Cloudflare Ray-ID 抽出', desc: 'Ray-IDでリクエスト追跡', href: '/recipes/logs/cloudflare-ray-id' },
+            { title: 'Top IPs', desc: '最もアクティブなIPを特定', href: '/recipes/logs/top-ips' },
+        ],
+        guide: 'nginx解析ガイドを見る ->',
+        guideHref: '/guides/analyze-nginx-access-log',
+    },
+    zh: {
+        title: '日志分析配方 - GigaSieve',
+        h1: '日志分析配方',
+        desc: '一键分析 nginx、Apache、Cloudflare 与应用日志。',
+        crumbs: ['配方', '日志'],
+        cards: [
+            { title: 'nginx 状态码 TopN', desc: '查看 499/502/504 分布', href: '/recipes/logs/nginx-status-codes' },
+            { title: '提取 Cloudflare Ray-ID', desc: '按 Ray-ID 追踪请求', href: '/recipes/logs/cloudflare-ray-id' },
+            { title: 'Top IPs', desc: '识别最活跃 IP', href: '/recipes/logs/top-ips' },
+        ],
+        guide: '查看 nginx 分析指南 ->',
+        guideHref: '/guides/analyze-nginx-access-log',
+    },
+};
+
+const c = copy[lang as keyof typeof copy] ?? copy.en;
+---
+
+<Layout title={c.title} description={c.desc}>
+    <section class="container mx-auto px-4 py-12">
+        <nav class="text-sm text-slate-500 mb-6">
+            <a href={buildLangPath('/recipes', lang)} class="hover:text-emerald-400">{c.crumbs[0]}</a>
+            <span class="mx-2">/</span>
+            <span class="text-slate-400">{c.crumbs[1]}</span>
+        </nav>
+
+        <h1 class="text-4xl font-extrabold text-slate-200 mb-4">{c.h1}</h1>
+        <p class="text-slate-500 mb-12">{c.desc}</p>
+
+        <div class="grid md:grid-cols-2 gap-6 max-w-3xl">
+            {c.cards.map((card) => (
+                <a href={card.href} class="group bg-slate-900 hover:bg-slate-800 rounded-xl p-6 border border-slate-800 transition-all">
+                    <h3 class="font-bold text-lg text-slate-300 group-hover:text-emerald-400 mb-2">{card.title}</h3>
+                    <p class="text-sm text-slate-600">{card.desc}</p>
+                </a>
+            ))}
+        </div>
+
+        <p class="text-slate-600 text-sm text-center mt-12">
+            <a href={c.guideHref} class="text-cyan-400 hover:underline">{c.guide}</a>
+        </p>
+    </section>
+</Layout>

@@ -7,6 +7,7 @@ interface Props {
 }
 
 import { SITE_CONFIG } from '../site.config';
+import { getLangFromUrl, useTranslations, languages, defaultLang, buildLangPath } from '../i18n/utils';
 
 const {
     title = "GigaSieve - Analyze Huge Files Locally",
@@ -19,10 +20,28 @@ const googleSiteVerification = SITE_CONFIG.googleSiteVerification?.trim();
 const hasAdsenseClient = !!adsenseClient && /^ca-pub-\d{16}$/.test(adsenseClient);
 const hasAdsenseAccountMeta = !!adsenseAccountMeta && /^ca-pub-\d{16}$/.test(adsenseAccountMeta);
 const hasGoogleSiteVerification = !!googleSiteVerification;
+
+const lang = getLangFromUrl(Astro.url);
+const t = useTranslations(lang);
+const supportedLangs = Object.keys(languages);
+const siteUrl = (import.meta.env.PUBLIC_SITE_URL ?? Astro.url.origin).replace(/\/+$/, '');
+const rawPath = Astro.url.pathname;
+const pathWithoutLang = lang !== defaultLang && rawPath.startsWith(`/${lang}`)
+    ? rawPath.slice(lang.length + 1) || '/'
+    : rawPath;
+const cleanPath = pathWithoutLang === '' ? '/' : pathWithoutLang;
+const canonicalPath = lang === defaultLang ? cleanPath : rawPath;
+
+const hreflangs = supportedLangs.map((l) => {
+    const href = l === defaultLang
+        ? `${siteUrl}${cleanPath}`
+        : `${siteUrl}/${l}${cleanPath === '/' ? '/' : cleanPath}`;
+    return { lang: l, href };
+});
 ---
 
 <!doctype html>
-<html lang="en">
+<html lang={lang}>
     <head>
         <meta charset="UTF-8" />
         <meta name="description" content={description} />
@@ -33,6 +52,11 @@ const hasGoogleSiteVerification = !!googleSiteVerification;
         <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
         <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+        <link rel="canonical" href={`${siteUrl}${canonicalPath}`} />
+        {hreflangs.map((link) => (
+            <link rel="alternate" hreflang={link.lang} href={link.href} />
+        ))}
+        <link rel="alternate" hreflang="x-default" href={`${siteUrl}${cleanPath}`} />
         {hasGoogleSiteVerification && (
             <meta name="google-site-verification" content={googleSiteVerification} />
         )}
@@ -46,17 +70,33 @@ const hasGoogleSiteVerification = !!googleSiteVerification;
     <body class="min-h-screen flex flex-col bg-slate-950 text-slate-100 font-['Inter',sans-serif] antialiased">
         <header class="sticky top-0 z-50 bg-slate-900/80 backdrop-blur-md border-b border-slate-800">
             <div class="container mx-auto px-4 h-16 flex items-center justify-between">
-                <a href="/" class="flex items-center gap-2 font-extrabold text-xl tracking-tight">
+                <a href={buildLangPath('/', lang)} class="flex items-center gap-2 font-extrabold text-xl tracking-tight">
                     <div class="w-8 h-8 rounded-lg bg-gradient-to-br from-emerald-500 to-cyan-500 flex items-center justify-center text-white shadow-lg shadow-emerald-500/30">
                         G
                     </div>
                     <span class="bg-gradient-to-r from-emerald-400 to-cyan-400 bg-clip-text text-transparent">GigaSieve</span>
                 </a>
-                <nav class="flex gap-1 md:gap-4 text-sm font-semibold text-slate-400">
-                    <a href="/app" class="px-4 py-2 rounded-full hover:bg-slate-800 transition-all hover:text-emerald-400">App</a>
-                    <a href="/recipes" class="hidden md:block px-4 py-2 rounded-full hover:bg-slate-800 transition-all hover:text-emerald-400">Recipes</a>
-                    <a href="/guides" class="hidden md:block px-4 py-2 rounded-full hover:bg-slate-800 transition-all hover:text-emerald-400">Guides</a>
-                    <a href="/privacy" class="hidden md:block px-4 py-2 rounded-full hover:bg-slate-800 transition-all hover:text-emerald-400">Privacy</a>
+                <nav class="flex items-center gap-1 md:gap-4 text-sm font-semibold text-slate-400">
+                    <a href={buildLangPath('/app', lang)} class="px-4 py-2 rounded-full hover:bg-slate-800 transition-all hover:text-emerald-400">{t('nav.app')}</a>
+                    <a href={buildLangPath('/recipes', lang)} class="hidden md:block px-4 py-2 rounded-full hover:bg-slate-800 transition-all hover:text-emerald-400">{t('nav.recipes')}</a>
+                    <a href={buildLangPath('/guides', lang)} class="hidden md:block px-4 py-2 rounded-full hover:bg-slate-800 transition-all hover:text-emerald-400">{t('nav.guides')}</a>
+                    <a href={buildLangPath('/privacy', lang)} class="hidden md:block px-4 py-2 rounded-full hover:bg-slate-800 transition-all hover:text-emerald-400">{t('nav.privacy')}</a>
+                    <div class="relative hidden sm:block">
+                        <button class="px-3 py-2 rounded-full bg-slate-800 text-slate-300 text-xs font-semibold">
+                            {languages[lang]}
+                        </button>
+                        <div class="absolute right-0 mt-2 w-28 rounded-xl bg-slate-900 border border-slate-800 shadow-lg overflow-hidden">
+                            {supportedLangs.map((l) => (
+                                <a
+                                    href={buildLangPath(cleanPath, l)}
+                                    data-lang-switch={l}
+                                    class={`block px-3 py-2 text-xs hover:bg-slate-800 ${l === lang ? 'text-emerald-300' : 'text-slate-300'}`}
+                                >
+                                    {languages[l]}
+                                </a>
+                            ))}
+                        </div>
+                    </div>
                 </nav>
             </div>
         </header>
@@ -68,17 +108,33 @@ const hasGoogleSiteVerification = !!googleSiteVerification;
         <footer class="border-t border-slate-800 bg-slate-900/50 py-12 mt-20">
             <div class="container mx-auto px-4 text-center">
                 <div class="flex justify-center gap-8 mb-8 text-sm font-medium text-slate-500">
-                    <a href="/about" class="hover:text-emerald-400 transition-colors">About</a>
-                    <a href="/contact" class="hover:text-emerald-400 transition-colors">Contact</a>
-                    <a href="/privacy" class="hover:text-emerald-400 transition-colors">Privacy</a>
-                    <a href="/terms" class="hover:text-emerald-400 transition-colors">Terms</a>
-                    <a href="/guides" class="hover:text-emerald-400 transition-colors">Guides</a>
-                    <a href="/recipes" class="hover:text-emerald-400 transition-colors">Recipes</a>
+                    <a href={buildLangPath('/about', lang)} class="hover:text-emerald-400 transition-colors">{t('footer.about')}</a>
+                    <a href={buildLangPath('/contact', lang)} class="hover:text-emerald-400 transition-colors">{t('footer.contact')}</a>
+                    <a href={buildLangPath('/privacy', lang)} class="hover:text-emerald-400 transition-colors">{t('footer.privacy')}</a>
+                    <a href={buildLangPath('/terms', lang)} class="hover:text-emerald-400 transition-colors">{t('footer.terms')}</a>
+                    <a href={buildLangPath('/guides', lang)} class="hover:text-emerald-400 transition-colors">{t('footer.guides')}</a>
+                    <a href={buildLangPath('/recipes', lang)} class="hover:text-emerald-400 transition-colors">{t('footer.recipes')}</a>
                 </div>
-                <p class="text-slate-600 text-sm">(c) {new Date().getFullYear()} GigaSieve. All files processed locally.</p>
+                <p class="text-slate-600 text-sm">{t('footer.copyright').replace('{year}', String(new Date().getFullYear()))}</p>
 
-                <p class="text-slate-700 text-xs mt-2">No upload. No tracking. Your data stays on your device.</p>
+                <p class="text-slate-700 text-xs mt-2">{t('footer.note')}</p>
             </div>
         </footer>
+        <script is:inline define:vars={{ supportedLangs, defaultLang }}>
+            const preferred = localStorage.getItem('preferred_lang');
+            const browserLang = (navigator.languages && navigator.languages.length ? navigator.languages[0] : navigator.language) || '';
+            const detected = (preferred || browserLang || '').slice(0, 2);
+            const path = window.location.pathname;
+            const hasLangPrefix = supportedLangs.some((l) => path.startsWith(`/${l}/`) || path === `/${l}`);
+            if (path === '/' && !hasLangPrefix && detected && detected !== defaultLang && supportedLangs.includes(detected)) {
+                window.location.replace(`/${detected}/`);
+            }
+            document.querySelectorAll('[data-lang-switch]').forEach((el) => {
+                el.addEventListener('click', () => {
+                    const lang = el.getAttribute('data-lang-switch');
+                    if (lang) localStorage.setItem('preferred_lang', lang);
+                });
+            });
+        </script>
     </body>
 </html>

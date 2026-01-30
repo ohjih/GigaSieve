@@ -1,0 +1,98 @@
+---
+import Layout from '../../../layouts/Layout.astro';
+import { ui, defaultLang } from '../../../i18n/ui';
+import { buildLangPath } from '../../../i18n/utils';
+
+export async function getStaticPaths() {
+    return Object.keys(ui).map((lang) => ({ params: { lang } }));
+}
+
+const { lang } = Astro.params;
+if (lang === defaultLang) {
+    return Astro.redirect('/recipes', 301);
+}
+
+const copy = {
+    en: {
+        title: 'Recipes - GigaSieve',
+        h1: 'Recipes',
+        desc: 'One-click analysis templates for logs, CSV, and JSONL.',
+        sections: [
+            { title: 'Logs', desc: 'nginx, Cloudflare, generic log parsing', href: '/recipes/logs' },
+            { title: 'CSV', desc: 'Preview, filter, and top values', href: '/recipes/csv' },
+            { title: 'JSONL', desc: 'Extract keys, errors, and top values', href: '/recipes/jsonl' },
+        ],
+        note: 'Need a walkthrough? See Guides.',
+        noteLink: 'See Guides',
+    },
+    ko: {
+        title: '레시피 - GigaSieve',
+        h1: '레시피',
+        desc: '로그/CSV/JSONL 원클릭 분석 템플릿.',
+        sections: [
+            { title: '로그', desc: 'nginx, Cloudflare, 일반 로그 파싱', href: '/recipes/logs' },
+            { title: 'CSV', desc: '미리보기, 필터, 상위값', href: '/recipes/csv' },
+            { title: 'JSONL', desc: '키 추출, 오류, 상위값', href: '/recipes/jsonl' },
+        ],
+        note: '자세한 설명이 필요하면 가이드를 확인하세요.',
+        noteLink: '가이드 보기',
+    },
+    es: {
+        title: 'Recetas - GigaSieve',
+        h1: 'Recetas',
+        desc: 'Plantillas de análisis en un clic para logs, CSV y JSONL.',
+        sections: [
+            { title: 'Logs', desc: 'nginx, Cloudflare y logs genéricos', href: '/recipes/logs' },
+            { title: 'CSV', desc: 'Vista previa, filtros y top valores', href: '/recipes/csv' },
+            { title: 'JSONL', desc: 'Extraer claves, errores y top valores', href: '/recipes/jsonl' },
+        ],
+        note: '¿Necesitas una guía? Mira Guías.',
+        noteLink: 'Ver Guías',
+    },
+    ja: {
+        title: 'レシピ - GigaSieve',
+        h1: 'レシピ',
+        desc: 'ログ/CSV/JSONLのワンクリック解析テンプレート。',
+        sections: [
+            { title: 'ログ', desc: 'nginx, Cloudflare, 汎用ログ', href: '/recipes/logs' },
+            { title: 'CSV', desc: 'プレビュー、フィルタ、Top値', href: '/recipes/csv' },
+            { title: 'JSONL', desc: 'キー抽出、エラー、Top値', href: '/recipes/jsonl' },
+        ],
+        note: '詳しい説明はガイドへ。',
+        noteLink: 'ガイドを見る',
+    },
+    zh: {
+        title: '配方 - GigaSieve',
+        h1: '配方',
+        desc: '日志/CSV/JSONL 的一键分析模板。',
+        sections: [
+            { title: '日志', desc: 'nginx、Cloudflare 与通用日志', href: '/recipes/logs' },
+            { title: 'CSV', desc: '预览、筛选与Top值', href: '/recipes/csv' },
+            { title: 'JSONL', desc: '提取键、错误与Top值', href: '/recipes/jsonl' },
+        ],
+        note: '需要详细讲解？请看指南。',
+        noteLink: '查看指南',
+    },
+};
+
+const c = copy[lang as keyof typeof copy] ?? copy.en;
+---
+
+<Layout title={c.title} description={c.desc}>
+    <section class="container mx-auto px-4 py-12">
+        <h1 class="text-4xl font-extrabold text-slate-200 mb-4">{c.h1}</h1>
+        <p class="text-slate-500 mb-4 max-w-2xl">{c.desc}</p>
+        <div class="grid md:grid-cols-3 gap-6 max-w-5xl">
+            {c.sections.map((s) => (
+                <a href={buildLangPath(s.href, lang)} class="group bg-slate-900 hover:bg-slate-800 rounded-xl p-6 border border-slate-800 transition-all">
+                    <h3 class="font-bold text-lg text-slate-300 group-hover:text-emerald-400 mb-2">{s.title}</h3>
+                    <p class="text-sm text-slate-600">{s.desc}</p>
+                </a>
+            ))}
+        </div>
+
+        <p class="text-slate-600 text-sm text-center mt-12">
+            {c.note} <a href={buildLangPath('/guides', lang)} class="text-cyan-400 hover:underline">{c.noteLink}</a>.
+        </p>
+    </section>
+</Layout>

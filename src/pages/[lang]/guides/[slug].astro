@@ -1,0 +1,1217 @@
+﻿
+---
+import Layout from '../../../layouts/Layout.astro';
+import { ui, defaultLang } from '../../../i18n/ui';
+import { buildLangPath } from '../../../i18n/utils';
+
+export async function getStaticPaths() {
+    const guideSlugs = [
+        'open-1gb-csv-in-browser',
+        'analyze-nginx-access-log',
+        'regex-extract-from-log',
+        'why-csv-is-slow',
+        'json-vs-jsonl',
+        'remove-pii-from-logs',
+    ];
+    return Object.keys(ui).flatMap((lang) =>
+        guideSlugs.map((slug) => ({ params: { lang, slug } }))
+    );
+}
+
+const { lang, slug } = Astro.params;
+const langKey = (lang in ui ? lang : defaultLang) as keyof typeof ui;
+const slugKey = String(slug);
+
+if (lang === defaultLang) {
+    return Astro.redirect(`/guides/${slugKey}`, 301);
+}
+
+const labels = {
+    en: {
+        guides: 'Guides',
+        relatedRecipes: 'Related Recipes',
+        relatedGuides: 'Related Guides',
+        cta: 'Try GigaSieve Now ->',
+    },
+    ko: {
+        guides: '가이드',
+        relatedRecipes: '관련 레시피',
+        relatedGuides: '관련 가이드',
+        cta: '지금 GigaSieve 사용하기 ->',
+    },
+    es: {
+        guides: 'Guías',
+        relatedRecipes: 'Recetas relacionadas',
+        relatedGuides: 'Guías relacionadas',
+        cta: 'Probar GigaSieve ahora ->',
+    },
+    ja: {
+        guides: 'ガイド',
+        relatedRecipes: '関連レシピ',
+        relatedGuides: '関連ガイド',
+        cta: '今すぐGigaSieveを試す ->',
+    },
+    zh: {
+        guides: '指南',
+        relatedRecipes: '相关食谱',
+        relatedGuides: '相关指南',
+        cta: '立即试用 GigaSieve ->',
+    },
+} as const;
+
+const guides = {
+    'open-1gb-csv-in-browser': {
+        en: {
+            title: 'How to Open 1GB CSV in Browser',
+            description: 'Excel crashed? Here is how to preview and filter massive CSVs without installing software.',
+            intro: 'Excel crashed trying to open a huge CSV? You do not need to install any software. GigaSieve can stream-open files of any size directly in your browser.',
+            callout: {
+                tone: 'emerald',
+                title: 'Why this is safe',
+                body: 'GigaSieve reads your file directly from disk using the browser File API. The file never leaves your computer.',
+            },
+            sections: [
+                {
+                    title: 'The Problem',
+                    body: 'Excel has a hard limit of about 1 million rows. Google Sheets is limited by total cells. Large CSVs often crash or freeze desktop tools.',
+                },
+                {
+                    title: 'The Solution: Streaming',
+                    body: 'GigaSieve reads files in small chunks instead of loading everything into memory. This lets you preview, search, and analyze 1GB to 10GB files safely.',
+                },
+                {
+                    title: 'Step-by-Step',
+                    steps: [
+                        { title: 'Open GigaSieve', desc: 'Go to /app and keep the page open.' },
+                        { title: 'Drop your CSV file', desc: 'Drag and drop the file, or click to browse.' },
+                        { title: 'Wait for scanning', desc: 'You can start exploring while the scan continues.' },
+                        { title: 'Explore and filter', desc: 'Use the filter box to search and narrow results.' },
+                    ],
+                },
+                {
+                    title: 'Performance Tips',
+                    list: [
+                        'Close other tabs to free memory.',
+                        'Chrome or Edge performs best for huge CSVs.',
+                        'If the file has many columns, filter by simple text first.',
+                    ],
+                },
+                {
+                    title: 'FAQ',
+                    faq: [
+                        { q: 'Will this work offline?', a: 'Yes. After the page loads, processing is 100% local.' },
+                        { q: 'Is my data uploaded?', a: 'No. The file never leaves your device.' },
+                        { q: 'Can I edit the CSV?', a: 'GigaSieve is read-only. It focuses on analysis.' },
+                    ],
+                },
+            ],
+            relatedRecipes: [
+                { href: '/recipes/csv/top-values', title: 'Column Top Values', desc: 'Group-by in browser' },
+                { href: '/recipes/csv/filter-rows', title: 'Filter Rows', desc: 'Contains / matches' },
+            ],
+            relatedGuides: [
+                { href: '/guides/why-csv-is-slow', title: 'Why CSV is Slow', desc: 'And how to speed up' },
+                { href: '/guides/json-vs-jsonl', title: 'JSON vs JSONL', desc: 'For large datasets' },
+            ],
+        },
+        ko: {
+            title: '브라우저에서 1GB CSV 여는 방법',
+            description: '엑셀이 멈췄나요? 설치 없이 대용량 CSV를 미리보기/필터링하는 방법.',
+            intro: '엑셀이 1GB CSV를 열다가 멈췄나요? 별도 설치 없이 브라우저에서 스트리밍으로 바로 열 수 있습니다.',
+            callout: {
+                tone: 'emerald',
+                title: '안전한 이유',
+                body: 'GigaSieve는 브라우저 File API로 로컬 파일을 직접 읽습니다. 업로드 없이 내 기기에서만 처리됩니다.',
+            },
+            sections: [
+                {
+                    title: '문제',
+                    body: 'Excel은 약 100만 행 제한이 있습니다. Google Sheets는 셀 수 제한이 있어 큰 CSV는 종종 멈추거나 일부만 열립니다.',
+                },
+                {
+                    title: '해결: 스트리밍',
+                    body: 'GigaSieve는 파일 전체를 메모리에 올리지 않고 작은 청크로 읽습니다. 1GB~10GB도 안전하게 미리보기와 검색이 가능합니다.',
+                },
+                {
+                    title: '단계별',
+                    steps: [
+                        { title: 'GigaSieve 열기', desc: '/app 페이지로 이동합니다.' },
+                        { title: 'CSV 파일 드롭', desc: '드래그 앤 드롭하거나 파일을 선택합니다.' },
+                        { title: '스캔 대기', desc: '스캔 중에도 일부 결과를 바로 볼 수 있습니다.' },
+                        { title: '탐색/필터', desc: '필터 박스로 검색하고 결과를 좁힙니다.' },
+                    ],
+                },
+                {
+                    title: '성능 팁',
+                    list: [
+                        '다른 탭을 닫아 메모리를 확보하세요.',
+                        'Chrome/Edge가 대용량 CSV에 가장 빠릅니다.',
+                        '열이 많으면 먼저 간단 텍스트로 필터링하세요.',
+                    ],
+                },
+                {
+                    title: 'FAQ',
+                    faq: [
+                        { q: '오프라인에서도 되나요?', a: '페이지가 로드된 후에는 로컬에서만 처리됩니다.' },
+                        { q: '데이터가 업로드되나요?', a: '아니요. 파일은 기기 밖으로 나가지 않습니다.' },
+                        { q: 'CSV를 편집할 수 있나요?', a: 'GigaSieve는 분석 전용입니다. 편집 기능은 없습니다.' },
+                    ],
+                },
+            ],
+            relatedRecipes: [
+                { href: '/recipes/csv/top-values', title: '컬럼 상위 값', desc: '브라우저에서 그룹 집계' },
+                { href: '/recipes/csv/filter-rows', title: '행 필터', desc: '포함/매칭 조건' },
+            ],
+            relatedGuides: [
+                { href: '/guides/why-csv-is-slow', title: 'CSV가 느린 이유', desc: '속도 올리는 방법' },
+                { href: '/guides/json-vs-jsonl', title: 'JSON vs JSONL', desc: '대용량 데이터 기준' },
+            ],
+        },
+        es: {
+            title: 'Cómo abrir un CSV de 1GB en el navegador',
+            description: '¿Excel se bloqueó? Así puedes previsualizar y filtrar un CSV enorme sin instalar software.',
+            intro: '¿Excel se bloqueó al abrir un CSV enorme? No necesitas instalar nada. GigaSieve abre archivos gigantes por streaming en tu navegador.',
+            callout: {
+                tone: 'emerald',
+                title: 'Por qué es seguro',
+                body: 'GigaSieve lee el archivo directamente desde el disco con la API de archivos del navegador. El archivo nunca sale de tu equipo.',
+            },
+            sections: [
+                {
+                    title: 'El problema',
+                    body: 'Excel tiene un límite de ~1 millón de filas. Google Sheets se limita por celdas. Los CSV grandes suelen colgarse o truncarse.',
+                },
+                {
+                    title: 'La solución: streaming',
+                    body: 'GigaSieve lee el archivo en pequeños bloques, sin cargarlo completo en memoria. Puedes explorar 1GB–10GB con seguridad.',
+                },
+                {
+                    title: 'Paso a paso',
+                    steps: [
+                        { title: 'Abrir GigaSieve', desc: 'Ve a /app y deja la pestaña abierta.' },
+                        { title: 'Soltar el CSV', desc: 'Arrastra el archivo o selecciónalo.' },
+                        { title: 'Esperar el escaneo', desc: 'Puedes explorar mientras continúa el escaneo.' },
+                        { title: 'Explorar y filtrar', desc: 'Usa el filtro para acotar resultados.' },
+                    ],
+                },
+                {
+                    title: 'Consejos de rendimiento',
+                    list: [
+                        'Cierra otras pestañas para liberar memoria.',
+                        'Chrome o Edge rinden mejor con CSV grandes.',
+                        'Si hay muchas columnas, filtra primero por texto simple.',
+                    ],
+                },
+                {
+                    title: 'Preguntas frecuentes',
+                    faq: [
+                        { q: '¿Funciona sin conexión?', a: 'Sí. Una vez cargada la página, todo es local.' },
+                        { q: '¿Se suben mis datos?', a: 'No. El archivo no sale de tu dispositivo.' },
+                        { q: '¿Puedo editar el CSV?', a: 'GigaSieve es solo para análisis, no edición.' },
+                    ],
+                },
+            ],
+            relatedRecipes: [
+                { href: '/recipes/csv/top-values', title: 'Valores principales por columna', desc: 'Agrupar en el navegador' },
+                { href: '/recipes/csv/filter-rows', title: 'Filtrar filas', desc: 'Contiene / coincide' },
+            ],
+            relatedGuides: [
+                { href: '/guides/why-csv-is-slow', title: 'Por qué CSV es lento', desc: 'Cómo acelerarlo' },
+                { href: '/guides/json-vs-jsonl', title: 'JSON vs JSONL', desc: 'Para datos grandes' },
+            ],
+        },
+        ja: {
+            title: 'ブラウザで1GBのCSVを開く方法',
+            description: 'Excelが落ちた？インストールなしで巨大CSVをプレビュー/フィルタする方法。',
+            intro: 'Excelで大きなCSVを開いてクラッシュしましたか？GigaSieveならインストール不要でブラウザ上でストリーミング表示できます。',
+            callout: {
+                tone: 'emerald',
+                title: '安全な理由',
+                body: 'GigaSieveはブラウザのFile APIでローカルから直接読み取ります。ファイルは外部に出ません。',
+            },
+            sections: [
+                {
+                    title: '問題点',
+                    body: 'Excelは約100万行の制限があります。Google Sheetsもセル数制限があり、大きなCSVはフリーズしがちです。',
+                },
+                {
+                    title: '解決策: ストリーミング',
+                    body: 'GigaSieveはファイル全体を読み込まず、小さなチャンクで読みます。1GB〜10GBも安全に扱えます。',
+                },
+                {
+                    title: '手順',
+                    steps: [
+                        { title: 'GigaSieveを開く', desc: '/appにアクセスします。' },
+                        { title: 'CSVをドロップ', desc: 'ドラッグ&ドロップ、または選択します。' },
+                        { title: 'スキャンを待つ', desc: 'スキャン中でも一部はすぐ表示されます。' },
+                        { title: '探索とフィルタ', desc: 'フィルタで検索して絞り込みます。' },
+                    ],
+                },
+                {
+                    title: 'パフォーマンスのコツ',
+                    list: [
+                        '他のタブを閉じてメモリを確保。',
+                        'Chrome/Edgeが最も高速です。',
+                        '列が多い場合は簡単な文字で先にフィルタ。',
+                    ],
+                },
+                {
+                    title: 'FAQ',
+                    faq: [
+                        { q: 'オフラインでも使えますか？', a: 'ページ読み込み後はローカル処理のみです。' },
+                        { q: 'データはアップロードされますか？', a: 'いいえ。ファイルは端末外に出ません。' },
+                        { q: 'CSVを編集できますか？', a: 'GigaSieveは分析専用で編集はできません。' },
+                    ],
+                },
+            ],
+            relatedRecipes: [
+                { href: '/recipes/csv/top-values', title: '列のトップ値', desc: 'ブラウザで集計' },
+                { href: '/recipes/csv/filter-rows', title: '行フィルタ', desc: '含む/一致' },
+            ],
+            relatedGuides: [
+                { href: '/guides/why-csv-is-slow', title: 'CSVが遅い理由', desc: '高速化の方法' },
+                { href: '/guides/json-vs-jsonl', title: 'JSONとJSONLの違い', desc: '大規模データ向け' },
+            ],
+        },
+        zh: {
+            title: '如何在浏览器打开 1GB CSV',
+            description: 'Excel 崩溃了？无需安装软件即可预览和过滤超大 CSV。',
+            intro: '用 Excel 打开超大 CSV 容易崩溃。GigaSieve 通过流式读取，在浏览器里直接打开。',
+            callout: {
+                tone: 'emerald',
+                title: '为什么安全',
+                body: 'GigaSieve 使用浏览器 File API 直接读取本地文件，文件不会上传。',
+            },
+            sections: [
+                {
+                    title: '问题',
+                    body: 'Excel 约有 100 万行限制，Google Sheets 也受单元格数量限制，大 CSV 容易卡死或被截断。',
+                },
+                {
+                    title: '解决方案：流式读取',
+                    body: 'GigaSieve 不会一次性读完整文件，而是分块读取。可安全处理 1GB–10GB。',
+                },
+                {
+                    title: '步骤',
+                    steps: [
+                        { title: '打开 GigaSieve', desc: '访问 /app 页面。' },
+                        { title: '拖入 CSV', desc: '拖拽文件或点击选择。' },
+                        { title: '等待扫描', desc: '扫描中也可立即查看部分结果。' },
+                        { title: '浏览与过滤', desc: '用过滤框搜索并缩小范围。' },
+                    ],
+                },
+                {
+                    title: '性能建议',
+                    list: [
+                        '关闭其他标签以释放内存。',
+                        'Chrome/Edge 对大 CSV 更快。',
+                        '列很多时先用简单文本过滤。',
+                    ],
+                },
+                {
+                    title: '常见问题',
+                    faq: [
+                        { q: '离线能用吗？', a: '页面加载后即可离线，本地处理。' },
+                        { q: '数据会上传吗？', a: '不会，文件不会离开你的设备。' },
+                        { q: '能编辑 CSV 吗？', a: 'GigaSieve 仅用于分析，不提供编辑。' },
+                    ],
+                },
+            ],
+            relatedRecipes: [
+                { href: '/recipes/csv/top-values', title: '列值 Top 排名', desc: '浏览器内分组统计' },
+                { href: '/recipes/csv/filter-rows', title: '过滤行', desc: '包含/匹配' },
+            ],
+            relatedGuides: [
+                { href: '/guides/why-csv-is-slow', title: 'CSV 为什么慢', desc: '以及如何加速' },
+                { href: '/guides/json-vs-jsonl', title: 'JSON vs JSONL', desc: '大数据场景' },
+            ],
+        },
+    },
+    'analyze-nginx-access-log': {
+        en: {
+            title: 'How to Analyze nginx Access Log',
+            description: 'Step-by-step guide to analyzing nginx access logs for 5xx errors, top IPs, and slow requests.',
+            intro: 'Your nginx access log contains traffic, errors, and performance data. Here is a quick way to extract insights without installing tools.',
+            sections: [
+                {
+                    title: 'Step 1: Get your log file',
+                    body: 'nginx access logs are typically at /var/log/nginx/access.log. Download a copy to your machine.',
+                },
+                {
+                    title: 'Step 2: Open in GigaSieve',
+                    body: 'Drag the file into /app. Streaming parsing starts immediately.',
+                },
+                {
+                    title: 'Step 3: Find 5xx errors',
+                    body: 'Filter by 502 or 504. The Insights panel shows error distribution.',
+                },
+                {
+                    title: 'Step 4: Identify top IPs',
+                    body: 'If many 4xx errors come from a few IPs, they may be bots or attackers.',
+                },
+            ],
+            relatedRecipes: [
+                { href: '/recipes/logs/nginx-status-codes', title: 'nginx Status Codes Recipe', desc: 'Find 5xx errors quickly' },
+                { href: '/recipes/logs/top-ips', title: 'Top IPs Recipe', desc: 'Most active visitors' },
+            ],
+            relatedGuides: [
+                { href: '/guides/open-1gb-csv-in-browser', title: 'Open 1GB CSV', desc: 'When Excel crashes' },
+                { href: '/guides/regex-extract-from-log', title: 'Regex Extract', desc: 'Pull patterns from logs' },
+            ],
+        },
+        ko: {
+            title: 'nginx 액세스 로그 분석 방법',
+            description: '5xx 오류, 상위 IP, 느린 요청을 빠르게 찾는 nginx 로그 분석 가이드.',
+            intro: 'nginx 액세스 로그에는 트래픽, 오류, 성능 정보가 담겨 있습니다. 설치 없이 빠르게 인사이트를 얻는 방법입니다.',
+            sections: [
+                {
+                    title: '1단계: 로그 파일 확보',
+                    body: 'nginx 로그는 보통 /var/log/nginx/access.log에 있습니다. 파일을 로컬로 다운로드하세요.',
+                },
+                {
+                    title: '2단계: GigaSieve에서 열기',
+                    body: '/app에 파일을 드롭하면 스트리밍 파싱이 즉시 시작됩니다.',
+                },
+                {
+                    title: '3단계: 5xx 오류 찾기',
+                    body: '502, 504로 필터링하면 오류 분포를 빠르게 볼 수 있습니다.',
+                },
+                {
+                    title: '4단계: 상위 IP 확인',
+                    body: '특정 IP에서 4xx가 많다면 봇/공격 가능성이 있습니다.',
+                },
+            ],
+            relatedRecipes: [
+                { href: '/recipes/logs/nginx-status-codes', title: 'nginx 상태코드 레시피', desc: '5xx 오류 빠르게 찾기' },
+                { href: '/recipes/logs/top-ips', title: '상위 IP 레시피', desc: '가장 많이 요청한 IP' },
+            ],
+            relatedGuides: [
+                { href: '/guides/open-1gb-csv-in-browser', title: '1GB CSV 열기', desc: '엑셀이 멈출 때' },
+                { href: '/guides/regex-extract-from-log', title: '정규식 추출', desc: '로그에서 패턴 추출' },
+            ],
+        },
+        es: {
+            title: 'Cómo analizar el access log de nginx',
+            description: 'Guía paso a paso para ver errores 5xx, IPs principales y solicitudes lentas.',
+            intro: 'El access log de nginx contiene datos de tráfico, errores y rendimiento. Aquí tienes una forma rápida de extraer insights.',
+            sections: [
+                { title: 'Paso 1: Obtener el archivo', body: 'Normalmente está en /var/log/nginx/access.log. Descárgalo localmente.' },
+                { title: 'Paso 2: Abrir en GigaSieve', body: 'Arrástralo a /app. El streaming empieza al instante.' },
+                { title: 'Paso 3: Encontrar 5xx', body: 'Filtra por 502 o 504 para ver la distribución de errores.' },
+                { title: 'Paso 4: IPs principales', body: 'Muchas 4xx desde pocas IPs suelen indicar bots.' },
+            ],
+            relatedRecipes: [
+                { href: '/recipes/logs/nginx-status-codes', title: 'Receta de códigos nginx', desc: 'Detecta errores 5xx' },
+                { href: '/recipes/logs/top-ips', title: 'Top IPs', desc: 'Visitantes más activos' },
+            ],
+            relatedGuides: [
+                { href: '/guides/open-1gb-csv-in-browser', title: 'Abrir CSV de 1GB', desc: 'Cuando Excel se cae' },
+                { href: '/guides/regex-extract-from-log', title: 'Extracción con regex', desc: 'Sacar patrones del log' },
+            ],
+        },
+        ja: {
+            title: 'nginx アクセスログの分析方法',
+            description: '5xxエラー、上位IP、遅いリクエストを確認する手順。',
+            intro: 'nginxアクセスログにはトラフィックやエラー情報が含まれます。ツールなしで簡単に分析できます。',
+            sections: [
+                { title: '手順1: ログ取得', body: '通常 /var/log/nginx/access.log にあります。ローカルに保存します。' },
+                { title: '手順2: GigaSieveで開く', body: '/appにドラッグすると即座に解析が始まります。' },
+                { title: '手順3: 5xxを探す', body: '502/504でフィルタし、エラー分布を確認します。' },
+                { title: '手順4: 上位IP確認', body: '特定IPから4xxが多い場合はボットの可能性。' },
+            ],
+            relatedRecipes: [
+                { href: '/recipes/logs/nginx-status-codes', title: 'nginxステータスコード', desc: '5xxを素早く検出' },
+                { href: '/recipes/logs/top-ips', title: '上位IP', desc: '最も多い訪問元' },
+            ],
+            relatedGuides: [
+                { href: '/guides/open-1gb-csv-in-browser', title: '1GB CSVを開く', desc: 'Excelが落ちる時' },
+                { href: '/guides/regex-extract-from-log', title: '正規表現抽出', desc: 'ログから抽出' },
+            ],
+        },
+        zh: {
+            title: '如何分析 nginx 访问日志',
+            description: '查看 5xx 错误、Top IP、慢请求的分步指南。',
+            intro: 'nginx access log 包含流量、错误和性能数据。无需安装工具即可快速分析。',
+            sections: [
+                { title: '步骤1：获取日志', body: '通常在 /var/log/nginx/access.log，下载到本地。' },
+                { title: '步骤2：在 GigaSieve 打开', body: '拖入 /app，立即开始流式解析。' },
+                { title: '步骤3：查找 5xx', body: '用 502/504 过滤，查看错误分布。' },
+                { title: '步骤4：查看 Top IP', body: '少数 IP 的大量 4xx 可能是机器人。' },
+            ],
+            relatedRecipes: [
+                { href: '/recipes/logs/nginx-status-codes', title: 'nginx 状态码', desc: '快速发现 5xx' },
+                { href: '/recipes/logs/top-ips', title: 'Top IP', desc: '最活跃访客' },
+            ],
+            relatedGuides: [
+                { href: '/guides/open-1gb-csv-in-browser', title: '打开 1GB CSV', desc: 'Excel 崩溃时' },
+                { href: '/guides/regex-extract-from-log', title: '正则提取', desc: '从日志提取模式' },
+            ],
+        },
+    },
+    'regex-extract-from-log': {
+        en: {
+            title: 'Regex Extract from Huge Log File',
+            description: 'Pull specific fields from logs using regex patterns without writing scripts.',
+            intro: 'Need to pull specific patterns from massive log files? Here is how to do it in your browser without writing scripts.',
+            sections: [
+                {
+                    title: 'Common patterns',
+                    list: [
+                        '\\d{1,3}\\.\\d{1,3}\\.\\d{1,3}\\.\\d{1,3} - IP addresses',
+                        '[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\\.[A-Z|a-z]{2,} - Emails',
+                        '\\d{4}-\\d{2}-\\d{2} - Dates (YYYY-MM-DD)',
+                    ],
+                    mono: true,
+                    boxed: true,
+                },
+                {
+                    title: 'How to use in GigaSieve',
+                    body: 'The current filter box supports simple text matching. Regex support is coming in V2. For now, use keywords or status codes.',
+                },
+            ],
+            relatedRecipes: [
+                { href: '/recipes/logs/cloudflare-ray-id', title: 'Cloudflare Ray-ID', desc: 'Trace requests by ID' },
+                { href: '/recipes/jsonl/extract-keys', title: 'JSONL Extract Keys', desc: 'Pull keys from JSONL' },
+            ],
+            relatedGuides: [
+                { href: '/guides/analyze-nginx-access-log', title: 'Analyze nginx Logs', desc: 'Step-by-step analysis' },
+                { href: '/guides/remove-pii-from-logs', title: 'Remove PII', desc: 'Mask sensitive data' },
+            ],
+        },
+        ko: {
+            title: '대용량 로그에서 정규식 추출',
+            description: '스크립트 없이 로그에서 원하는 패턴을 정규식으로 추출하는 방법.',
+            intro: '대용량 로그에서 특정 패턴만 뽑고 싶나요? 브라우저에서 간단히 처리하는 방법입니다.',
+            sections: [
+                {
+                    title: '자주 쓰는 패턴',
+                    list: [
+                        '\\d{1,3}\\.\\d{1,3}\\.\\d{1,3}\\.\\d{1,3} - IP 주소',
+                        '[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\\.[A-Z|a-z]{2,} - 이메일',
+                        '\\d{4}-\\d{2}-\\d{2} - 날짜(YYYY-MM-DD)',
+                    ],
+                    mono: true,
+                    boxed: true,
+                },
+                {
+                    title: 'GigaSieve에서 사용하는 법',
+                    body: '현재 필터는 텍스트 매칭만 지원합니다. 정규식은 V2에서 제공될 예정이며, 지금은 키워드/상태코드로 필터링하세요.',
+                },
+            ],
+            relatedRecipes: [
+                { href: '/recipes/logs/cloudflare-ray-id', title: 'Cloudflare Ray-ID', desc: '요청 추적' },
+                { href: '/recipes/jsonl/extract-keys', title: 'JSONL 키 추출', desc: '키 목록 보기' },
+            ],
+            relatedGuides: [
+                { href: '/guides/analyze-nginx-access-log', title: 'nginx 로그 분석', desc: '단계별 가이드' },
+                { href: '/guides/remove-pii-from-logs', title: 'PII 제거', desc: '민감 정보 보호' },
+            ],
+        },
+        es: {
+            title: 'Extracción con regex en logs grandes',
+            description: 'Extrae patrones específicos de logs con regex sin escribir scripts.',
+            intro: '¿Quieres extraer patrones de logs masivos? Puedes hacerlo en el navegador sin scripts.',
+            sections: [
+                {
+                    title: 'Patrones comunes',
+                    list: [
+                        '\\d{1,3}\\.\\d{1,3}\\.\\d{1,3}\\.\\d{1,3} - IPs',
+                        '[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\\.[A-Z|a-z]{2,} - Emails',
+                        '\\d{4}-\\d{2}-\\d{2} - Fechas (YYYY-MM-DD)',
+                    ],
+                    mono: true,
+                    boxed: true,
+                },
+                {
+                    title: 'Cómo usarlo en GigaSieve',
+                    body: 'El filtro actual solo admite coincidencias de texto. Regex llegará en V2. Por ahora usa palabras clave o códigos.',
+                },
+            ],
+            relatedRecipes: [
+                { href: '/recipes/logs/cloudflare-ray-id', title: 'Cloudflare Ray-ID', desc: 'Rastrear solicitudes' },
+                { href: '/recipes/jsonl/extract-keys', title: 'Extraer claves JSONL', desc: 'Ver claves' },
+            ],
+            relatedGuides: [
+                { href: '/guides/analyze-nginx-access-log', title: 'Analizar nginx', desc: 'Guía paso a paso' },
+                { href: '/guides/remove-pii-from-logs', title: 'Eliminar PII', desc: 'Proteger datos' },
+            ],
+        },
+        ja: {
+            title: '巨大ログから正規表現で抽出',
+            description: 'スクリプトなしでログから特定パターンを抽出。',
+            intro: '巨大なログから特定パターンを抽出したいですか？ブラウザで簡単にできます。',
+            sections: [
+                {
+                    title: 'よく使うパターン',
+                    list: [
+                        '\\d{1,3}\\.\\d{1,3}\\.\\d{1,3}\\.\\d{1,3} - IPアドレス',
+                        '[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\\.[A-Z|a-z]{2,} - メール',
+                        '\\d{4}-\\d{2}-\\d{2} - 日付(YYYY-MM-DD)',
+                    ],
+                    mono: true,
+                    boxed: true,
+                },
+                {
+                    title: 'GigaSieveでの使い方',
+                    body: '現在のフィルタはテキスト一致のみ対応。正規表現はV2で提供予定です。',
+                },
+            ],
+            relatedRecipes: [
+                { href: '/recipes/logs/cloudflare-ray-id', title: 'Cloudflare Ray-ID', desc: 'リクエスト追跡' },
+                { href: '/recipes/jsonl/extract-keys', title: 'JSONLキー抽出', desc: 'キーを見る' },
+            ],
+            relatedGuides: [
+                { href: '/guides/analyze-nginx-access-log', title: 'nginxログ分析', desc: '手順ガイド' },
+                { href: '/guides/remove-pii-from-logs', title: 'PII削除', desc: '機密情報保護' },
+            ],
+        },
+        zh: {
+            title: '从大日志中正则提取',
+            description: '无需脚本，用正则从日志中提取特定模式。',
+            intro: '想从海量日志中提取特定模式？在浏览器里就能完成。',
+            sections: [
+                {
+                    title: '常用模式',
+                    list: [
+                        '\\d{1,3}\\.\\d{1,3}\\.\\d{1,3}\\.\\d{1,3} - IP 地址',
+                        '[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\\.[A-Z|a-z]{2,} - 邮箱',
+                        '\\d{4}-\\d{2}-\\d{2} - 日期(YYYY-MM-DD)',
+                    ],
+                    mono: true,
+                    boxed: true,
+                },
+                {
+                    title: '在 GigaSieve 中使用',
+                    body: '当前过滤器仅支持文本匹配。正则功能将于 V2 提供，暂时使用关键词/状态码。',
+                },
+            ],
+            relatedRecipes: [
+                { href: '/recipes/logs/cloudflare-ray-id', title: 'Cloudflare Ray-ID', desc: '请求追踪' },
+                { href: '/recipes/jsonl/extract-keys', title: 'JSONL 提取键', desc: '查看键' },
+            ],
+            relatedGuides: [
+                { href: '/guides/analyze-nginx-access-log', title: '分析 nginx 日志', desc: '分步指南' },
+                { href: '/guides/remove-pii-from-logs', title: '移除 PII', desc: '保护隐私' },
+            ],
+        },
+    },
+    'why-csv-is-slow': {
+        en: {
+            title: 'Why CSV is Slow (and How to Speed Up)',
+            description: 'Understanding CSV parsing bottlenecks and how streaming solves them.',
+            intro: 'CSV looks simple, but parsing it correctly is surprisingly complex. Here is why it is slow and how streaming helps.',
+            sections: [
+                {
+                    title: 'The problem with CSV',
+                    list: [
+                        'Quoted fields can include commas and newlines.',
+                        'Escaping rules vary across generators.',
+                        'No fixed record length, so random access is hard.',
+                        'Large files must be scanned to count rows.',
+                    ],
+                },
+                {
+                    title: 'How GigaSieve solves this',
+                    body: 'GigaSieve parses in chunks and renders rows as soon as they are read, so you can start exploring immediately.',
+                },
+                {
+                    title: 'Alternative: JSONL',
+                    body: 'If you control the format, JSONL streams much better because each line is a record.',
+                    callout: 'emerald',
+                },
+            ],
+            relatedRecipes: [
+                { href: '/recipes/csv/preview-huge', title: 'Preview Huge CSV', desc: 'Open without crashing' },
+                { href: '/recipes/csv/top-values', title: 'CSV Top Values', desc: 'Find frequent values' },
+            ],
+            relatedGuides: [
+                { href: '/guides/open-1gb-csv-in-browser', title: 'Open 1GB CSV', desc: 'Streaming preview' },
+                { href: '/guides/json-vs-jsonl', title: 'JSON vs JSONL', desc: 'Choose the right format' },
+            ],
+        },
+        ko: {
+            title: 'CSV가 느린 이유 (그리고 빠르게 보는 법)',
+            description: 'CSV 파싱이 느린 이유와 스트리밍이 해결하는 방법.',
+            intro: 'CSV는 단순해 보이지만 올바르게 파싱하는 건 꽤 복잡합니다. 왜 느린지와 해결책을 정리했습니다.',
+            sections: [
+                {
+                    title: 'CSV의 문제점',
+                    list: [
+                        '따옴표 필드 안에 쉼표/줄바꿈이 들어갈 수 있음',
+                        '이스케이프 규칙이 도구마다 다름',
+                        '고정 레코드 길이가 없어 랜덤 접근이 어려움',
+                        '행 수를 세려면 전체를 읽어야 함',
+                    ],
+                },
+                {
+                    title: 'GigaSieve의 해결 방식',
+                    body: 'GigaSieve는 청크 단위로 읽고 즉시 렌더링하여 바로 탐색할 수 있습니다.',
+                },
+                {
+                    title: '대안: JSONL',
+                    body: '데이터 형식을 바꿀 수 있다면 JSONL이 더 빠릅니다. 한 줄이 하나의 레코드이기 때문입니다.',
+                    callout: 'emerald',
+                },
+            ],
+            relatedRecipes: [
+                { href: '/recipes/csv/preview-huge', title: '대용량 CSV 미리보기', desc: '멈춤 없이 열기' },
+                { href: '/recipes/csv/top-values', title: 'CSV 상위 값', desc: '빈도 높은 값 찾기' },
+            ],
+            relatedGuides: [
+                { href: '/guides/open-1gb-csv-in-browser', title: '1GB CSV 열기', desc: '스트리밍 미리보기' },
+                { href: '/guides/json-vs-jsonl', title: 'JSON vs JSONL', desc: '형식 선택' },
+            ],
+        },
+        es: {
+            title: 'Por qué CSV es lento (y cómo acelerarlo)',
+            description: 'Cuellos de botella al parsear CSV y cómo el streaming ayuda.',
+            intro: 'CSV parece simple, pero parsearlo bien es complejo. Aquí está el motivo y la solución.',
+            sections: [
+                {
+                    title: 'Problemas del CSV',
+                    list: [
+                        'Campos entre comillas pueden tener comas o saltos de línea.',
+                        'Las reglas de escape varían.',
+                        'No hay longitud fija por fila.',
+                        'Archivos grandes requieren escanear todo.',
+                    ],
+                },
+                {
+                    title: 'Cómo lo resuelve GigaSieve',
+                    body: 'GigaSieve procesa por bloques y muestra filas al instante.',
+                },
+                {
+                    title: 'Alternativa: JSONL',
+                    body: 'Si controlas el formato, JSONL es más eficiente porque cada línea es un registro.',
+                    callout: 'emerald',
+                },
+            ],
+            relatedRecipes: [
+                { href: '/recipes/csv/preview-huge', title: 'Previsualizar CSV grande', desc: 'Abrir sin fallar' },
+                { href: '/recipes/csv/top-values', title: 'Top valores CSV', desc: 'Valores frecuentes' },
+            ],
+            relatedGuides: [
+                { href: '/guides/open-1gb-csv-in-browser', title: 'Abrir CSV de 1GB', desc: 'Previsualización streaming' },
+                { href: '/guides/json-vs-jsonl', title: 'JSON vs JSONL', desc: 'Elegir formato' },
+            ],
+        },
+        ja: {
+            title: 'CSVが遅い理由（高速化の方法）',
+            description: 'CSVパースのボトルネックとストリーミングの解決策。',
+            intro: 'CSVは簡単そうに見えて実は複雑です。なぜ遅いのか、どう改善するかを解説します。',
+            sections: [
+                {
+                    title: 'CSVの問題点',
+                    list: [
+                        '引用符内にカンマや改行が入る。',
+                        'エスケープ規則がバラバラ。',
+                        '固定長でないためランダムアクセスが難しい。',
+                        '行数カウントには全体読み込みが必要。',
+                    ],
+                },
+                {
+                    title: 'GigaSieveの解決策',
+                    body: 'チャンク処理で即時に行を表示できるため、すぐ探索できます。',
+                },
+                {
+                    title: '代替: JSONL',
+                    body: '形式を選べるならJSONLが最適です。1行1レコードでストリーミングに強いです。',
+                    callout: 'emerald',
+                },
+            ],
+            relatedRecipes: [
+                { href: '/recipes/csv/preview-huge', title: '巨大CSVプレビュー', desc: '落ちずに開く' },
+                { href: '/recipes/csv/top-values', title: 'CSVトップ値', desc: '頻出値を確認' },
+            ],
+            relatedGuides: [
+                { href: '/guides/open-1gb-csv-in-browser', title: '1GB CSVを開く', desc: 'ストリーミング表示' },
+                { href: '/guides/json-vs-jsonl', title: 'JSON vs JSONL', desc: '形式の選び方' },
+            ],
+        },
+        zh: {
+            title: 'CSV 为什么慢（以及如何加速）',
+            description: 'CSV 解析瓶颈与流式处理的解决方案。',
+            intro: 'CSV 看似简单，但正确解析非常复杂。这里解释慢的原因与解决方法。',
+            sections: [
+                {
+                    title: 'CSV 的问题',
+                    list: [
+                        '带引号字段可包含逗号和换行。',
+                        '转义规则不统一。',
+                        '没有固定记录长度，无法随机跳转。',
+                        '统计行数需要通读全文。',
+                    ],
+                },
+                {
+                    title: 'GigaSieve 如何解决',
+                    body: 'GigaSieve 分块解析并立即渲染行，可快速开始探索。',
+                },
+                {
+                    title: '替代方案：JSONL',
+                    body: '如果可选择格式，JSONL 更适合流式处理，因为每行就是一个记录。',
+                    callout: 'emerald',
+                },
+            ],
+            relatedRecipes: [
+                { href: '/recipes/csv/preview-huge', title: '预览超大 CSV', desc: '不再崩溃' },
+                { href: '/recipes/csv/top-values', title: 'CSV 热门值', desc: '高频值统计' },
+            ],
+            relatedGuides: [
+                { href: '/guides/open-1gb-csv-in-browser', title: '打开 1GB CSV', desc: '流式预览' },
+                { href: '/guides/json-vs-jsonl', title: 'JSON vs JSONL', desc: '格式选择' },
+            ],
+        },
+    },
+    'json-vs-jsonl': {
+        en: {
+            title: 'JSON vs JSONL: Which to Use?',
+            description: 'For large datasets, JSONL wins. Here is why and when to use each format.',
+            intro: 'Both formats store structured data, but they behave very differently at large scale.',
+            sections: [
+                {
+                    title: 'Quick comparison',
+                    table: {
+                        headers: ['Feature', 'JSON', 'JSONL'],
+                        rows: [
+                            ['Structure', 'Single array', 'One object per line'],
+                            ['Streaming', 'Hard', 'Easy'],
+                            ['Append', 'Requires rewrite', 'Just add line'],
+                            ['Large files', 'Memory issues', 'Works great'],
+                        ],
+                    },
+                },
+                {
+                    title: 'When to use JSON',
+                    list: ['Small datasets (< 100MB)', 'Single response APIs', 'Configuration files'],
+                },
+                {
+                    title: 'When to use JSONL',
+                    list: ['Log files and event streams', 'Data that grows over time', 'Files larger than 100MB', 'Line-by-line processing'],
+                },
+            ],
+            relatedRecipes: [
+                { href: '/recipes/jsonl/extract-keys', title: 'JSONL Extract Keys', desc: 'Inspect fields' },
+                { href: '/recipes/jsonl/top-values', title: 'JSONL Top Values', desc: 'Frequent values' },
+            ],
+            relatedGuides: [
+                { href: '/guides/why-csv-is-slow', title: 'Why CSV is Slow', desc: 'Parsing bottlenecks' },
+                { href: '/guides/open-1gb-csv-in-browser', title: 'Open 1GB CSV', desc: 'Streaming preview' },
+            ],
+        },
+        ko: {
+            title: 'JSON vs JSONL: 무엇을 써야 할까?',
+            description: '대용량 데이터에는 JSONL이 유리합니다. 차이와 사용처를 정리합니다.',
+            intro: '둘 다 구조화 데이터를 담지만, 대용량에서는 성능 차이가 큽니다.',
+            sections: [
+                {
+                    title: '빠른 비교',
+                    table: {
+                        headers: ['항목', 'JSON', 'JSONL'],
+                        rows: [
+                            ['구조', '단일 배열', '한 줄=하나의 객체'],
+                            ['스트리밍', '어려움', '쉬움'],
+                            ['추가', '재작성 필요', '한 줄 추가'],
+                            ['대용량', '메모리 문제', '매우 적합'],
+                        ],
+                    },
+                },
+                {
+                    title: 'JSON을 사용할 때',
+                    list: ['작은 데이터(<100MB)', '단일 응답 API', '설정 파일'],
+                },
+                {
+                    title: 'JSONL을 사용할 때',
+                    list: ['로그/이벤트 스트림', '계속 커지는 데이터', '100MB 이상 파일', '라인 단위 처리'],
+                },
+            ],
+            relatedRecipes: [
+                { href: '/recipes/jsonl/extract-keys', title: 'JSONL 키 추출', desc: '필드 확인' },
+                { href: '/recipes/jsonl/top-values', title: 'JSONL 상위 값', desc: '빈도값 확인' },
+            ],
+            relatedGuides: [
+                { href: '/guides/why-csv-is-slow', title: 'CSV가 느린 이유', desc: '파싱 병목' },
+                { href: '/guides/open-1gb-csv-in-browser', title: '1GB CSV 열기', desc: '스트리밍 미리보기' },
+            ],
+        },
+        es: {
+            title: 'JSON vs JSONL: ¿Cuál usar?',
+            description: 'Para grandes volúmenes, JSONL es mejor. Cuándo usar cada formato.',
+            intro: 'Ambos almacenan datos estructurados, pero su rendimiento difiere en escala.',
+            sections: [
+                {
+                    title: 'Comparación rápida',
+                    table: {
+                        headers: ['Característica', 'JSON', 'JSONL'],
+                        rows: [
+                            ['Estructura', 'Un solo arreglo', 'Un objeto por línea'],
+                            ['Streaming', 'Difícil', 'Fácil'],
+                            ['Añadir', 'Reescribir', 'Agregar línea'],
+                            ['Archivos grandes', 'Problemas de memoria', 'Funciona bien'],
+                        ],
+                    },
+                },
+                {
+                    title: 'Cuándo usar JSON',
+                    list: ['Datos pequeños (<100MB)', 'APIs de una sola respuesta', 'Archivos de configuración'],
+                },
+                {
+                    title: 'Cuándo usar JSONL',
+                    list: ['Logs y streams', 'Datos que crecen', 'Archivos >100MB', 'Procesamiento línea por línea'],
+                },
+            ],
+            relatedRecipes: [
+                { href: '/recipes/jsonl/extract-keys', title: 'Extraer claves JSONL', desc: 'Inspeccionar campos' },
+                { href: '/recipes/jsonl/top-values', title: 'Top valores JSONL', desc: 'Valores frecuentes' },
+            ],
+            relatedGuides: [
+                { href: '/guides/why-csv-is-slow', title: 'Por qué CSV es lento', desc: 'Cuellos de botella' },
+                { href: '/guides/open-1gb-csv-in-browser', title: 'Abrir CSV 1GB', desc: 'Preview streaming' },
+            ],
+        },
+        ja: {
+            title: 'JSONとJSONL：どちらを使う？',
+            description: '大規模データではJSONLが有利。使い分けを解説。',
+            intro: 'どちらも構造化データですが、大規模では挙動が違います。',
+            sections: [
+                {
+                    title: '簡易比較',
+                    table: {
+                        headers: ['項目', 'JSON', 'JSONL'],
+                        rows: [
+                            ['構造', '配列1つ', '1行1オブジェクト'],
+                            ['ストリーミング', '難しい', '簡単'],
+                            ['追加', '書き換え必要', '行追加のみ'],
+                            ['大容量', 'メモリ問題', '非常に良い'],
+                        ],
+                    },
+                },
+                {
+                    title: 'JSONを使う場面',
+                    list: ['小規模データ(<100MB)', '単一レスポンスAPI', '設定ファイル'],
+                },
+                {
+                    title: 'JSONLを使う場面',
+                    list: ['ログ/イベント', '増加するデータ', '100MB超', '行単位処理'],
+                },
+            ],
+            relatedRecipes: [
+                { href: '/recipes/jsonl/extract-keys', title: 'JSONLキー抽出', desc: 'フィールド確認' },
+                { href: '/recipes/jsonl/top-values', title: 'JSONLトップ値', desc: '頻出値' },
+            ],
+            relatedGuides: [
+                { href: '/guides/why-csv-is-slow', title: 'CSVが遅い理由', desc: 'パースの壁' },
+                { href: '/guides/open-1gb-csv-in-browser', title: '1GB CSVを開く', desc: 'ストリーミング' },
+            ],
+        },
+        zh: {
+            title: 'JSON vs JSONL：该用哪个？',
+            description: '大数据场景下 JSONL 更合适。这里解释差异与用法。',
+            intro: '两者都能存结构化数据，但在大规模下差异明显。',
+            sections: [
+                {
+                    title: '快速对比',
+                    table: {
+                        headers: ['特性', 'JSON', 'JSONL'],
+                        rows: [
+                            ['结构', '单个数组', '每行一个对象'],
+                            ['流式读取', '困难', '容易'],
+                            ['追加', '需要重写', '直接加一行'],
+                            ['大文件', '内存问题', '表现良好'],
+                        ],
+                    },
+                },
+                {
+                    title: '何时用 JSON',
+                    list: ['小数据(<100MB)', '单次响应 API', '配置文件'],
+                },
+                {
+                    title: '何时用 JSONL',
+                    list: ['日志/事件流', '不断增长的数据', '超过100MB', '按行处理'],
+                },
+            ],
+            relatedRecipes: [
+                { href: '/recipes/jsonl/extract-keys', title: 'JSONL 提取键', desc: '查看字段' },
+                { href: '/recipes/jsonl/top-values', title: 'JSONL 高频值', desc: '频繁值统计' },
+            ],
+            relatedGuides: [
+                { href: '/guides/why-csv-is-slow', title: 'CSV 为什么慢', desc: '解析瓶颈' },
+                { href: '/guides/open-1gb-csv-in-browser', title: '打开 1GB CSV', desc: '流式预览' },
+            ],
+        },
+    },
+    'remove-pii-from-logs': {
+        en: {
+            title: 'Remove PII from Logs Locally',
+            description: 'Mask emails, phone numbers, and IPs locally before sharing logs.',
+            intro: 'Before sharing logs, you should remove personally identifiable information (PII). Here is how to do it safely without uploading.',
+            callout: {
+                tone: 'red',
+                title: '[warn] Why this matters',
+                body: 'Logs often contain IPs, emails, user IDs, and session tokens. Sharing them can violate privacy regulations.',
+            },
+            sections: [
+                {
+                    title: 'What counts as PII?',
+                    list: ['IP addresses', 'Email addresses', 'Phone numbers', 'User IDs and session tokens', 'API keys and secrets'],
+                },
+                {
+                    title: 'How GigaSieve helps',
+                    body: 'Use filters to identify lines with PII patterns. Automatic masking will arrive in V2.',
+                },
+                {
+                    title: '100% local',
+                    body: 'All analysis happens in your browser. Files are never uploaded.',
+                    callout: 'emerald',
+                },
+            ],
+            relatedRecipes: [
+                { href: '/recipes/logs/top-ips', title: 'Top IPs', desc: 'Find frequent IPs' },
+                { href: '/recipes/logs/nginx-status-codes', title: 'nginx Status Codes', desc: 'Spot errors quickly' },
+            ],
+            relatedGuides: [
+                { href: '/guides/regex-extract-from-log', title: 'Regex Extract', desc: 'Find patterns' },
+                { href: '/privacy', title: 'Privacy Policy', desc: 'Local-only promise' },
+            ],
+        },
+        ko: {
+            title: '로그에서 PII 로컬 제거',
+            description: '로그 공유 전에 이메일/전화/IP 등 개인정보를 로컬에서 마스킹하세요.',
+            intro: '로그를 공유하기 전에 개인정보(PII)를 제거해야 합니다. 업로드 없이 안전하게 처리하는 방법입니다.',
+            callout: {
+                tone: 'red',
+                title: '[warn] 왜 중요한가',
+                body: '로그에는 IP, 이메일, 사용자 ID, 세션 토큰이 포함될 수 있습니다. 공유 시 규정 위반이 될 수 있습니다.',
+            },
+            sections: [
+                {
+                    title: 'PII에 해당하는 것',
+                    list: ['IP 주소', '이메일 주소', '전화번호', '사용자 ID/세션 토큰', 'API 키/시크릿'],
+                },
+                {
+                    title: 'GigaSieve 활용',
+                    body: '필터로 PII 패턴이 있는 라인을 찾고 수동으로 제거하세요. 자동 마스킹은 V2에서 제공 예정입니다.',
+                },
+                {
+                    title: '100% 로컬 처리',
+                    body: '모든 분석은 브라우저에서 수행됩니다. 파일은 업로드되지 않습니다.',
+                    callout: 'emerald',
+                },
+            ],
+            relatedRecipes: [
+                { href: '/recipes/logs/top-ips', title: '상위 IP', desc: '자주 등장하는 IP' },
+                { href: '/recipes/logs/nginx-status-codes', title: 'nginx 상태코드', desc: '오류 빠르게 찾기' },
+            ],
+            relatedGuides: [
+                { href: '/guides/regex-extract-from-log', title: '정규식 추출', desc: '패턴 찾기' },
+                { href: '/privacy', title: '개인정보 처리방침', desc: '로컬 처리 약속' },
+            ],
+        },
+        es: {
+            title: 'Eliminar PII de logs en local',
+            description: 'Enmascara correos, teléfonos e IPs antes de compartir logs.',
+            intro: 'Antes de compartir logs, elimina PII. Aquí tienes una forma segura sin subir archivos.',
+            callout: {
+                tone: 'red',
+                title: '[warn] Por qué importa',
+                body: 'Los logs suelen contener IPs, emails, IDs y tokens. Compartirlos puede violar normas de privacidad.',
+            },
+            sections: [
+                { title: 'Qué es PII', list: ['Direcciones IP', 'Emails', 'Teléfonos', 'IDs de usuario y tokens', 'Claves API y secretos'] },
+                { title: 'Cómo ayuda GigaSieve', body: 'Usa filtros para encontrar patrones PII. El enmascarado automático llegará en V2.' },
+                { title: '100% local', body: 'El análisis ocurre en el navegador. Nada se sube.', callout: 'emerald' },
+            ],
+            relatedRecipes: [
+                { href: '/recipes/logs/top-ips', title: 'Top IPs', desc: 'IPs frecuentes' },
+                { href: '/recipes/logs/nginx-status-codes', title: 'Códigos nginx', desc: 'Detecta errores' },
+            ],
+            relatedGuides: [
+                { href: '/guides/regex-extract-from-log', title: 'Extracción regex', desc: 'Encontrar patrones' },
+                { href: '/privacy', title: 'Política de privacidad', desc: 'Promesa local' },
+            ],
+        },
+        ja: {
+            title: 'ログからPIIをローカル削除',
+            description: 'ログ共有前にメール/電話/IPなどをマスキング。',
+            intro: 'ログを共有する前にPIIを削除しましょう。アップロードなしで安全に処理します。',
+            callout: {
+                tone: 'red',
+                title: '[warn] 重要な理由',
+                body: 'ログにはIPやメール、ID、トークンが含まれます。共有は規制違反の可能性があります。',
+            },
+            sections: [
+                { title: 'PIIの例', list: ['IPアドレス', 'メール', '電話番号', 'ユーザーID/セッショントークン', 'APIキー/シークレット'] },
+                { title: 'GigaSieveの使い方', body: 'フィルタでPIIを含む行を探します。自動マスキングはV2で提供予定。' },
+                { title: '100% ローカル', body: '解析はブラウザ内で完結し、アップロードされません。', callout: 'emerald' },
+            ],
+            relatedRecipes: [
+                { href: '/recipes/logs/top-ips', title: '上位IP', desc: '頻出IP' },
+                { href: '/recipes/logs/nginx-status-codes', title: 'nginxステータスコード', desc: 'エラー検出' },
+            ],
+            relatedGuides: [
+                { href: '/guides/regex-extract-from-log', title: '正規表現抽出', desc: 'パターン検索' },
+                { href: '/privacy', title: 'プライバシー', desc: 'ローカル処理' },
+            ],
+        },
+        zh: {
+            title: '本地移除日志中的 PII',
+            description: '在分享日志前本地屏蔽邮箱、电话与 IP。',
+            intro: '分享日志前应移除 PII。这里是无需上传的安全做法。',
+            callout: {
+                tone: 'red',
+                title: '[warn] 为什么重要',
+                body: '日志常含 IP、邮箱、ID、会话令牌。分享可能违反隐私法规。',
+            },
+            sections: [
+                { title: '哪些属于 PII', list: ['IP 地址', '邮箱地址', '电话号码', '用户 ID/会话令牌', 'API Key 与密钥'] },
+                { title: 'GigaSieve 如何帮助', body: '用过滤器找到含 PII 的行。自动脱敏将在 V2 提供。' },
+                { title: '100% 本地', body: '分析在浏览器内完成，不会上传文件。', callout: 'emerald' },
+            ],
+            relatedRecipes: [
+                { href: '/recipes/logs/top-ips', title: 'Top IP', desc: '高频 IP' },
+                { href: '/recipes/logs/nginx-status-codes', title: 'nginx 状态码', desc: '快速识别错误' },
+            ],
+            relatedGuides: [
+                { href: '/guides/regex-extract-from-log', title: '正则提取', desc: '查找模式' },
+                { href: '/privacy', title: '隐私政策', desc: '本地处理' },
+            ],
+        },
+    },
+};
+
+const guide = guides[slugKey]?.[langKey] ?? guides[slugKey]?.[defaultLang];
+const uiLabels = labels[langKey];
+
+if (!guide) {
+    return Astro.redirect(buildLangPath('/guides', langKey), 302);
+}
+
+const calloutStyles = {
+    emerald: {
+        box: 'bg-emerald-500/10 border-emerald-500/30',
+        title: 'text-emerald-400',
+    },
+    amber: {
+        box: 'bg-amber-500/10 border-amber-500/30',
+        title: 'text-amber-400',
+    },
+    red: {
+        box: 'bg-red-500/10 border-red-500/30',
+        title: 'text-red-400',
+    },
+} as const;
+---
+
+<Layout title={`${guide.title} - GigaSieve Guide`} description={guide.description}>
+    <section class="container mx-auto px-4 py-12 max-w-3xl">
+        <nav class="text-sm text-slate-500 mb-6">
+            <a href={buildLangPath('/guides', langKey)} class="hover:text-cyan-400">{uiLabels.guides}</a>
+            <span class="mx-2">/</span>
+            <span class="text-slate-400">{guide.title}</span>
+        </nav>
+
+        <h1 class="text-3xl font-extrabold text-slate-200 mb-4">{guide.title}</h1>
+        <p class="text-slate-400 mb-8">{guide.intro}</p>
+
+        {guide.callout && (
+            <div class={`border rounded-xl p-6 mb-8 ${calloutStyles[guide.callout.tone].box}`}>
+                <h2 class={`text-lg font-bold mb-2 ${calloutStyles[guide.callout.tone].title}`}>{guide.callout.title}</h2>
+                <p class="text-slate-400 text-sm">{guide.callout.body}</p>
+            </div>
+        )}
+
+        {guide.sections?.map((section) => (
+            <div class="mb-8">
+                {section.table ? (
+                    <div class="bg-slate-900 rounded-xl border border-slate-800 p-6">
+                        <h2 class="text-lg font-bold text-slate-300 mb-4">{section.title}</h2>
+                        <table class="w-full text-sm">
+                            <thead>
+                                <tr class="text-slate-400 border-b border-slate-800">
+                                    {section.table.headers.map((header) => (
+                                        <th class="text-left py-2">{header}</th>
+                                    ))}
+                                </tr>
+                            </thead>
+                            <tbody class="text-slate-400">
+                                {section.table.rows.map((row) => (
+                                    <tr class="border-b border-slate-800">
+                                        {row.map((cell) => (
+                                            <td class="py-2">{cell}</td>
+                                        ))}
+                                    </tr>
+                                ))}
+                            </tbody>
+                        </table>
+                    </div>
+                ) : section.steps ? (
+                    <div class="bg-slate-900 rounded-xl border border-slate-800 p-6">
+                        <h2 class="text-lg font-bold text-slate-300 mb-4">{section.title}</h2>
+                        <ol class="list-decimal list-inside space-y-3 text-slate-400">
+                            {section.steps.map((step) => (
+                                <li>
+                                    <span class="font-medium text-slate-300">{step.title}</span>
+                                    <p class="text-sm text-slate-500 ml-5 mt-1">{step.desc}</p>
+                                </li>
+                            ))}
+                        </ol>
+                    </div>
+                ) : section.faq ? (
+                    <>
+                        <h2 class="text-xl font-bold text-slate-300 mb-4">{section.title}</h2>
+                        <div class="space-y-4">
+                            {section.faq.map((item) => (
+                                <div class="bg-slate-900 rounded-xl border border-slate-800 p-4">
+                                    <h3 class="font-semibold text-slate-300 mb-2">{item.q}</h3>
+                                    <p class="text-slate-500 text-sm">{item.a}</p>
+                                </div>
+                            ))}
+                        </div>
+                    </>
+                ) : section.list ? (
+                    <>
+                        <h2 class="text-xl font-bold text-slate-300 mb-4">{section.title}</h2>
+                        <ul class={`list-disc list-inside space-y-2 text-slate-400 ${section.mono ? 'font-mono text-sm' : ''}`}>
+                            {section.list.map((item) => (
+                                <li>{item}</li>
+                            ))}
+                        </ul>
+                    </>
+                ) : section.callout ? (
+                    <div class={`border rounded-xl p-6 ${calloutStyles[section.callout].box}`}>
+                        <h2 class={`text-lg font-bold mb-2 ${calloutStyles[section.callout].title}`}>{section.title}</h2>
+                        <p class="text-slate-400 text-sm">{section.body}</p>
+                    </div>
+                ) : (
+                    <>
+                        <h2 class="text-xl font-bold text-slate-300 mb-4">{section.title}</h2>
+                        <p class="text-slate-400">{section.body}</p>
+                    </>
+                )}
+            </div>
+        ))}
+
+        <a href={buildLangPath('/app', langKey)} class="inline-flex items-center gap-2 bg-gradient-to-r from-emerald-500 to-cyan-500 text-white font-bold py-3 px-6 rounded-xl shadow-lg shadow-emerald-500/30 hover:shadow-emerald-500/50 transition-all mb-8">
+            {uiLabels.cta}
+        </a>
+
+        <h2 class="text-xl font-bold text-slate-300 mb-4">{uiLabels.relatedRecipes}</h2>
+        <div class="grid md:grid-cols-2 gap-4 mb-8">
+            {guide.relatedRecipes?.map((item) => (
+                <a href={buildLangPath(item.href, langKey)} class="bg-slate-900 hover:bg-slate-800 rounded-xl p-4 border border-slate-800 transition-all">
+                    <h3 class="font-semibold text-slate-300">{item.title}</h3>
+                    <p class="text-xs text-slate-600 mt-1">{item.desc}</p>
+                </a>
+            ))}
+        </div>
+
+        <h2 class="text-xl font-bold text-slate-300 mb-4">{uiLabels.relatedGuides}</h2>
+        <div class="grid md:grid-cols-2 gap-4">
+            {guide.relatedGuides?.map((item) => (
+                <a href={buildLangPath(item.href, langKey)} class="bg-slate-900 hover:bg-slate-800 rounded-xl p-4 border border-slate-800 transition-all">
+                    <h3 class="font-semibold text-slate-300">{item.title}</h3>
+                    <p class="text-xs text-slate-600 mt-1">{item.desc}</p>
+                </a>
+            ))}
+        </div>
+    </section>
+</Layout>

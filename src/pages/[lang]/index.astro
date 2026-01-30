@@ -1,0 +1,232 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import { ui, defaultLang } from '../../i18n/ui';
+import { useTranslations, buildLangPath } from '../../i18n/utils';
+
+export async function getStaticPaths() {
+    return Object.keys(ui).map((lang) => ({ params: { lang } }));
+}
+
+const { lang } = Astro.params;
+const t = useTranslations(lang as keyof typeof ui);
+if (lang === defaultLang) {
+    return Astro.redirect('/', 301);
+}
+
+const copy = {
+    en: {
+        title: 'GigaSieve - Analyze Huge Files Locally',
+        heroLine1: 'Open 1-10GB files',
+        heroLine2: 'in your browser.',
+        heroDesc1: 'Analyze massive logs, CSVs, and JSONL files locally.',
+        heroDesc2: 'No upload. No account. 100% private.',
+        launch: 'Launch App',
+        steps: [
+            { title: 'Open', desc: 'Drag & drop your file. Streaming starts instantly.' },
+            { title: 'Sift', desc: 'Filter, search, or run a Recipe in seconds.' },
+            { title: 'Export', desc: 'Download your report. Share without the raw file.' },
+        ],
+        badges: ['Local-only', 'Offline mode', 'No account', 'Streaming parser'],
+        popularRecipes: 'Popular Recipes',
+        popularGuides: 'Popular Guides',
+        viewAllRecipes: 'View all Recipes ->',
+        viewAllGuides: 'View all Guides ->',
+        recipeCards: [
+            { title: 'nginx Status Codes TopN', desc: 'Find 499/502/504 errors fast', href: '/recipes/logs/nginx-status-codes' },
+            { title: 'Cloudflare Ray-ID Extract', desc: 'Trace requests by Ray-ID', href: '/recipes/logs/cloudflare-ray-id' },
+            { title: 'CSV Column Top Values', desc: 'Group-by in browser', href: '/recipes/csv/top-values' },
+        ],
+        guideCards: [
+            { title: 'Open 1GB CSV in Browser', desc: 'Excel crashed? We got you.', href: '/guides/open-1gb-csv-in-browser' },
+            { title: 'Analyze nginx Access Log', desc: '5xx origin hunting', href: '/guides/analyze-nginx-access-log' },
+            { title: 'Regex Extract from Logs', desc: 'Pull fields without scripts', href: '/guides/regex-extract-from-log' },
+        ],
+    },
+    ko: {
+        title: 'GigaSieve - 대용량 파일 로컬 분석',
+        heroLine1: '1~10GB 파일을',
+        heroLine2: '브라우저에서 바로 열기.',
+        heroDesc1: '대용량 로그/CSV/JSONL을 로컬에서 분석하세요.',
+        heroDesc2: '업로드 없음. 계정 없음. 100% 프라이빗.',
+        launch: '앱 실행',
+        steps: [
+            { title: '열기', desc: '드래그 앤 드롭하면 스트리밍이 즉시 시작됩니다.' },
+            { title: '분석', desc: '필터/검색/레시피 실행을 몇 초 안에.' },
+            { title: '내보내기', desc: '리포트를 다운로드하고 원본 없이 공유.' },
+        ],
+        badges: ['로컬 전용', '오프라인 모드', '계정 불필요', '스트리밍 파서'],
+        popularRecipes: '인기 레시피',
+        popularGuides: '인기 가이드',
+        viewAllRecipes: '레시피 전체 보기 ->',
+        viewAllGuides: '가이드 전체 보기 ->',
+        recipeCards: [
+            { title: 'nginx 상태코드 TopN', desc: '499/502/504 에러 빠르게 찾기', href: '/recipes/logs/nginx-status-codes' },
+            { title: 'Cloudflare Ray-ID 추출', desc: 'Ray-ID로 요청 추적', href: '/recipes/logs/cloudflare-ray-id' },
+            { title: 'CSV 컬럼 Top Values', desc: '브라우저에서 그룹핑', href: '/recipes/csv/top-values' },
+        ],
+        guideCards: [
+            { title: '브라우저에서 1GB CSV 열기', desc: '엑셀이 죽었나요? 해결합니다.', href: '/guides/open-1gb-csv-in-browser' },
+            { title: 'nginx 액세스 로그 분석', desc: '5xx 원인 추적', href: '/guides/analyze-nginx-access-log' },
+            { title: '로그에서 정규식 추출', desc: '스크립트 없이 필드 추출', href: '/guides/regex-extract-from-log' },
+        ],
+    },
+    es: {
+        title: 'GigaSieve - Analiza archivos enormes localmente',
+        heroLine1: 'Abre archivos de 1 a 10GB',
+        heroLine2: 'en tu navegador.',
+        heroDesc1: 'Analiza logs, CSV y JSONL masivos de forma local.',
+        heroDesc2: 'Sin subidas. Sin cuenta. 100% privado.',
+        launch: 'Abrir la app',
+        steps: [
+            { title: 'Abrir', desc: 'Arrastra y suelta tu archivo. El streaming inicia al instante.' },
+            { title: 'Filtrar', desc: 'Filtra, busca o ejecuta una receta en segundos.' },
+            { title: 'Exportar', desc: 'Descarga el reporte. Comparte sin el archivo original.' },
+        ],
+        badges: ['Solo local', 'Modo offline', 'Sin cuenta', 'Parser en streaming'],
+        popularRecipes: 'Recetas populares',
+        popularGuides: 'Guías populares',
+        viewAllRecipes: 'Ver todas las recetas ->',
+        viewAllGuides: 'Ver todas las guías ->',
+        recipeCards: [
+            { title: 'TopN de códigos nginx', desc: 'Detecta 499/502/504 rápido', href: '/recipes/logs/nginx-status-codes' },
+            { title: 'Extraer Ray-ID de Cloudflare', desc: 'Rastrea por Ray-ID', href: '/recipes/logs/cloudflare-ray-id' },
+            { title: 'Top valores en CSV', desc: 'Group-by en el navegador', href: '/recipes/csv/top-values' },
+        ],
+        guideCards: [
+            { title: 'Abrir CSV de 1GB en navegador', desc: '¿Excel falló? Te ayudamos.', href: '/guides/open-1gb-csv-in-browser' },
+            { title: 'Analizar log de nginx', desc: 'Rastreo de errores 5xx', href: '/guides/analyze-nginx-access-log' },
+            { title: 'Extraer con regex desde logs', desc: 'Campos sin scripts', href: '/guides/regex-extract-from-log' },
+        ],
+    },
+    ja: {
+        title: 'GigaSieve - 大容量ファイルをローカル解析',
+        heroLine1: '1〜10GBのファイルを',
+        heroLine2: 'ブラウザで開く。',
+        heroDesc1: '巨大なログ/CSV/JSONLをローカルで解析。',
+        heroDesc2: 'アップロードなし。アカウント不要。100%プライベート。',
+        launch: 'アプリを起動',
+        steps: [
+            { title: '開く', desc: 'ドラッグ＆ドロップで即ストリーミング開始。' },
+            { title: '抽出', desc: 'フィルタ/検索/レシピ実行を数秒で。' },
+            { title: '出力', desc: 'レポートをダウンロード。原本なしで共有。' },
+        ],
+        badges: ['ローカル専用', 'オフライン対応', 'アカウント不要', 'ストリーミング解析'],
+        popularRecipes: '人気レシピ',
+        popularGuides: '人気ガイド',
+        viewAllRecipes: 'レシピ一覧 ->',
+        viewAllGuides: 'ガイド一覧 ->',
+        recipeCards: [
+            { title: 'nginx ステータスコード TopN', desc: '499/502/504を素早く検出', href: '/recipes/logs/nginx-status-codes' },
+            { title: 'Cloudflare Ray-ID 抽出', desc: 'Ray-IDで追跡', href: '/recipes/logs/cloudflare-ray-id' },
+            { title: 'CSV 列のTop値', desc: 'ブラウザでGroup-by', href: '/recipes/csv/top-values' },
+        ],
+        guideCards: [
+            { title: 'ブラウザで1GB CSVを開く', desc: 'Excelが落ちた？解決します。', href: '/guides/open-1gb-csv-in-browser' },
+            { title: 'nginxアクセスログ解析', desc: '5xx原因を追跡', href: '/guides/analyze-nginx-access-log' },
+            { title: 'ログから正規表現抽出', desc: 'スクリプト不要で抽出', href: '/guides/regex-extract-from-log' },
+        ],
+    },
+    zh: {
+        title: 'GigaSieve - 本地分析超大文件',
+        heroLine1: '打开 1–10GB 文件',
+        heroLine2: '就在浏览器里。',
+        heroDesc1: '本地分析超大日志、CSV 与 JSONL。',
+        heroDesc2: '不上传。不登录。100% 私密。',
+        launch: '打开应用',
+        steps: [
+            { title: '打开', desc: '拖拽文件即可开始流式读取。' },
+            { title: '筛选', desc: '筛选、搜索或一键执行配方。' },
+            { title: '导出', desc: '下载报告，无需分享原文件。' },
+        ],
+        badges: ['仅本地', '离线模式', '无需账号', '流式解析'],
+        popularRecipes: '热门配方',
+        popularGuides: '热门指南',
+        viewAllRecipes: '查看全部配方 ->',
+        viewAllGuides: '查看全部指南 ->',
+        recipeCards: [
+            { title: 'nginx 状态码 TopN', desc: '快速定位 499/502/504', href: '/recipes/logs/nginx-status-codes' },
+            { title: '提取 Cloudflare Ray-ID', desc: '按 Ray-ID 追踪请求', href: '/recipes/logs/cloudflare-ray-id' },
+            { title: 'CSV 列 Top 值', desc: '浏览器内分组统计', href: '/recipes/csv/top-values' },
+        ],
+        guideCards: [
+            { title: '浏览器打开 1GB CSV', desc: 'Excel 崩了？我们来帮你。', href: '/guides/open-1gb-csv-in-browser' },
+            { title: '分析 nginx 访问日志', desc: '定位 5xx 原因', href: '/guides/analyze-nginx-access-log' },
+            { title: '日志正则提取', desc: '无需脚本提取字段', href: '/guides/regex-extract-from-log' },
+        ],
+    },
+};
+
+const c = copy[lang as keyof typeof copy] ?? copy.en;
+---
+
+<Layout title={c.title}>
+    <section class="container mx-auto px-4 py-20 text-center">
+        <div class="max-w-3xl mx-auto mb-16 animate-fade-in">
+            <h1 class="text-5xl md:text-6xl font-extrabold mb-6">
+                <span class="bg-gradient-to-r from-emerald-400 to-cyan-400 bg-clip-text text-transparent">
+                    {c.heroLine1}
+                </span>
+                <br />
+                <span class="text-slate-300">{c.heroLine2}</span>
+            </h1>
+            <p class="text-xl text-slate-400 mb-8">
+                {c.heroDesc1} <br class="hidden md:block" />
+                <strong class="text-emerald-400">{c.heroDesc2}</strong>
+            </p>
+            <a href={buildLangPath('/app', lang)} class="inline-flex items-center gap-2 bg-gradient-to-r from-emerald-500 to-cyan-500 text-white font-bold py-4 px-8 rounded-xl shadow-lg shadow-emerald-500/30 hover:shadow-emerald-500/50 transition-all transform hover:-translate-y-1">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7l5 5m0 0l-5 5m5-5H6"></path>
+                </svg>
+                {c.launch}
+            </a>
+        </div>
+
+        <div class="grid md:grid-cols-3 gap-8 max-w-4xl mx-auto mb-20">
+            {c.steps.map((step, i) => (
+                <div class="bg-slate-900 rounded-2xl p-6 border border-slate-800">
+                    <div class={`w-12 h-12 ${i === 0 ? 'bg-emerald-500/20 text-emerald-400' : i === 1 ? 'bg-cyan-500/20 text-cyan-400' : 'bg-purple-500/20 text-purple-400'} rounded-xl flex items-center justify-center mb-4 mx-auto font-bold text-xl`}>
+                        {i + 1}
+                    </div>
+                    <h3 class="text-lg font-bold text-slate-200 mb-2">{step.title}</h3>
+                    <p class="text-slate-500 text-sm">{step.desc}</p>
+                </div>
+            ))}
+        </div>
+
+        <div class="flex flex-wrap justify-center gap-4 text-sm font-medium text-slate-500 mb-20">
+            {c.badges.map((badge) => (
+                <span class="bg-slate-900 border border-slate-800 px-4 py-2 rounded-full">{badge}</span>
+            ))}
+        </div>
+
+        <div class="max-w-5xl mx-auto mb-16">
+            <h2 class="text-2xl font-bold text-slate-200 mb-8">{c.popularRecipes}</h2>
+            <div class="grid md:grid-cols-3 gap-4">
+                {c.recipeCards.map((card) => (
+                    <a href={card.href} class="group bg-slate-900 hover:bg-slate-800 rounded-xl p-4 border border-slate-800 text-left transition-all">
+                        <h3 class="font-semibold text-slate-300 group-hover:text-emerald-400 mb-1">{card.title}</h3>
+                        <p class="text-xs text-slate-600">{card.desc}</p>
+                    </a>
+                ))}
+            </div>
+            <a href={buildLangPath('/recipes', lang)} class="inline-block mt-6 text-emerald-400 hover:text-emerald-300 font-medium text-sm">
+                {c.viewAllRecipes}
+            </a>
+        </div>
+
+        <div class="max-w-5xl mx-auto">
+            <h2 class="text-2xl font-bold text-slate-200 mb-8">{c.popularGuides}</h2>
+            <div class="grid md:grid-cols-3 gap-4">
+                {c.guideCards.map((card) => (
+                    <a href={card.href} class="group bg-slate-900 hover:bg-slate-800 rounded-xl p-4 border border-slate-800 text-left transition-all">
+                        <h3 class="font-semibold text-slate-300 group-hover:text-cyan-400 mb-1">{card.title}</h3>
+                        <p class="text-xs text-slate-600">{card.desc}</p>
+                    </a>
+                ))}
+            </div>
+            <a href={buildLangPath('/guides', lang)} class="inline-block mt-6 text-cyan-400 hover:text-cyan-300 font-medium text-sm">
+                {c.viewAllGuides}
+            </a>
+        </div>
+    </section>
+</Layout>
