@@ -12,6 +12,12 @@ export async function getStaticPaths() {
         'why-csv-is-slow',
         'json-vs-jsonl',
         'remove-pii-from-logs',
+        'analyze-cloudflare-logs',
+        'find-slow-requests',
+        'log-anomaly-basics',
+        'csv-group-by-in-browser',
+        'jsonl-schema-from-logs',
+        'convert-csv-to-jsonl',
     ];
     return Object.keys(ui).flatMap((lang) =>
         guideSlugs.map((slug) => ({ params: { lang, slug } }))
@@ -1073,6 +1079,1013 @@ const guides = {
             relatedGuides: [
                 { href: '/guides/regex-extract-from-log', title: '正则提取', desc: '查找模式' },
                 { href: '/privacy', title: '隐私政策', desc: '本地处理' },
+            ],
+        },
+    },
+    'analyze-cloudflare-logs': {
+        en: {
+            title: 'Analyze Cloudflare Logs Locally',
+            description: 'Extract Ray-IDs, status spikes, and top URLs without uploading logs.',
+            intro: 'Cloudflare logs can be massive and sensitive. Use local analysis to understand traffic, errors, and incidents without sending data to a server.',
+            sections: [
+                {
+                    title: 'What to extract first',
+                    list: [
+                        'Ray-IDs for incident tracing',
+                        '4xx and 5xx status spikes',
+                        'Top requested URLs and endpoints',
+                        'Top IPs and user agents',
+                    ],
+                },
+                {
+                    title: 'Step-by-step',
+                    steps: [
+                        { title: 'Download a sample', desc: 'Export Cloudflare logs for the time window you want to inspect.' },
+                        { title: 'Open in GigaSieve', desc: 'Drop the log file into /app and wait for indexing.' },
+                        { title: 'Run recipes', desc: 'Use Ray-ID and Status Codes recipes to surface issues.' },
+                        { title: 'Summarize', desc: 'Check top URIs and IPs to see where the spike comes from.' },
+                    ],
+                },
+                {
+                    title: 'Privacy note',
+                    body: 'GigaSieve processes logs locally in your browser. Your files never leave your device.',
+                },
+            ],
+            relatedRecipes: [
+                { href: '/recipes/logs/cloudflare-ray-id', title: 'Cloudflare Ray-ID Extract', desc: 'Trace requests by ID' },
+                { href: '/recipes/logs/status-by-hour', title: 'Status Codes by Hour', desc: 'Find spike windows' },
+            ],
+            relatedGuides: [
+                { href: '/guides/analyze-nginx-access-log', title: 'Analyze nginx Access Log', desc: 'Apply the same workflow' },
+                { href: '/guides/remove-pii-from-logs', title: 'Remove PII', desc: 'Share logs safely' },
+            ],
+        },
+        ko: {
+            title: 'Cloudflare 로그 로컬 분석',
+            description: '업로드 없이 Ray-ID, 상태코드 스파이크, 상위 URL을 추출합니다.',
+            intro: 'Cloudflare 로그는 크고 민감합니다. 서버로 보내지 않고 로컬에서 트래픽과 오류를 분석하세요.',
+            sections: [
+                {
+                    title: '우선 추출할 것',
+                    list: [
+                        '사고 추적용 Ray-ID',
+                        '4xx/5xx 스파이크',
+                        '상위 요청 URL/엔드포인트',
+                        '상위 IP 및 UA',
+                    ],
+                },
+                {
+                    title: '단계별',
+                    steps: [
+                        { title: '샘플 다운로드', desc: '분석할 시간대의 Cloudflare 로그를 내보냅니다.' },
+                        { title: 'GigaSieve에서 열기', desc: '/app에 드롭하고 인덱싱을 기다립니다.' },
+                        { title: '레시피 실행', desc: 'Ray-ID/상태코드 레시피로 이슈를 찾습니다.' },
+                        { title: '요약 확인', desc: '상위 URI/IP로 스파이크 원인을 좁힙니다.' },
+                    ],
+                },
+                {
+                    title: '개인정보 메모',
+                    body: 'GigaSieve는 브라우저에서 로컬로만 처리합니다. 파일은 기기 밖으로 나가지 않습니다.',
+                },
+            ],
+            relatedRecipes: [
+                { href: '/recipes/logs/cloudflare-ray-id', title: 'Cloudflare Ray-ID 추출', desc: '요청 추적' },
+                { href: '/recipes/logs/status-by-hour', title: '시간대별 상태코드', desc: '스파이크 구간' },
+            ],
+            relatedGuides: [
+                { href: '/guides/analyze-nginx-access-log', title: 'nginx 로그 분석', desc: '동일 워크플로우' },
+                { href: '/guides/remove-pii-from-logs', title: 'PII 제거', desc: '안전한 공유' },
+            ],
+        },
+        es: {
+            title: 'Analizar logs de Cloudflare en local',
+            description: 'Extrae Ray-ID, picos de estado y URLs principales sin subir archivos.',
+            intro: 'Los logs de Cloudflare son grandes y sensibles. Analízalos localmente sin enviarlos a un servidor.',
+            sections: [
+                {
+                    title: 'Qué extraer primero',
+                    list: [
+                        'Ray-ID para trazas de incidentes',
+                        'Picos 4xx y 5xx',
+                        'URLs y endpoints más solicitados',
+                        'IPs y user agents principales',
+                    ],
+                },
+                {
+                    title: 'Paso a paso',
+                    steps: [
+                        { title: 'Descarga un sample', desc: 'Exporta los logs del intervalo que quieres analizar.' },
+                        { title: 'Abrir en GigaSieve', desc: 'Arrastra el archivo a /app y espera el indexado.' },
+                        { title: 'Ejecutar recetas', desc: 'Usa Ray-ID y Status Codes para detectar problemas.' },
+                        { title: 'Resumir', desc: 'Revisa URIs e IPs principales para encontrar el origen.' },
+                    ],
+                },
+                {
+                    title: 'Nota de privacidad',
+                    body: 'GigaSieve procesa todo en tu navegador. Los archivos no salen de tu equipo.',
+                },
+            ],
+            relatedRecipes: [
+                { href: '/recipes/logs/cloudflare-ray-id', title: 'Extraer Ray-ID', desc: 'Trazar solicitudes' },
+                { href: '/recipes/logs/status-by-hour', title: 'Códigos por hora', desc: 'Detectar picos' },
+            ],
+            relatedGuides: [
+                { href: '/guides/analyze-nginx-access-log', title: 'Analizar nginx', desc: 'Mismo flujo' },
+                { href: '/guides/remove-pii-from-logs', title: 'Eliminar PII', desc: 'Compartir seguro' },
+            ],
+        },
+        ja: {
+            title: 'Cloudflareログをローカル解析',
+            description: 'アップロードせずに Ray-ID、ステータススパイク、上位URLを抽出。',
+            intro: 'Cloudflareログは大容量で機密です。サーバー送信なしでローカル解析しましょう。',
+            sections: [
+                {
+                    title: '最初に抽出する項目',
+                    list: [
+                        '障害追跡用 Ray-ID',
+                        '4xx/5xx のスパイク',
+                        '上位URL/エンドポイント',
+                        '上位IPとUA',
+                    ],
+                },
+                {
+                    title: '手順',
+                    steps: [
+                        { title: 'サンプル取得', desc: '対象期間のログをエクスポート。' },
+                        { title: 'GigaSieveで開く', desc: '/appにドロップして索引化を待つ。' },
+                        { title: 'レシピ実行', desc: 'Ray-ID/ステータスで問題を抽出。' },
+                        { title: '要約', desc: '上位URI/IPで原因を絞る。' },
+                    ],
+                },
+                {
+                    title: 'プライバシー',
+                    body: '処理はブラウザ内で完結し、ファイルは外部へ出ません。',
+                },
+            ],
+            relatedRecipes: [
+                { href: '/recipes/logs/cloudflare-ray-id', title: 'Cloudflare Ray-ID', desc: 'リクエスト追跡' },
+                { href: '/recipes/logs/status-by-hour', title: '時間別ステータス', desc: 'スパイク検出' },
+            ],
+            relatedGuides: [
+                { href: '/guides/analyze-nginx-access-log', title: 'nginxログ分析', desc: '同じ流れ' },
+                { href: '/guides/remove-pii-from-logs', title: 'PII削除', desc: '安全な共有' },
+            ],
+        },
+        zh: {
+            title: '本地分析 Cloudflare 日志',
+            description: '无需上传即可提取 Ray-ID、状态码峰值与热门 URL。',
+            intro: 'Cloudflare 日志体积大且敏感，建议在本地分析，不要上传到服务器。',
+            sections: [
+                {
+                    title: '优先提取内容',
+                    list: [
+                        '事故追踪用 Ray-ID',
+                        '4xx/5xx 峰值',
+                        '热门 URL/端点',
+                        '高频 IP 与 UA',
+                    ],
+                },
+                {
+                    title: '步骤',
+                    steps: [
+                        { title: '下载样本', desc: '导出需要分析的时间段日志。' },
+                        { title: '在 GigaSieve 打开', desc: '拖到 /app 并等待索引。' },
+                        { title: '运行配方', desc: '用 Ray-ID 与状态码配方定位问题。' },
+                        { title: '汇总', desc: '查看热门 URI/IP 锁定原因。' },
+                    ],
+                },
+                {
+                    title: '隐私说明',
+                    body: 'GigaSieve 在浏览器本地处理，文件不会离开设备。',
+                },
+            ],
+            relatedRecipes: [
+                { href: '/recipes/logs/cloudflare-ray-id', title: 'Cloudflare Ray-ID', desc: '请求追踪' },
+                { href: '/recipes/logs/status-by-hour', title: '按小时状态码', desc: '定位峰值' },
+            ],
+            relatedGuides: [
+                { href: '/guides/analyze-nginx-access-log', title: '分析 nginx 日志', desc: '同一流程' },
+                { href: '/guides/remove-pii-from-logs', title: '移除 PII', desc: '安全分享' },
+            ],
+        },
+    },
+    'find-slow-requests': {
+        en: {
+            title: 'Find Slow Requests in Logs',
+            description: 'Spot slow endpoints by parsing response time fields in access logs.',
+            intro: 'If your log format includes response time, you can quickly surface slow requests and the endpoints causing them.',
+            sections: [
+                {
+                    title: 'Prerequisites',
+                    list: [
+                        'Your log format includes response time (e.g., request_time).',
+                        'Consistent units (seconds or milliseconds).',
+                        'A sample window to test first.',
+                    ],
+                },
+                {
+                    title: 'Step-by-step',
+                    steps: [
+                        { title: 'Open the log', desc: 'Drop the file into /app.' },
+                        { title: 'Find latency fields', desc: 'Filter for lines containing response time markers.' },
+                        { title: 'Identify slow requests', desc: 'Sort or scan for large values (e.g., > 2s).' },
+                        { title: 'Group by URI', desc: 'Find which endpoints are slow most often.' },
+                    ],
+                },
+                {
+                    title: 'Tip',
+                    body: 'If response time is missing, update your nginx log_format to include request_time.',
+                },
+            ],
+            relatedRecipes: [
+                { href: '/recipes/logs/slow-requests', title: 'Slow Requests', desc: 'Surface latency hotspots' },
+                { href: '/recipes/logs/top-uris', title: 'Top Requested URIs', desc: 'See hot endpoints' },
+            ],
+            relatedGuides: [
+                { href: '/guides/analyze-nginx-access-log', title: 'Analyze nginx Access Log', desc: 'Full workflow' },
+                { href: '/guides/log-anomaly-basics', title: 'Log Anomaly Basics', desc: 'Spike detection' },
+            ],
+        },
+        ko: {
+            title: '로그에서 느린 요청 찾기',
+            description: '응답 시간 필드로 느린 엔드포인트를 찾습니다.',
+            intro: '로그 포맷에 응답 시간이 포함되어 있다면 느린 요청과 원인 엔드포인트를 빠르게 찾을 수 있습니다.',
+            sections: [
+                {
+                    title: '사전 조건',
+                    list: [
+                        'request_time 등 응답 시간 필드 포함',
+                        '초/밀리초 단위 일관성',
+                        '테스트용 샘플 구간',
+                    ],
+                },
+                {
+                    title: '단계별',
+                    steps: [
+                        { title: '로그 열기', desc: '파일을 /app에 드롭합니다.' },
+                        { title: '지연 필드 찾기', desc: '응답 시간 마커가 있는 줄을 필터합니다.' },
+                        { title: '느린 요청 식별', desc: '큰 값(예: 2초 이상)을 찾습니다.' },
+                        { title: 'URI별 집계', desc: '느린 엔드포인트를 파악합니다.' },
+                    ],
+                },
+                {
+                    title: '팁',
+                    body: '응답 시간이 없다면 nginx log_format에 request_time을 추가하세요.',
+                },
+            ],
+            relatedRecipes: [
+                { href: '/recipes/logs/slow-requests', title: '느린 요청', desc: '지연 구간 찾기' },
+                { href: '/recipes/logs/top-uris', title: '상위 URI', desc: '핫 엔드포인트' },
+            ],
+            relatedGuides: [
+                { href: '/guides/analyze-nginx-access-log', title: 'nginx 로그 분석', desc: '전체 흐름' },
+                { href: '/guides/log-anomaly-basics', title: '로그 이상 징후', desc: '스파이크 탐지' },
+            ],
+        },
+        es: {
+            title: 'Encontrar solicitudes lentas en logs',
+            description: 'Detecta endpoints lentos analizando tiempos de respuesta.',
+            intro: 'Si el log incluye tiempo de respuesta, puedes encontrar solicitudes lentas rápidamente.',
+            sections: [
+                {
+                    title: 'Requisitos',
+                    list: [
+                        'El formato incluye tiempo (request_time).',
+                        'Unidades consistentes (s o ms).',
+                        'Ventana de prueba pequeña.',
+                    ],
+                },
+                {
+                    title: 'Paso a paso',
+                    steps: [
+                        { title: 'Abrir el log', desc: 'Arrastra el archivo a /app.' },
+                        { title: 'Filtrar latencia', desc: 'Busca líneas con el campo de tiempo.' },
+                        { title: 'Identificar lentos', desc: 'Localiza valores altos (p. ej., > 2s).' },
+                        { title: 'Agrupar por URI', desc: 'Detecta rutas lentas frecuentes.' },
+                    ],
+                },
+                {
+                    title: 'Consejo',
+                    body: 'Si no hay tiempos, agrega request_time en log_format de nginx.',
+                },
+            ],
+            relatedRecipes: [
+                { href: '/recipes/logs/slow-requests', title: 'Solicitudes lentas', desc: 'Puntos de latencia' },
+                { href: '/recipes/logs/top-uris', title: 'URIs principales', desc: 'Endpoints calientes' },
+            ],
+            relatedGuides: [
+                { href: '/guides/analyze-nginx-access-log', title: 'Analizar nginx', desc: 'Flujo completo' },
+                { href: '/guides/log-anomaly-basics', title: 'Anomalías básicas', desc: 'Detectar picos' },
+            ],
+        },
+        ja: {
+            title: 'ログで遅いリクエストを探す',
+            description: 'レスポンスタイムから遅いエンドポイントを特定。',
+            intro: 'レスポンスタイムがあれば遅いリクエストを素早く見つけられます。',
+            sections: [
+                {
+                    title: '前提',
+                    list: [
+                        'ログに request_time がある',
+                        '単位が一貫している',
+                        '小さなサンプルでテスト',
+                    ],
+                },
+                {
+                    title: '手順',
+                    steps: [
+                        { title: 'ログを開く', desc: 'ファイルを /app にドロップ。' },
+                        { title: '遅延フィールド検索', desc: 'レスポンスタイムの行を探す。' },
+                        { title: '遅延を特定', desc: '大きい値(例: 2秒超)を抽出。' },
+                        { title: 'URI別集計', desc: '遅いルートを把握。' },
+                    ],
+                },
+                {
+                    title: 'ヒント',
+                    body: '時間が無い場合は nginx の log_format に request_time を追加。',
+                },
+            ],
+            relatedRecipes: [
+                { href: '/recipes/logs/slow-requests', title: '遅いリクエスト', desc: '遅延箇所' },
+                { href: '/recipes/logs/top-uris', title: '上位URI', desc: '人気エンドポイント' },
+            ],
+            relatedGuides: [
+                { href: '/guides/analyze-nginx-access-log', title: 'nginxログ分析', desc: 'フルフロー' },
+                { href: '/guides/log-anomaly-basics', title: '異常検知の基礎', desc: 'スパイク' },
+            ],
+        },
+        zh: {
+            title: '在日志中查找慢请求',
+            description: '通过响应时间字段定位慢接口。',
+            intro: '如果日志包含响应时间字段，就可以快速找出慢请求与慢端点。',
+            sections: [
+                {
+                    title: '前置条件',
+                    list: [
+                        '日志包含 request_time 等字段',
+                        '单位一致（秒或毫秒）',
+                        '先用小样本测试',
+                    ],
+                },
+                {
+                    title: '步骤',
+                    steps: [
+                        { title: '打开日志', desc: '拖入 /app。' },
+                        { title: '筛选延迟字段', desc: '过滤含响应时间的行。' },
+                        { title: '定位慢请求', desc: '查找较大值（如 > 2s）。' },
+                        { title: '按 URI 汇总', desc: '找出最慢端点。' },
+                    ],
+                },
+                {
+                    title: '提示',
+                    body: '若没有时间字段，请在 nginx log_format 中加入 request_time。',
+                },
+            ],
+            relatedRecipes: [
+                { href: '/recipes/logs/slow-requests', title: '慢请求', desc: '延迟热点' },
+                { href: '/recipes/logs/top-uris', title: '热门 URI', desc: '热点端点' },
+            ],
+            relatedGuides: [
+                { href: '/guides/analyze-nginx-access-log', title: '分析 nginx 日志', desc: '完整流程' },
+                { href: '/guides/log-anomaly-basics', title: '日志异常基础', desc: '识别峰值' },
+            ],
+        },
+    },
+    'log-anomaly-basics': {
+        en: {
+            title: 'Log Anomaly Basics',
+            description: 'Detect spikes in errors or traffic by grouping logs by hour.',
+            intro: 'Anomaly detection starts with simple baselines. Group logs by hour and compare error spikes.',
+            sections: [
+                {
+                    title: 'Signals to watch',
+                    list: [
+                        'Sudden 5xx spikes',
+                        'Repeated 403 or 429 responses',
+                        'Burst traffic from a single IP',
+                        'Top URLs changing unexpectedly',
+                    ],
+                },
+                {
+                    title: 'Quick workflow',
+                    steps: [
+                        { title: 'Group by hour', desc: 'Run Status Codes by Hour for a time series.' },
+                        { title: 'Compare endpoints', desc: 'Check top URIs for the spike window.' },
+                        { title: 'Inspect clients', desc: 'Use Top IPs to identify bots or scrapers.' },
+                    ],
+                },
+            ],
+            relatedRecipes: [
+                { href: '/recipes/logs/status-by-hour', title: 'Status Codes by Hour', desc: 'Spike detection' },
+                { href: '/recipes/logs/top-ips', title: 'Top IPs', desc: 'Noisy clients' },
+            ],
+            relatedGuides: [
+                { href: '/guides/analyze-nginx-access-log', title: 'Analyze nginx Access Log', desc: 'Incident triage' },
+                { href: '/guides/regex-extract-from-log', title: 'Regex Extract', desc: 'Find patterns' },
+            ],
+        },
+        ko: {
+            title: '로그 이상 징후 기초',
+            description: '시간대별로 묶어 오류/트래픽 스파이크를 찾습니다.',
+            intro: '이상 탐지는 간단한 기준선부터 시작합니다. 시간대별 상태코드를 비교하세요.',
+            sections: [
+                {
+                    title: '주요 신호',
+                    list: [
+                        '5xx 급증',
+                        '403/429 반복',
+                        '특정 IP 폭주',
+                        '상위 URL 급변',
+                    ],
+                },
+                {
+                    title: '빠른 절차',
+                    steps: [
+                        { title: '시간대 그룹', desc: '시간대별 상태코드 레시피 실행.' },
+                        { title: '엔드포인트 비교', desc: '스파이크 구간의 상위 URI 확인.' },
+                        { title: '클라이언트 확인', desc: '상위 IP로 봇 여부 확인.' },
+                    ],
+                },
+            ],
+            relatedRecipes: [
+                { href: '/recipes/logs/status-by-hour', title: '시간대별 상태코드', desc: '스파이크 탐지' },
+                { href: '/recipes/logs/top-ips', title: '상위 IP', desc: '노이즈 클라이언트' },
+            ],
+            relatedGuides: [
+                { href: '/guides/analyze-nginx-access-log', title: 'nginx 로그 분석', desc: '사건 대응' },
+                { href: '/guides/regex-extract-from-log', title: '정규식 추출', desc: '패턴 찾기' },
+            ],
+        },
+        es: {
+            title: 'Bases de anomalías en logs',
+            description: 'Detecta picos de errores o tráfico agrupando por hora.',
+            intro: 'Empieza con una línea base simple: agrupa por hora y compara picos.',
+            sections: [
+                {
+                    title: 'Señales clave',
+                    list: [
+                        'Picos 5xx',
+                        '403/429 repetidos',
+                        'Ráfagas desde una IP',
+                        'Cambios en URLs principales',
+                    ],
+                },
+                {
+                    title: 'Flujo rápido',
+                    steps: [
+                        { title: 'Agrupar por hora', desc: 'Ejecuta Status Codes by Hour.' },
+                        { title: 'Comparar endpoints', desc: 'Revisa URIs del intervalo con pico.' },
+                        { title: 'Inspeccionar clientes', desc: 'Usa Top IPs para bots.' },
+                    ],
+                },
+            ],
+            relatedRecipes: [
+                { href: '/recipes/logs/status-by-hour', title: 'Códigos por hora', desc: 'Detección de picos' },
+                { href: '/recipes/logs/top-ips', title: 'Top IPs', desc: 'Clientes ruidosos' },
+            ],
+            relatedGuides: [
+                { href: '/guides/analyze-nginx-access-log', title: 'Analizar nginx', desc: 'Respuesta a incidentes' },
+                { href: '/guides/regex-extract-from-log', title: 'Extracción regex', desc: 'Patrones' },
+            ],
+        },
+        ja: {
+            title: 'ログ異常検知の基礎',
+            description: '時間帯でまとめてエラーやトラフィックの急増を検出。',
+            intro: 'まずは時間単位でグルーピングし、スパイクを比較します。',
+            sections: [
+                {
+                    title: '見るべきシグナル',
+                    list: [
+                        '5xx の急増',
+                        '403/429 の連続',
+                        '単一IPの急増',
+                        '上位URLの変化',
+                    ],
+                },
+                {
+                    title: 'クイック手順',
+                    steps: [
+                        { title: '時間別集計', desc: 'Status Codes by Hour を実行。' },
+                        { title: 'URI比較', desc: 'スパイク時間の上位URIを確認。' },
+                        { title: 'クライアント確認', desc: 'Top IPsでボット確認。' },
+                    ],
+                },
+            ],
+            relatedRecipes: [
+                { href: '/recipes/logs/status-by-hour', title: '時間別ステータス', desc: 'スパイク検出' },
+                { href: '/recipes/logs/top-ips', title: '上位IP', desc: 'ノイズ把握' },
+            ],
+            relatedGuides: [
+                { href: '/guides/analyze-nginx-access-log', title: 'nginxログ分析', desc: 'インシデント対応' },
+                { href: '/guides/regex-extract-from-log', title: '正規表現抽出', desc: 'パターン' },
+            ],
+        },
+        zh: {
+            title: '日志异常基础',
+            description: '按小时分组，识别错误或流量峰值。',
+            intro: '从简单基线开始：按小时统计并对比峰值。',
+            sections: [
+                {
+                    title: '关注信号',
+                    list: [
+                        '5xx 激增',
+                        '403/429 重复',
+                        '单一 IP 爆发',
+                        '热门 URL 异常变化',
+                    ],
+                },
+                {
+                    title: '快速流程',
+                    steps: [
+                        { title: '按小时分组', desc: '运行 Status Codes by Hour。' },
+                        { title: '比较端点', desc: '查看峰值时段的热门 URI。' },
+                        { title: '检查客户端', desc: '用 Top IPs 找出爬虫。' },
+                    ],
+                },
+            ],
+            relatedRecipes: [
+                { href: '/recipes/logs/status-by-hour', title: '按小时状态码', desc: '峰值检测' },
+                { href: '/recipes/logs/top-ips', title: 'Top IP', desc: '噪声客户端' },
+            ],
+            relatedGuides: [
+                { href: '/guides/analyze-nginx-access-log', title: '分析 nginx 日志', desc: '事件处理' },
+                { href: '/guides/regex-extract-from-log', title: '正则提取', desc: '模式' },
+            ],
+        },
+    },
+    'csv-group-by-in-browser': {
+        en: {
+            title: 'Group CSV by Column in the Browser',
+            description: 'Summarize large CSVs by a column without Excel.',
+            intro: 'Group-by is the fastest way to summarize large CSVs. GigaSieve does it locally in your browser.',
+            sections: [
+                {
+                    title: 'Common use cases',
+                    list: [
+                        'Count orders per country',
+                        'Top customers by frequency',
+                        'Status distribution by type',
+                    ],
+                },
+                {
+                    title: 'Step-by-step',
+                    steps: [
+                        { title: 'Open CSV', desc: 'Drop the file into /app.' },
+                        { title: 'Pick a column', desc: 'Choose the group-by field (e.g., country).' },
+                        { title: 'Inspect counts', desc: 'Review the counts in Insights.' },
+                        { title: 'Export summary', desc: 'Download the grouped results.' },
+                    ],
+                },
+            ],
+            relatedRecipes: [
+                { href: '/recipes/csv/group-by', title: 'Group By (CSV)', desc: 'Counts by key' },
+                { href: '/recipes/csv/top-values', title: 'Column Top Values', desc: 'Quick summaries' },
+            ],
+            relatedGuides: [
+                { href: '/guides/open-1gb-csv-in-browser', title: 'Open 1GB CSV', desc: 'Large file tips' },
+                { href: '/guides/why-csv-is-slow', title: 'Why CSV is Slow', desc: 'Performance notes' },
+            ],
+        },
+        ko: {
+            title: '브라우저에서 CSV 그룹화',
+            description: '엑셀 없이 대용량 CSV를 컬럼 기준으로 요약합니다.',
+            intro: '그룹바이는 대용량 CSV를 요약하는 가장 빠른 방법입니다.',
+            sections: [
+                {
+                    title: '대표 활용',
+                    list: [
+                        '국가별 주문 수',
+                        '고객별 빈도',
+                        '상태 분포',
+                    ],
+                },
+                {
+                    title: '단계별',
+                    steps: [
+                        { title: 'CSV 열기', desc: '파일을 /app에 드롭합니다.' },
+                        { title: '컬럼 선택', desc: '그룹 기준 컬럼을 선택합니다.' },
+                        { title: '카운트 확인', desc: 'Insights에서 집계 결과를 확인합니다.' },
+                        { title: '요약 내보내기', desc: '그룹 결과를 다운로드합니다.' },
+                    ],
+                },
+            ],
+            relatedRecipes: [
+                { href: '/recipes/csv/group-by', title: 'CSV 그룹화', desc: '키별 집계' },
+                { href: '/recipes/csv/top-values', title: '상위 값', desc: '빠른 요약' },
+            ],
+            relatedGuides: [
+                { href: '/guides/open-1gb-csv-in-browser', title: '1GB CSV 열기', desc: '대용량 팁' },
+                { href: '/guides/why-csv-is-slow', title: 'CSV가 느린 이유', desc: '성능 메모' },
+            ],
+        },
+        es: {
+            title: 'Agrupar CSV por columna en el navegador',
+            description: 'Resume CSV grandes por columna sin Excel.',
+            intro: 'Group-by es la forma más rápida de resumir CSV grandes localmente.',
+            sections: [
+                {
+                    title: 'Casos comunes',
+                    list: [
+                        'Pedidos por país',
+                        'Clientes más frecuentes',
+                        'Distribución por estado',
+                    ],
+                },
+                {
+                    title: 'Paso a paso',
+                    steps: [
+                        { title: 'Abrir CSV', desc: 'Arrastra el archivo a /app.' },
+                        { title: 'Elegir columna', desc: 'Selecciona la columna de agrupación.' },
+                        { title: 'Ver conteos', desc: 'Revisa los conteos en Insights.' },
+                        { title: 'Exportar resumen', desc: 'Descarga el resultado.' },
+                    ],
+                },
+            ],
+            relatedRecipes: [
+                { href: '/recipes/csv/group-by', title: 'Group By (CSV)', desc: 'Conteos por clave' },
+                { href: '/recipes/csv/top-values', title: 'Top valores', desc: 'Resumen rápido' },
+            ],
+            relatedGuides: [
+                { href: '/guides/open-1gb-csv-in-browser', title: 'Abrir CSV 1GB', desc: 'Consejos' },
+                { href: '/guides/why-csv-is-slow', title: 'Por qué CSV es lento', desc: 'Rendimiento' },
+            ],
+        },
+        ja: {
+            title: 'ブラウザでCSVをグループ化',
+            description: 'ExcelなしでCSVを列ごとに要約します。',
+            intro: 'グループ化は大きなCSVを要約する最速の方法です。',
+            sections: [
+                {
+                    title: 'よくある用途',
+                    list: [
+                        '国別の注文数',
+                        '顧客別の頻度',
+                        'ステータス分布',
+                    ],
+                },
+                {
+                    title: '手順',
+                    steps: [
+                        { title: 'CSVを開く', desc: '/appにドロップ。' },
+                        { title: '列を選ぶ', desc: 'グループ化列を選択。' },
+                        { title: '件数確認', desc: 'Insightsで件数確認。' },
+                        { title: 'エクスポート', desc: '結果をダウンロード。' },
+                    ],
+                },
+            ],
+            relatedRecipes: [
+                { href: '/recipes/csv/group-by', title: 'CSVグループ化', desc: 'キー別集計' },
+                { href: '/recipes/csv/top-values', title: 'トップ値', desc: 'クイック要約' },
+            ],
+            relatedGuides: [
+                { href: '/guides/open-1gb-csv-in-browser', title: '1GB CSVを開く', desc: '大容量のコツ' },
+                { href: '/guides/why-csv-is-slow', title: 'CSVが遅い理由', desc: '性能' },
+            ],
+        },
+        zh: {
+            title: '在浏览器按列分组 CSV',
+            description: '无需 Excel 按列汇总大 CSV。',
+            intro: '分组是汇总大 CSV 的最快方式。',
+            sections: [
+                {
+                    title: '常见场景',
+                    list: [
+                        '按国家统计订单',
+                        '高频客户',
+                        '状态分布',
+                    ],
+                },
+                {
+                    title: '步骤',
+                    steps: [
+                        { title: '打开 CSV', desc: '拖入 /app。' },
+                        { title: '选择列', desc: '选择分组列。' },
+                        { title: '查看计数', desc: '在 Insights 查看计数。' },
+                        { title: '导出摘要', desc: '下载结果。' },
+                    ],
+                },
+            ],
+            relatedRecipes: [
+                { href: '/recipes/csv/group-by', title: 'CSV 分组', desc: '按键统计' },
+                { href: '/recipes/csv/top-values', title: '高频值', desc: '快速汇总' },
+            ],
+            relatedGuides: [
+                { href: '/guides/open-1gb-csv-in-browser', title: '打开 1GB CSV', desc: '大文件技巧' },
+                { href: '/guides/why-csv-is-slow', title: 'CSV 为什么慢', desc: '性能说明' },
+            ],
+        },
+    },
+    'jsonl-schema-from-logs': {
+        en: {
+            title: 'Extract JSONL Schema from Logs',
+            description: 'Identify keys and structure in JSONL log files quickly.',
+            intro: 'Before querying JSONL, you need to know the schema. Extract keys and flatten nested fields locally.',
+            sections: [
+                {
+                    title: 'What you get',
+                    list: [
+                        'List of keys',
+                        'Counts per key',
+                        'Nested fields in dot notation',
+                    ],
+                },
+                {
+                    title: 'Step-by-step',
+                    steps: [
+                        { title: 'Open JSONL', desc: 'Load the file into /app.' },
+                        { title: 'Extract keys', desc: 'Run the Extract Keys recipe.' },
+                        { title: 'Flatten nested fields', desc: 'Use Flatten Nested JSONL for deeper structures.' },
+                    ],
+                },
+            ],
+            relatedRecipes: [
+                { href: '/recipes/jsonl/extract-keys', title: 'Extract Keys', desc: 'Discover schema' },
+                { href: '/recipes/jsonl/flatten-nested', title: 'Flatten Nested JSONL', desc: 'Dot notation fields' },
+            ],
+            relatedGuides: [
+                { href: '/guides/json-vs-jsonl', title: 'JSON vs JSONL', desc: 'Format choice' },
+                { href: '/guides/remove-pii-from-logs', title: 'Remove PII', desc: 'Safe sharing' },
+            ],
+        },
+        ko: {
+            title: 'JSONL 스키마 추출',
+            description: 'JSONL 로그의 키와 구조를 빠르게 파악합니다.',
+            intro: '쿼리 전에 스키마를 알아야 합니다. 키 추출과 중첩 평탄화를 로컬에서 수행하세요.',
+            sections: [
+                {
+                    title: '얻는 것',
+                    list: [
+                        '키 목록',
+                        '키별 빈도',
+                        'dot 표기 중첩 필드',
+                    ],
+                },
+                {
+                    title: '단계별',
+                    steps: [
+                        { title: 'JSONL 열기', desc: '/app에 로드합니다.' },
+                        { title: '키 추출', desc: 'Extract Keys 레시피 실행.' },
+                        { title: '중첩 평탄화', desc: 'Flatten Nested JSONL 사용.' },
+                    ],
+                },
+            ],
+            relatedRecipes: [
+                { href: '/recipes/jsonl/extract-keys', title: '키 추출', desc: '스키마 확인' },
+                { href: '/recipes/jsonl/flatten-nested', title: '중첩 평탄화', desc: 'dot 필드' },
+            ],
+            relatedGuides: [
+                { href: '/guides/json-vs-jsonl', title: 'JSON vs JSONL', desc: '형식 선택' },
+                { href: '/guides/remove-pii-from-logs', title: 'PII 제거', desc: '안전 공유' },
+            ],
+        },
+        es: {
+            title: 'Extraer esquema JSONL de logs',
+            description: 'Identifica claves y estructura en JSONL rápidamente.',
+            intro: 'Antes de consultar JSONL, necesitas el esquema. Extrae claves y aplana campos anidados.',
+            sections: [
+                {
+                    title: 'Qué obtienes',
+                    list: [
+                        'Lista de claves',
+                        'Conteos por clave',
+                        'Campos anidados en dot notation',
+                    ],
+                },
+                {
+                    title: 'Paso a paso',
+                    steps: [
+                        { title: 'Abrir JSONL', desc: 'Carga el archivo en /app.' },
+                        { title: 'Extraer claves', desc: 'Ejecuta Extract Keys.' },
+                        { title: 'Aplanar anidados', desc: 'Usa Flatten Nested JSONL.' },
+                    ],
+                },
+            ],
+            relatedRecipes: [
+                { href: '/recipes/jsonl/extract-keys', title: 'Extraer claves', desc: 'Descubrir esquema' },
+                { href: '/recipes/jsonl/flatten-nested', title: 'Aplanar anidados', desc: 'Dot notation' },
+            ],
+            relatedGuides: [
+                { href: '/guides/json-vs-jsonl', title: 'JSON vs JSONL', desc: 'Elección de formato' },
+                { href: '/guides/remove-pii-from-logs', title: 'Eliminar PII', desc: 'Compartir seguro' },
+            ],
+        },
+        ja: {
+            title: 'JSONLスキーマ抽出',
+            description: 'JSONLログのキーと構造を素早く把握。',
+            intro: 'クエリ前にスキーマ把握が必要です。キー抽出と平坦化を行います。',
+            sections: [
+                {
+                    title: '得られるもの',
+                    list: [
+                        'キー一覧',
+                        'キー別件数',
+                        'ドット表記のネストフィールド',
+                    ],
+                },
+                {
+                    title: '手順',
+                    steps: [
+                        { title: 'JSONLを開く', desc: '/appに読み込み。' },
+                        { title: 'キー抽出', desc: 'Extract Keysを実行。' },
+                        { title: 'ネスト平坦化', desc: 'Flatten Nested JSONLを使用。' },
+                    ],
+                },
+            ],
+            relatedRecipes: [
+                { href: '/recipes/jsonl/extract-keys', title: 'キー抽出', desc: 'スキーマ確認' },
+                { href: '/recipes/jsonl/flatten-nested', title: 'ネスト平坦化', desc: 'dot表記' },
+            ],
+            relatedGuides: [
+                { href: '/guides/json-vs-jsonl', title: 'JSON vs JSONL', desc: '形式選択' },
+                { href: '/guides/remove-pii-from-logs', title: 'PII削除', desc: '安全共有' },
+            ],
+        },
+        zh: {
+            title: '提取 JSONL 结构',
+            description: '快速识别 JSONL 日志的键与结构。',
+            intro: '查询前先了解结构。通过键提取与嵌套平坦化完成。',
+            sections: [
+                {
+                    title: '你会得到',
+                    list: [
+                        '键列表',
+                        '键出现次数',
+                        '点号表示的嵌套字段',
+                    ],
+                },
+                {
+                    title: '步骤',
+                    steps: [
+                        { title: '打开 JSONL', desc: '加载到 /app。' },
+                        { title: '提取键', desc: '运行 Extract Keys。' },
+                        { title: '平坦化嵌套', desc: '使用 Flatten Nested JSONL。' },
+                    ],
+                },
+            ],
+            relatedRecipes: [
+                { href: '/recipes/jsonl/extract-keys', title: '提取键', desc: '结构发现' },
+                { href: '/recipes/jsonl/flatten-nested', title: '平坦化嵌套', desc: '点号字段' },
+            ],
+            relatedGuides: [
+                { href: '/guides/json-vs-jsonl', title: 'JSON vs JSONL', desc: '格式选择' },
+                { href: '/guides/remove-pii-from-logs', title: '移除 PII', desc: '安全分享' },
+            ],
+        },
+    },
+    'convert-csv-to-jsonl': {
+        en: {
+            title: 'Convert CSV to JSONL (Local Workflow)',
+            description: 'Why JSONL is better for large data and how to transition safely.',
+            intro: 'CSV is fragile for large pipelines. JSONL is streaming-friendly and easier to parse. Use this workflow to convert safely.',
+            sections: [
+                {
+                    title: 'Why switch to JSONL',
+                    list: [
+                        'Streaming reads',
+                        'Schema flexibility',
+                        'Better for logs and events',
+                    ],
+                },
+                {
+                    title: 'Safe workflow',
+                    steps: [
+                        { title: 'Preview the CSV', desc: 'Open the file and check basic data quality.' },
+                        { title: 'Clean duplicates', desc: 'Remove duplicate rows and invalid lines.' },
+                        { title: 'Convert', desc: 'Export to JSONL or convert with a script.' },
+                    ],
+                },
+            ],
+            relatedRecipes: [
+                { href: '/recipes/csv/dedupe-rows', title: 'Remove Duplicate Rows', desc: 'Clean data first' },
+                { href: '/recipes/jsonl/filter-by-key', title: 'Filter by Key Value', desc: 'Work with JSONL' },
+            ],
+            relatedGuides: [
+                { href: '/guides/open-1gb-csv-in-browser', title: 'Open 1GB CSV', desc: 'Large file tips' },
+                { href: '/guides/json-vs-jsonl', title: 'JSON vs JSONL', desc: 'Format comparison' },
+            ],
+        },
+        ko: {
+            title: 'CSV를 JSONL로 변환 (로컬 워크플로우)',
+            description: '대용량에는 JSONL이 유리합니다. 안전한 전환 흐름을 설명합니다.',
+            intro: 'CSV는 대용량 파이프라인에 취약합니다. JSONL은 스트리밍 친화적입니다.',
+            sections: [
+                {
+                    title: 'JSONL로 전환하는 이유',
+                    list: [
+                        '스트리밍 읽기',
+                        '유연한 스키마',
+                        '로그/이벤트에 적합',
+                    ],
+                },
+                {
+                    title: '안전한 흐름',
+                    steps: [
+                        { title: 'CSV 미리보기', desc: '파일을 열어 품질을 확인합니다.' },
+                        { title: '중복/오류 제거', desc: '중복 행과 잘못된 행을 정리합니다.' },
+                        { title: '변환', desc: 'JSONL로 내보내거나 스크립트로 변환합니다.' },
+                    ],
+                },
+            ],
+            relatedRecipes: [
+                { href: '/recipes/csv/dedupe-rows', title: '중복 제거', desc: '정리부터' },
+                { href: '/recipes/jsonl/filter-by-key', title: '키 필터', desc: 'JSONL 활용' },
+            ],
+            relatedGuides: [
+                { href: '/guides/open-1gb-csv-in-browser', title: '1GB CSV 열기', desc: '대용량 팁' },
+                { href: '/guides/json-vs-jsonl', title: 'JSON vs JSONL', desc: '형식 비교' },
+            ],
+        },
+        es: {
+            title: 'Convertir CSV a JSONL (flujo local)',
+            description: 'JSONL es mejor para datos grandes. Aquí un flujo seguro.',
+            intro: 'CSV es frágil en grandes volúmenes. JSONL es ideal para streaming.',
+            sections: [
+                {
+                    title: 'Por qué cambiar',
+                    list: [
+                        'Lectura por streaming',
+                        'Esquema flexible',
+                        'Ideal para logs/eventos',
+                    ],
+                },
+                {
+                    title: 'Flujo seguro',
+                    steps: [
+                        { title: 'Previsualizar CSV', desc: 'Revisa calidad básica.' },
+                        { title: 'Limpiar duplicados', desc: 'Elimina filas inválidas.' },
+                        { title: 'Convertir', desc: 'Exporta a JSONL o usa script.' },
+                    ],
+                },
+            ],
+            relatedRecipes: [
+                { href: '/recipes/csv/dedupe-rows', title: 'Eliminar duplicados', desc: 'Limpiar primero' },
+                { href: '/recipes/jsonl/filter-by-key', title: 'Filtrar por clave', desc: 'Trabajar JSONL' },
+            ],
+            relatedGuides: [
+                { href: '/guides/open-1gb-csv-in-browser', title: 'Abrir CSV 1GB', desc: 'Tips' },
+                { href: '/guides/json-vs-jsonl', title: 'JSON vs JSONL', desc: 'Comparación' },
+            ],
+        },
+        ja: {
+            title: 'CSVをJSONLへ変換（ローカル手順）',
+            description: '大規模データではJSONLが有利。安全な移行手順。',
+            intro: 'CSVは大容量に弱く、JSONLはストリーミング向きです。',
+            sections: [
+                {
+                    title: '移行理由',
+                    list: [
+                        'ストリーミング読み込み',
+                        '柔軟なスキーマ',
+                        'ログ/イベント向き',
+                    ],
+                },
+                {
+                    title: '安全フロー',
+                    steps: [
+                        { title: 'CSVを確認', desc: '品質を簡易チェック。' },
+                        { title: '重複除去', desc: '重複/不正行を整理。' },
+                        { title: '変換', desc: 'JSONLにエクスポート。' },
+                    ],
+                },
+            ],
+            relatedRecipes: [
+                { href: '/recipes/csv/dedupe-rows', title: '重複除去', desc: '整理から' },
+                { href: '/recipes/jsonl/filter-by-key', title: 'キーでフィルタ', desc: 'JSONL活用' },
+            ],
+            relatedGuides: [
+                { href: '/guides/open-1gb-csv-in-browser', title: '1GB CSVを開く', desc: '大容量のコツ' },
+                { href: '/guides/json-vs-jsonl', title: 'JSON vs JSONL', desc: '比較' },
+            ],
+        },
+        zh: {
+            title: 'CSV 转 JSONL（本地流程）',
+            description: '大数据更适合 JSONL，这里给出安全迁移流程。',
+            intro: 'CSV 对大规模不友好，JSONL 更适合流式处理。',
+            sections: [
+                {
+                    title: '为什么切换',
+                    list: [
+                        '流式读取',
+                        '结构灵活',
+                        '适合日志/事件',
+                    ],
+                },
+                {
+                    title: '安全流程',
+                    steps: [
+                        { title: '预览 CSV', desc: '先做质量检查。' },
+                        { title: '清理重复', desc: '移除重复/无效行。' },
+                        { title: '转换', desc: '导出为 JSONL 或用脚本转换。' },
+                    ],
+                },
+            ],
+            relatedRecipes: [
+                { href: '/recipes/csv/dedupe-rows', title: '去重行', desc: '先清理' },
+                { href: '/recipes/jsonl/filter-by-key', title: '按键过滤', desc: '使用 JSONL' },
+            ],
+            relatedGuides: [
+                { href: '/guides/open-1gb-csv-in-browser', title: '打开 1GB CSV', desc: '大文件技巧' },
+                { href: '/guides/json-vs-jsonl', title: 'JSON vs JSONL', desc: '对比' },
             ],
         },
     },

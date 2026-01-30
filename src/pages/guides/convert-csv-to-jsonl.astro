@@ -1,0 +1,56 @@
+---
+import Layout from '../../layouts/Layout.astro';
+---
+
+<Layout title="Convert CSV to JSONL (Local Workflow) - GigaSieve Guide" description="Why JSONL is better for large data and how to transition safely.">
+    <section class="container mx-auto px-4 py-12 max-w-3xl">
+        <nav class="text-sm text-slate-500 mb-6">
+            <a href="/guides" class="hover:text-cyan-400">Guides</a>
+            <span class="mx-2">/</span>
+            <span class="text-slate-400">Convert CSV to JSONL (Local Workflow)</span>
+        </nav>
+
+        <h1 class="text-3xl font-extrabold text-slate-200 mb-4">Convert CSV to JSONL (Local Workflow)</h1>
+        <p class="text-slate-400 mb-8">
+            CSV is fragile for large pipelines. JSONL is streaming-friendly and easier to parse. Here is a safe conversion workflow.
+        </p>
+
+        <div class="bg-slate-900 rounded-xl border border-slate-800 p-6 mb-8">
+            <h2 class="text-lg font-bold text-slate-300 mb-4">Why switch</h2>
+            <ul class="list-disc list-inside space-y-2 text-slate-400 text-sm">
+                <li>Streaming reads</li>
+                <li>Schema flexibility</li>
+                <li>Better for logs and events</li>
+            </ul>
+        </div>
+
+        <div class="bg-slate-900 rounded-xl border border-slate-800 p-6 mb-8">
+            <h2 class="text-lg font-bold text-slate-300 mb-4">Safe workflow</h2>
+            <ul class="list-disc list-inside space-y-2 text-slate-400 text-sm">
+                <li>Preview the CSV in GigaSieve.</li>
+                <li>Clean duplicates and invalid rows.</li>
+                <li>Export in JSONL format (if supported) or convert via script.</li>
+            </ul>
+        </div>
+
+        <a href="/app" class="inline-flex items-center gap-2 bg-gradient-to-r from-emerald-500 to-cyan-500 text-white font-bold py-3 px-6 rounded-xl shadow-lg mb-8">
+            Try GigaSieve ->
+        </a>
+
+        <h2 class="text-xl font-bold text-slate-300 mb-4">Related</h2>
+        <div class="grid md:grid-cols-2 gap-4">
+            <a href="/guides/json-vs-jsonl" class="bg-slate-900 hover:bg-slate-800 rounded-xl p-4 border border-slate-800">
+                <h3 class="font-semibold text-slate-300">JSON vs JSONL</h3>
+            </a>
+            <a href="/guides/open-1gb-csv-in-browser" class="bg-slate-900 hover:bg-slate-800 rounded-xl p-4 border border-slate-800">
+                <h3 class="font-semibold text-slate-300">Open 1GB CSV</h3>
+            </a>
+            <a href="/recipes/csv/dedupe-rows" class="bg-slate-900 hover:bg-slate-800 rounded-xl p-4 border border-slate-800">
+                <h3 class="font-semibold text-slate-300">Remove Duplicate Rows</h3>
+            </a>
+            <a href="/recipes/jsonl/filter-by-key" class="bg-slate-900 hover:bg-slate-800 rounded-xl p-4 border border-slate-800">
+                <h3 class="font-semibold text-slate-300">Filter by Key Value</h3>
+            </a>
+        </div>
+    </section>
+</Layout>

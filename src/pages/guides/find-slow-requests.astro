@@ -1,0 +1,62 @@
+---
+import Layout from '../../layouts/Layout.astro';
+---
+
+<Layout title="Find Slow Requests in Logs - GigaSieve Guide" description="Spot slow endpoints by parsing response time fields in access logs.">
+    <section class="container mx-auto px-4 py-12 max-w-3xl">
+        <nav class="text-sm text-slate-500 mb-6">
+            <a href="/guides" class="hover:text-cyan-400">Guides</a>
+            <span class="mx-2">/</span>
+            <span class="text-slate-400">Find Slow Requests in Logs</span>
+        </nav>
+
+        <h1 class="text-3xl font-extrabold text-slate-200 mb-4">Find Slow Requests in Logs</h1>
+        <p class="text-slate-400 mb-8">
+            If your log format includes response time, you can quickly surface slow requests and the endpoints causing them.
+        </p>
+
+        <div class="bg-slate-900 rounded-xl border border-slate-800 p-6 mb-8">
+            <h2 class="text-lg font-bold text-slate-300 mb-4">Before you start</h2>
+            <ul class="list-disc list-inside space-y-2 text-slate-400 text-sm">
+                <li>Ensure your log format includes response time.</li>
+                <li>Use a consistent unit (seconds or ms).</li>
+                <li>Test on a small sample first.</li>
+            </ul>
+        </div>
+
+        <div class="bg-slate-900 rounded-xl border border-slate-800 p-6 mb-8">
+            <h2 class="text-lg font-bold text-slate-300 mb-4">Workflow</h2>
+            <ul class="list-disc list-inside space-y-2 text-slate-400 text-sm">
+                <li>Open the log in GigaSieve.</li>
+                <li>Filter or scan for high response times.</li>
+                <li>Group by URI to find slow routes.</li>
+                <li>Export a report for the backend team.</li>
+            </ul>
+        </div>
+
+        <div class="bg-slate-900 rounded-xl border border-slate-800 p-6 mb-8">
+            <h2 class="text-lg font-bold text-slate-300 mb-4">Tip</h2>
+            <p class="text-slate-400 text-sm">If response time is missing, update nginx log_format to include request_time.</p>
+        </div>
+
+        <a href="/app" class="inline-flex items-center gap-2 bg-gradient-to-r from-emerald-500 to-cyan-500 text-white font-bold py-3 px-6 rounded-xl shadow-lg mb-8">
+            Try GigaSieve ->
+        </a>
+
+        <h2 class="text-xl font-bold text-slate-300 mb-4">Related</h2>
+        <div class="grid md:grid-cols-2 gap-4">
+            <a href="/guides/analyze-nginx-access-log" class="bg-slate-900 hover:bg-slate-800 rounded-xl p-4 border border-slate-800">
+                <h3 class="font-semibold text-slate-300">Analyze nginx Access Log</h3>
+            </a>
+            <a href="/guides/log-anomaly-basics" class="bg-slate-900 hover:bg-slate-800 rounded-xl p-4 border border-slate-800">
+                <h3 class="font-semibold text-slate-300">Log Anomaly Basics</h3>
+            </a>
+            <a href="/recipes/logs/slow-requests" class="bg-slate-900 hover:bg-slate-800 rounded-xl p-4 border border-slate-800">
+                <h3 class="font-semibold text-slate-300">Slow Requests</h3>
+            </a>
+            <a href="/recipes/logs/top-uris" class="bg-slate-900 hover:bg-slate-800 rounded-xl p-4 border border-slate-800">
+                <h3 class="font-semibold text-slate-300">Top Requested URIs</h3>
+            </a>
+        </div>
+    </section>
+</Layout>

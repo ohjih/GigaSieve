@@ -1,0 +1,39 @@
+﻿---
+import Layout from '../layouts/Layout.astro';
+---
+
+<Layout title="Changelog - GigaSieve" description="Product updates, new recipes, and guide additions for GigaSieve.">
+    <section class="container mx-auto px-4 py-12 max-w-3xl">
+        <h1 class="text-4xl font-extrabold text-slate-200 mb-4">Changelog</h1>
+        <p class="text-slate-500 mb-10">
+            Product updates, content additions, and policy changes.
+        </p>
+
+        <div class="space-y-8">
+            <div class="bg-slate-900 border border-slate-800 rounded-xl p-6">
+                <h2 class="text-lg font-bold text-slate-300">2026-01-30</h2>
+                <ul class="list-disc list-inside text-slate-400 text-sm mt-3 space-y-1">
+                    <li>Added new log recipes (Top URIs, Slow Requests, Status by Hour).</li>
+                    <li>Expanded CSV recipes (Group By, Dedupe, Date Range Filter).</li>
+                    <li>Expanded JSONL recipes (Flatten Nested, Filter by Key, Regex Extract).</li>
+                    <li>Added new guides for Cloudflare logs, anomaly basics, and JSONL schema.</li>
+                </ul>
+            </div>
+
+            <div class="bg-slate-900 border border-slate-800 rounded-xl p-6">
+                <h2 class="text-lg font-bold text-slate-300">2026-01-29</h2>
+                <ul class="list-disc list-inside text-slate-400 text-sm mt-3 space-y-1">
+                    <li>Expanded About and Privacy pages to improve transparency.</li>
+                    <li>Improved contact guidance and local-only processing explanations.</li>
+                </ul>
+            </div>
+
+            <div class="bg-slate-900 border border-slate-800 rounded-xl p-6">
+                <h2 class="text-lg font-bold text-slate-300">2026-01-27</h2>
+                <ul class="list-disc list-inside text-slate-400 text-sm mt-3 space-y-1">
+                    <li>Initial release of GigaSieve app, recipes, and guides.</li>
+                </ul>
+            </div>
+        </div>
+    </section>
+</Layout>

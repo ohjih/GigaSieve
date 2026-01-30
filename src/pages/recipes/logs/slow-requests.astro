@@ -1,0 +1,85 @@
+---
+import Layout from '../../../layouts/Layout.astro';
+---
+
+<Layout title="Slow Requests - GigaSieve Recipe" description="Find slow responses from your logs using response time fields.">
+    <section class="container mx-auto px-4 py-12 max-w-3xl">
+        <nav class="text-sm text-slate-500 mb-6">
+            <a href="/recipes" class="hover:text-emerald-400">Recipes</a>
+            <span class="mx-2">/</span>
+            <a href="/recipes" class="hover:text-emerald-400">Logs</a>
+            <span class="mx-2">/</span>
+            <span class="text-slate-400">Slow Requests</span>
+        </nav>
+
+        <h1 class="text-3xl font-extrabold text-slate-200 mb-4">Slow Requests</h1>
+        <p class="text-slate-400 mb-8">
+            If your log format includes response time, you can quickly surface slow endpoints and clients.
+        </p>
+
+        <a href="/app" class="inline-flex items-center gap-2 bg-gradient-to-r from-emerald-500 to-cyan-500 text-white font-bold py-3 px-6 rounded-xl shadow-lg shadow-emerald-500/30 hover:shadow-emerald-500/50 transition-all mb-8">
+            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path>
+            </svg>
+            Open in App
+        </a>
+
+        <div class="bg-slate-900 rounded-xl border border-slate-800 p-6 mb-8">
+            <h2 class="text-lg font-bold text-slate-300 mb-4">How it works</h2>
+            <ol class="list-decimal list-inside space-y-2 text-slate-400 text-sm">
+                <li>Open your log file in GigaSieve.</li>
+                <li>Filter for lines with response time field (e.g., request_time).</li>
+                <li>Sort or scan for high latency values (e.g., > 2s).</li>
+                <li>Group by URI to find the slowest routes.</li>
+            </ol>
+        </div>
+
+        <div class="bg-slate-900 rounded-xl border border-slate-800 p-6 mb-8">
+            <h2 class="text-lg font-bold text-slate-300 mb-4">Sample Input and Output</h2>
+            <div class="grid md:grid-cols-2 gap-4 text-sm font-mono">
+                <div>
+                    <p class="text-slate-500 mb-2">Input</p>
+                    <pre class="bg-slate-950 p-3 rounded-lg text-slate-400 overflow-x-auto">203.0.113.10 - - "GET /api/users" 200 1200 rt=0.120
+203.0.113.11 - - "GET /report" 200 1200 rt=3.512
+203.0.113.10 - - "GET /report" 200 1200 rt=2.901</pre>
+                </div>
+                <div>
+                    <p class="text-slate-500 mb-2">Output</p>
+                    <pre class="bg-slate-950 p-3 rounded-lg text-slate-400">/report avg rt: 3.2s
+/api/users avg rt: 0.12s</pre>
+                </div>
+            </div>
+        </div>
+
+        <div class="bg-amber-500/10 border border-amber-500/30 rounded-xl p-6 mb-8">
+            <h2 class="text-lg font-bold text-amber-400 mb-2">Tip</h2>
+            <p class="text-slate-400 text-sm">
+                If your log format does not include response time, add it to your nginx log_format first.
+            </p>
+        </div>
+
+        <h2 class="text-xl font-bold text-slate-300 mb-4">Related Recipes</h2>
+        <div class="grid md:grid-cols-2 gap-4 mb-8">
+            <a href="/recipes/logs/top-uris" class="bg-slate-900 hover:bg-slate-800 rounded-xl p-4 border border-slate-800 transition-all">
+                <h3 class="font-semibold text-slate-300">Top Requested URIs</h3>
+                <p class="text-xs text-slate-600 mt-1">See hot endpoints</p>
+            </a>
+            <a href="/recipes/logs/nginx-status-codes" class="bg-slate-900 hover:bg-slate-800 rounded-xl p-4 border border-slate-800 transition-all">
+                <h3 class="font-semibold text-slate-300">nginx Status Codes</h3>
+                <p class="text-xs text-slate-600 mt-1">Errors and spikes</p>
+            </a>
+        </div>
+
+        <h2 class="text-xl font-bold text-slate-300 mb-4">Related Guides</h2>
+        <div class="grid md:grid-cols-2 gap-4">
+            <a href="/guides/find-slow-requests" class="bg-slate-900 hover:bg-slate-800 rounded-xl p-4 border border-slate-800 transition-all">
+                <h3 class="font-semibold text-slate-300">Find Slow Requests</h3>
+                <p class="text-xs text-slate-600 mt-1">Methodical approach</p>
+            </a>
+            <a href="/guides/analyze-nginx-access-log" class="bg-slate-900 hover:bg-slate-800 rounded-xl p-4 border border-slate-800 transition-all">
+                <h3 class="font-semibold text-slate-300">Analyze nginx Access Log</h3>
+                <p class="text-xs text-slate-600 mt-1">Full workflow</p>
+            </a>
+        </div>
+    </section>
+</Layout>

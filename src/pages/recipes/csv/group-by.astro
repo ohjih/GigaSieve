@@ -1,0 +1,86 @@
+---
+import Layout from '../../../layouts/Layout.astro';
+---
+
+<Layout title="Group By (CSV) - GigaSieve Recipe" description="Group a CSV by a column and count rows in the browser.">
+    <section class="container mx-auto px-4 py-12 max-w-3xl">
+        <nav class="text-sm text-slate-500 mb-6">
+            <a href="/recipes" class="hover:text-emerald-400">Recipes</a>
+            <span class="mx-2">/</span>
+            <a href="/recipes" class="hover:text-emerald-400">Csv</a>
+            <span class="mx-2">/</span>
+            <span class="text-slate-400">Group By (CSV)</span>
+        </nav>
+
+        <h1 class="text-3xl font-extrabold text-slate-200 mb-4">Group By (CSV)</h1>
+        <p class="text-slate-400 mb-8">
+            Need a quick summary by category, country, or status? Group by a column locally.
+        </p>
+
+        <a href="/app" class="inline-flex items-center gap-2 bg-gradient-to-r from-emerald-500 to-cyan-500 text-white font-bold py-3 px-6 rounded-xl shadow-lg shadow-emerald-500/30 hover:shadow-emerald-500/50 transition-all mb-8">
+            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path>
+            </svg>
+            Open in App
+        </a>
+
+        <div class="bg-slate-900 rounded-xl border border-slate-800 p-6 mb-8">
+            <h2 class="text-lg font-bold text-slate-300 mb-4">How it works</h2>
+            <ol class="list-decimal list-inside space-y-2 text-slate-400 text-sm">
+                <li>Open a CSV in GigaSieve.</li>
+                <li>Pick the column to group by (e.g., country).</li>
+                <li>Counts appear in the Insights panel.</li>
+                <li>Sort to find the top groups.</li>
+            </ol>
+        </div>
+
+        <div class="bg-slate-900 rounded-xl border border-slate-800 p-6 mb-8">
+            <h2 class="text-lg font-bold text-slate-300 mb-4">Sample Input and Output</h2>
+            <div class="grid md:grid-cols-2 gap-4 text-sm font-mono">
+                <div>
+                    <p class="text-slate-500 mb-2">Input</p>
+                    <pre class="bg-slate-950 p-3 rounded-lg text-slate-400 overflow-x-auto">country,amount
+US,100
+KR,40
+US,55</pre>
+                </div>
+                <div>
+                    <p class="text-slate-500 mb-2">Output</p>
+                    <pre class="bg-slate-950 p-3 rounded-lg text-slate-400">US: 2
+KR: 1</pre>
+                </div>
+            </div>
+        </div>
+
+        <div class="bg-amber-500/10 border border-amber-500/30 rounded-xl p-6 mb-8">
+            <h2 class="text-lg font-bold text-amber-400 mb-2">Tip</h2>
+            <p class="text-slate-400 text-sm">
+                For large CSVs, group by low-cardinality columns for best performance.
+            </p>
+        </div>
+
+        <h2 class="text-xl font-bold text-slate-300 mb-4">Related Recipes</h2>
+        <div class="grid md:grid-cols-2 gap-4 mb-8">
+            <a href="/recipes/csv/top-values" class="bg-slate-900 hover:bg-slate-800 rounded-xl p-4 border border-slate-800 transition-all">
+                <h3 class="font-semibold text-slate-300">Column Top Values</h3>
+                <p class="text-xs text-slate-600 mt-1">Top values</p>
+            </a>
+            <a href="/recipes/csv/filter-rows" class="bg-slate-900 hover:bg-slate-800 rounded-xl p-4 border border-slate-800 transition-all">
+                <h3 class="font-semibold text-slate-300">Filter Rows</h3>
+                <p class="text-xs text-slate-600 mt-1">Narrow results</p>
+            </a>
+        </div>
+
+        <h2 class="text-xl font-bold text-slate-300 mb-4">Related Guides</h2>
+        <div class="grid md:grid-cols-2 gap-4">
+            <a href="/guides/csv-group-by-in-browser" class="bg-slate-900 hover:bg-slate-800 rounded-xl p-4 border border-slate-800 transition-all">
+                <h3 class="font-semibold text-slate-300">CSV Group By in Browser</h3>
+                <p class="text-xs text-slate-600 mt-1">Step-by-step</p>
+            </a>
+            <a href="/guides/open-1gb-csv-in-browser" class="bg-slate-900 hover:bg-slate-800 rounded-xl p-4 border border-slate-800 transition-all">
+                <h3 class="font-semibold text-slate-300">Open 1GB CSV</h3>
+                <p class="text-xs text-slate-600 mt-1">Large files</p>
+            </a>
+        </div>
+    </section>
+</Layout>

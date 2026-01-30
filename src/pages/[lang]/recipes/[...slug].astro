@@ -9,12 +9,21 @@ export async function getStaticPaths() {
         'logs/nginx-status-codes',
         'logs/cloudflare-ray-id',
         'logs/top-ips',
+        'logs/top-uris',
+        'logs/slow-requests',
+        'logs/status-by-hour',
         'csv/top-values',
         'csv/preview-huge',
         'csv/filter-rows',
+        'csv/group-by',
+        'csv/dedupe-rows',
+        'csv/date-range-filter',
         'jsonl/extract-keys',
         'jsonl/error-objects',
         'jsonl/top-values',
+        'jsonl/flatten-nested',
+        'jsonl/filter-by-key',
+        'jsonl/regex-extract',
     ];
     return Object.keys(ui).flatMap((lang) =>
         recipeSlugs.map((slug) => ({ params: { lang, slug } }))
@@ -1423,6 +1432,1504 @@ const recipes = {
             relatedGuides: [
                 { href: '/guides/json-vs-jsonl', title: 'JSON vs JSONL', desc: '格式比较' },
                 { href: '/guides/why-csv-is-slow', title: 'CSV 为什么慢', desc: '流式提示' },
+            ],
+        },
+    },
+    'logs/top-uris': {
+        en: {
+            category: 'Logs',
+            title: 'Top Requested URIs',
+            description: 'Find the most requested endpoints in your access logs.',
+            intro: 'See which URLs get the most traffic so you can spot hot endpoints, abuse, or broken links.',
+            howItWorks: [
+                'Drop your access.log file into GigaSieve.',
+                'Request paths are extracted from each line.',
+                'URIs are grouped and ranked by frequency.',
+                'Inspect any URI to see context lines.',
+            ],
+            input: [
+                '203.0.113.10 - - \"GET /api/users\" 200 1200',
+                '203.0.113.11 - - \"GET /\" 200 800',
+                '203.0.113.10 - - \"GET /api/users\" 200 900',
+                '203.0.113.12 - - \"GET /pricing\" 404 10',
+            ],
+            output: [
+                '/api/users: 2',
+                '/: 1',
+                '/pricing: 1',
+            ],
+            tip: {
+                tone: 'amber',
+                body: 'Filter by 404/500 to find broken or failing URLs faster.',
+            },
+            relatedRecipes: [
+                { href: '/recipes/logs/nginx-status-codes', title: 'nginx Status Codes', desc: 'Error distribution' },
+                { href: '/recipes/logs/top-ips', title: 'Top IPs', desc: 'Noisy clients' },
+            ],
+            relatedGuides: [
+                { href: '/guides/analyze-nginx-access-log', title: 'Analyze nginx Access Log', desc: 'Full workflow' },
+                { href: '/guides/regex-extract-from-log', title: 'Regex Extract', desc: 'Pattern extraction' },
+            ],
+        },
+        ko: {
+            category: '로그',
+            title: '상위 요청 URI',
+            description: '액세스 로그에서 가장 많이 호출된 엔드포인트를 찾습니다.',
+            intro: '트래픽이 집중되는 URL을 확인해 핫 엔드포인트와 이상 징후를 파악하세요.',
+            howItWorks: [
+                'access.log를 GigaSieve에 드롭합니다.',
+                '요청 경로를 추출합니다.',
+                'URI를 빈도순으로 정렬합니다.',
+                '특정 URI를 눌러 맥락을 확인합니다.',
+            ],
+            input: [
+                '203.0.113.10 - - \"GET /api/users\" 200 1200',
+                '203.0.113.11 - - \"GET /\" 200 800',
+                '203.0.113.10 - - \"GET /api/users\" 200 900',
+                '203.0.113.12 - - \"GET /pricing\" 404 10',
+            ],
+            output: [
+                '/api/users: 2',
+                '/: 1',
+                '/pricing: 1',
+            ],
+            tip: {
+                tone: 'amber',
+                body: '404/500 필터로 깨진 URL을 빠르게 찾을 수 있습니다.',
+            },
+            relatedRecipes: [
+                { href: '/recipes/logs/nginx-status-codes', title: 'nginx 상태코드', desc: '오류 분포' },
+                { href: '/recipes/logs/top-ips', title: '상위 IP', desc: '노이즈 클라이언트' },
+            ],
+            relatedGuides: [
+                { href: '/guides/analyze-nginx-access-log', title: 'nginx 로그 분석', desc: '전체 흐름' },
+                { href: '/guides/regex-extract-from-log', title: '정규식 추출', desc: '패턴 추출' },
+            ],
+        },
+        es: {
+            category: 'Logs',
+            title: 'URIs más solicitados',
+            description: 'Encuentra los endpoints más solicitados en tus logs.',
+            intro: 'Identifica URLs con más tráfico para detectar hotspots o fallos.',
+            howItWorks: [
+                'Arrastra access.log a GigaSieve.',
+                'Se extraen rutas de solicitud.',
+                'Se ordenan por frecuencia.',
+                'Inspecciona una URI para contexto.',
+            ],
+            input: [
+                '203.0.113.10 - - \"GET /api/users\" 200 1200',
+                '203.0.113.11 - - \"GET /\" 200 800',
+                '203.0.113.10 - - \"GET /api/users\" 200 900',
+                '203.0.113.12 - - \"GET /pricing\" 404 10',
+            ],
+            output: [
+                '/api/users: 2',
+                '/: 1',
+                '/pricing: 1',
+            ],
+            tip: {
+                tone: 'amber',
+                body: 'Filtra por 404/500 para encontrar URLs rotas.',
+            },
+            relatedRecipes: [
+                { href: '/recipes/logs/nginx-status-codes', title: 'Códigos nginx', desc: 'Distribución de errores' },
+                { href: '/recipes/logs/top-ips', title: 'Top IPs', desc: 'Clientes ruidosos' },
+            ],
+            relatedGuides: [
+                { href: '/guides/analyze-nginx-access-log', title: 'Analizar nginx', desc: 'Flujo completo' },
+                { href: '/guides/regex-extract-from-log', title: 'Extracción regex', desc: 'Patrones' },
+            ],
+        },
+        ja: {
+            category: 'ログ',
+            title: '上位リクエストURI',
+            description: 'ログ内で最も多いエンドポイントを抽出します。',
+            intro: 'トラフィック集中URLを把握し、異常や人気箇所を特定します。',
+            howItWorks: [
+                'access.logをGigaSieveにドロップ。',
+                'リクエストパスを抽出。',
+                '頻度順に並べ替え。',
+                'URIを開いて文脈を確認。',
+            ],
+            input: [
+                '203.0.113.10 - - \"GET /api/users\" 200 1200',
+                '203.0.113.11 - - \"GET /\" 200 800',
+                '203.0.113.10 - - \"GET /api/users\" 200 900',
+                '203.0.113.12 - - \"GET /pricing\" 404 10',
+            ],
+            output: [
+                '/api/users: 2',
+                '/: 1',
+                '/pricing: 1',
+            ],
+            tip: {
+                tone: 'amber',
+                body: '404/500でフィルタすると壊れたURLを見つけやすいです。',
+            },
+            relatedRecipes: [
+                { href: '/recipes/logs/nginx-status-codes', title: 'nginxステータスコード', desc: 'エラー分布' },
+                { href: '/recipes/logs/top-ips', title: '上位IP', desc: 'ノイズクライアント' },
+            ],
+            relatedGuides: [
+                { href: '/guides/analyze-nginx-access-log', title: 'nginxログ分析', desc: '全体の流れ' },
+                { href: '/guides/regex-extract-from-log', title: '正規表現抽出', desc: 'パターン抽出' },
+            ],
+        },
+        zh: {
+            category: '日志',
+            title: '热门请求 URI',
+            description: '找出日志中请求最多的端点。',
+            intro: '查看高频 URL，定位热点与异常。',
+            howItWorks: [
+                '将 access.log 拖入 GigaSieve。',
+                '提取请求路径。',
+                '按频率排序。',
+                '点开 URI 查看上下文。',
+            ],
+            input: [
+                '203.0.113.10 - - \"GET /api/users\" 200 1200',
+                '203.0.113.11 - - \"GET /\" 200 800',
+                '203.0.113.10 - - \"GET /api/users\" 200 900',
+                '203.0.113.12 - - \"GET /pricing\" 404 10',
+            ],
+            output: [
+                '/api/users: 2',
+                '/: 1',
+                '/pricing: 1',
+            ],
+            tip: {
+                tone: 'amber',
+                body: '用 404/500 过滤可快速找出坏链。',
+            },
+            relatedRecipes: [
+                { href: '/recipes/logs/nginx-status-codes', title: 'nginx 状态码', desc: '错误分布' },
+                { href: '/recipes/logs/top-ips', title: 'Top IP', desc: '噪声客户端' },
+            ],
+            relatedGuides: [
+                { href: '/guides/analyze-nginx-access-log', title: '分析 nginx 日志', desc: '完整流程' },
+                { href: '/guides/regex-extract-from-log', title: '正则提取', desc: '模式提取' },
+            ],
+        },
+    },
+    'logs/slow-requests': {
+        en: {
+            category: 'Logs',
+            title: 'Slow Requests',
+            description: 'Find slow responses using response time fields.',
+            intro: 'If your log format includes response time, you can surface slow requests and their endpoints.',
+            howItWorks: [
+                'Open the log file in GigaSieve.',
+                'Filter for lines with response time (e.g., request_time).',
+                'Scan for high values (e.g., > 2s).',
+                'Group by URI to identify slow routes.',
+            ],
+            input: [
+                '203.0.113.10 - - \"GET /api/users\" 200 1200 rt=0.120',
+                '203.0.113.11 - - \"GET /report\" 200 1200 rt=3.512',
+                '203.0.113.10 - - \"GET /report\" 200 1200 rt=2.901',
+            ],
+            output: [
+                '/report avg rt: 3.2s',
+                '/api/users avg rt: 0.12s',
+            ],
+            tip: {
+                tone: 'amber',
+                body: 'If response time is missing, add request_time to your nginx log_format.',
+            },
+            relatedRecipes: [
+                { href: '/recipes/logs/top-uris', title: 'Top Requested URIs', desc: 'Hot endpoints' },
+                { href: '/recipes/logs/nginx-status-codes', title: 'nginx Status Codes', desc: 'Errors and spikes' },
+            ],
+            relatedGuides: [
+                { href: '/guides/find-slow-requests', title: 'Find Slow Requests', desc: 'Step-by-step' },
+                { href: '/guides/analyze-nginx-access-log', title: 'Analyze nginx Access Log', desc: 'Incident triage' },
+            ],
+        },
+        ko: {
+            category: '로그',
+            title: '느린 요청',
+            description: '응답 시간 필드로 느린 응답을 찾습니다.',
+            intro: '응답 시간이 포함된 로그라면 느린 요청과 엔드포인트를 빠르게 파악할 수 있습니다.',
+            howItWorks: [
+                '로그 파일을 GigaSieve에 엽니다.',
+                '응답 시간 필드를 포함한 줄을 찾습니다.',
+                '큰 값(예: 2초 이상)을 확인합니다.',
+                'URI별로 느린 엔드포인트를 찾습니다.',
+            ],
+            input: [
+                '203.0.113.10 - - \"GET /api/users\" 200 1200 rt=0.120',
+                '203.0.113.11 - - \"GET /report\" 200 1200 rt=3.512',
+                '203.0.113.10 - - \"GET /report\" 200 1200 rt=2.901',
+            ],
+            output: [
+                '/report avg rt: 3.2s',
+                '/api/users avg rt: 0.12s',
+            ],
+            tip: {
+                tone: 'amber',
+                body: '응답 시간이 없다면 nginx log_format에 request_time을 추가하세요.',
+            },
+            relatedRecipes: [
+                { href: '/recipes/logs/top-uris', title: '상위 URI', desc: '핫 엔드포인트' },
+                { href: '/recipes/logs/nginx-status-codes', title: 'nginx 상태코드', desc: '오류/스파이크' },
+            ],
+            relatedGuides: [
+                { href: '/guides/find-slow-requests', title: '느린 요청 찾기', desc: '단계별' },
+                { href: '/guides/analyze-nginx-access-log', title: 'nginx 로그 분석', desc: '사건 대응' },
+            ],
+        },
+        es: {
+            category: 'Logs',
+            title: 'Solicitudes lentas',
+            description: 'Encuentra respuestas lentas usando el tiempo de respuesta.',
+            intro: 'Si el log incluye tiempo de respuesta, podrás localizar solicitudes lentas.',
+            howItWorks: [
+                'Abre el log en GigaSieve.',
+                'Busca el campo de tiempo.',
+                'Identifica valores altos (p. ej., > 2s).',
+                'Agrupa por URI para ver rutas lentas.',
+            ],
+            input: [
+                '203.0.113.10 - - \"GET /api/users\" 200 1200 rt=0.120',
+                '203.0.113.11 - - \"GET /report\" 200 1200 rt=3.512',
+                '203.0.113.10 - - \"GET /report\" 200 1200 rt=2.901',
+            ],
+            output: [
+                '/report avg rt: 3.2s',
+                '/api/users avg rt: 0.12s',
+            ],
+            tip: {
+                tone: 'amber',
+                body: 'Si no hay tiempo, agrega request_time en log_format.',
+            },
+            relatedRecipes: [
+                { href: '/recipes/logs/top-uris', title: 'URIs principales', desc: 'Endpoints calientes' },
+                { href: '/recipes/logs/nginx-status-codes', title: 'Códigos nginx', desc: 'Errores y picos' },
+            ],
+            relatedGuides: [
+                { href: '/guides/find-slow-requests', title: 'Solicitudes lentas', desc: 'Paso a paso' },
+                { href: '/guides/analyze-nginx-access-log', title: 'Analizar nginx', desc: 'Incidentes' },
+            ],
+        },
+        ja: {
+            category: 'ログ',
+            title: '遅いリクエスト',
+            description: 'レスポンスタイムで遅い応答を特定。',
+            intro: 'レスポンスタイムがあれば遅いリクエストを抽出できます。',
+            howItWorks: [
+                'ログをGigaSieveで開く。',
+                'レスポンスタイムの行を探す。',
+                '大きな値(例: 2秒超)を抽出。',
+                'URI別に遅いルートを確認。',
+            ],
+            input: [
+                '203.0.113.10 - - \"GET /api/users\" 200 1200 rt=0.120',
+                '203.0.113.11 - - \"GET /report\" 200 1200 rt=3.512',
+                '203.0.113.10 - - \"GET /report\" 200 1200 rt=2.901',
+            ],
+            output: [
+                '/report avg rt: 3.2s',
+                '/api/users avg rt: 0.12s',
+            ],
+            tip: {
+                tone: 'amber',
+                body: '時間が無い場合は request_time を追加。',
+            },
+            relatedRecipes: [
+                { href: '/recipes/logs/top-uris', title: '上位URI', desc: '人気エンドポイント' },
+                { href: '/recipes/logs/nginx-status-codes', title: 'nginxステータス', desc: 'エラー/スパイク' },
+            ],
+            relatedGuides: [
+                { href: '/guides/find-slow-requests', title: '遅いリクエスト', desc: '手順' },
+                { href: '/guides/analyze-nginx-access-log', title: 'nginxログ分析', desc: 'インシデント' },
+            ],
+        },
+        zh: {
+            category: '日志',
+            title: '慢请求',
+            description: '通过响应时间找出慢响应。',
+            intro: '如果日志包含响应时间字段，就能定位慢请求。',
+            howItWorks: [
+                '在 GigaSieve 打开日志。',
+                '查找响应时间字段。',
+                '定位较大值（如 > 2s）。',
+                '按 URI 汇总慢端点。',
+            ],
+            input: [
+                '203.0.113.10 - - \"GET /api/users\" 200 1200 rt=0.120',
+                '203.0.113.11 - - \"GET /report\" 200 1200 rt=3.512',
+                '203.0.113.10 - - \"GET /report\" 200 1200 rt=2.901',
+            ],
+            output: [
+                '/report avg rt: 3.2s',
+                '/api/users avg rt: 0.12s',
+            ],
+            tip: {
+                tone: 'amber',
+                body: '若无时间字段，请加入 request_time。',
+            },
+            relatedRecipes: [
+                { href: '/recipes/logs/top-uris', title: '热门 URI', desc: '热点端点' },
+                { href: '/recipes/logs/nginx-status-codes', title: 'nginx 状态码', desc: '错误/峰值' },
+            ],
+            relatedGuides: [
+                { href: '/guides/find-slow-requests', title: '慢请求', desc: '步骤' },
+                { href: '/guides/analyze-nginx-access-log', title: '分析 nginx 日志', desc: '事件处理' },
+            ],
+        },
+    },
+    'logs/status-by-hour': {
+        en: {
+            category: 'Logs',
+            title: 'Status Codes by Hour',
+            description: 'See hourly spikes of 4xx/5xx errors.',
+            intro: 'Break error rates down by hour to locate incident windows and traffic spikes.',
+            howItWorks: [
+                'Load your log file into GigaSieve.',
+                'Extract timestamp and status code fields.',
+                'Group by hour and status family (2xx/4xx/5xx).',
+                'Scan for hours with unusual spikes.',
+            ],
+            input: [
+                '[29/Jan/2026:10:05:01 +0000] \"GET /\" 200',
+                '[29/Jan/2026:10:06:22 +0000] \"GET /login\" 500',
+                '[29/Jan/2026:11:01:10 +0000] \"GET /\" 200',
+            ],
+            output: [
+                '10:00 - 2xx: 1, 5xx: 1',
+                '11:00 - 2xx: 1, 5xx: 0',
+            ],
+            tip: {
+                tone: 'amber',
+                body: 'Compare spikes with deploy times or upstream outages.',
+            },
+            relatedRecipes: [
+                { href: '/recipes/logs/nginx-status-codes', title: 'nginx Status Codes', desc: 'Overall distribution' },
+                { href: '/recipes/logs/top-ips', title: 'Top IPs', desc: 'Noisy clients' },
+            ],
+            relatedGuides: [
+                { href: '/guides/log-anomaly-basics', title: 'Log Anomaly Basics', desc: 'Spike detection' },
+                { href: '/guides/analyze-nginx-access-log', title: 'Analyze nginx Access Log', desc: 'Full workflow' },
+            ],
+        },
+        ko: {
+            category: '로그',
+            title: '시간대별 상태코드',
+            description: '시간대별 4xx/5xx 스파이크를 확인합니다.',
+            intro: '오류율을 시간대별로 나누어 사건 구간을 찾습니다.',
+            howItWorks: [
+                '로그를 GigaSieve에 로드합니다.',
+                '타임스탬프와 상태코드를 추출합니다.',
+                '시간대/상태코드로 그룹화합니다.',
+                '스파이크 구간을 확인합니다.',
+            ],
+            input: [
+                '[29/Jan/2026:10:05:01 +0000] \"GET /\" 200',
+                '[29/Jan/2026:10:06:22 +0000] \"GET /login\" 500',
+                '[29/Jan/2026:11:01:10 +0000] \"GET /\" 200',
+            ],
+            output: [
+                '10:00 - 2xx: 1, 5xx: 1',
+                '11:00 - 2xx: 1, 5xx: 0',
+            ],
+            tip: {
+                tone: 'amber',
+                body: '배포 시간과 스파이크를 비교하세요.',
+            },
+            relatedRecipes: [
+                { href: '/recipes/logs/nginx-status-codes', title: 'nginx 상태코드', desc: '분포 확인' },
+                { href: '/recipes/logs/top-ips', title: '상위 IP', desc: '노이즈 확인' },
+            ],
+            relatedGuides: [
+                { href: '/guides/log-anomaly-basics', title: '로그 이상 징후', desc: '스파이크 탐지' },
+                { href: '/guides/analyze-nginx-access-log', title: 'nginx 로그 분석', desc: '전체 흐름' },
+            ],
+        },
+        es: {
+            category: 'Logs',
+            title: 'Códigos por hora',
+            description: 'Observa picos 4xx/5xx por hora.',
+            intro: 'Divide errores por hora para localizar ventanas de incidentes.',
+            howItWorks: [
+                'Carga el log en GigaSieve.',
+                'Extrae timestamp y código.',
+                'Agrupa por hora y familia.',
+                'Detecta picos.',
+            ],
+            input: [
+                '[29/Jan/2026:10:05:01 +0000] \"GET /\" 200',
+                '[29/Jan/2026:10:06:22 +0000] \"GET /login\" 500',
+                '[29/Jan/2026:11:01:10 +0000] \"GET /\" 200',
+            ],
+            output: [
+                '10:00 - 2xx: 1, 5xx: 1',
+                '11:00 - 2xx: 1, 5xx: 0',
+            ],
+            tip: {
+                tone: 'amber',
+                body: 'Compara picos con despliegues o caídas.',
+            },
+            relatedRecipes: [
+                { href: '/recipes/logs/nginx-status-codes', title: 'Códigos nginx', desc: 'Distribución' },
+                { href: '/recipes/logs/top-ips', title: 'Top IPs', desc: 'Clientes ruidosos' },
+            ],
+            relatedGuides: [
+                { href: '/guides/log-anomaly-basics', title: 'Anomalías básicas', desc: 'Detectar picos' },
+                { href: '/guides/analyze-nginx-access-log', title: 'Analizar nginx', desc: 'Flujo completo' },
+            ],
+        },
+        ja: {
+            category: 'ログ',
+            title: '時間別ステータスコード',
+            description: '時間別の4xx/5xxスパイクを確認。',
+            intro: '時間単位でエラー率を分けて原因区間を特定します。',
+            howItWorks: [
+                'ログを読み込み。',
+                '時刻とステータスを抽出。',
+                '時間/ファミリで集計。',
+                'スパイクを確認。',
+            ],
+            input: [
+                '[29/Jan/2026:10:05:01 +0000] \"GET /\" 200',
+                '[29/Jan/2026:10:06:22 +0000] \"GET /login\" 500',
+                '[29/Jan/2026:11:01:10 +0000] \"GET /\" 200',
+            ],
+            output: [
+                '10:00 - 2xx: 1, 5xx: 1',
+                '11:00 - 2xx: 1, 5xx: 0',
+            ],
+            tip: {
+                tone: 'amber',
+                body: 'デプロイ時間とスパイクを比較。',
+            },
+            relatedRecipes: [
+                { href: '/recipes/logs/nginx-status-codes', title: 'nginxステータス', desc: '分布' },
+                { href: '/recipes/logs/top-ips', title: '上位IP', desc: 'ノイズ確認' },
+            ],
+            relatedGuides: [
+                { href: '/guides/log-anomaly-basics', title: '異常検知の基礎', desc: 'スパイク' },
+                { href: '/guides/analyze-nginx-access-log', title: 'nginxログ分析', desc: '全体' },
+            ],
+        },
+        zh: {
+            category: '日志',
+            title: '按小时状态码',
+            description: '查看 4xx/5xx 的小时峰值。',
+            intro: '按小时拆分错误率，定位异常时间段。',
+            howItWorks: [
+                '加载日志。',
+                '提取时间与状态码。',
+                '按小时/类型汇总。',
+                '识别峰值。',
+            ],
+            input: [
+                '[29/Jan/2026:10:05:01 +0000] \"GET /\" 200',
+                '[29/Jan/2026:10:06:22 +0000] \"GET /login\" 500',
+                '[29/Jan/2026:11:01:10 +0000] \"GET /\" 200',
+            ],
+            output: [
+                '10:00 - 2xx: 1, 5xx: 1',
+                '11:00 - 2xx: 1, 5xx: 0',
+            ],
+            tip: {
+                tone: 'amber',
+                body: '对照发布/故障时间定位原因。',
+            },
+            relatedRecipes: [
+                { href: '/recipes/logs/nginx-status-codes', title: 'nginx 状态码', desc: '分布' },
+                { href: '/recipes/logs/top-ips', title: 'Top IP', desc: '噪声' },
+            ],
+            relatedGuides: [
+                { href: '/guides/log-anomaly-basics', title: '日志异常基础', desc: '峰值检测' },
+                { href: '/guides/analyze-nginx-access-log', title: '分析 nginx 日志', desc: '完整流程' },
+            ],
+        },
+    },
+    'csv/group-by': {
+        en: {
+            category: 'CSV',
+            title: 'Group By (CSV)',
+            description: 'Group a CSV by a column and count rows in the browser.',
+            intro: 'Summarize large CSVs by category, country, or status without Excel.',
+            howItWorks: [
+                'Open a CSV in GigaSieve.',
+                'Pick a column to group by.',
+                'Counts appear in the Insights panel.',
+                'Sort to find top groups.',
+            ],
+            input: [
+                'country,amount',
+                'US,100',
+                'KR,40',
+                'US,55',
+            ],
+            output: [
+                'US: 2',
+                'KR: 1',
+            ],
+            tip: {
+                tone: 'amber',
+                body: 'Group by low-cardinality columns for best performance.',
+            },
+            relatedRecipes: [
+                { href: '/recipes/csv/top-values', title: 'Column Top Values', desc: 'Quick summaries' },
+                { href: '/recipes/csv/filter-rows', title: 'Filter Rows', desc: 'Narrow results' },
+            ],
+            relatedGuides: [
+                { href: '/guides/csv-group-by-in-browser', title: 'CSV Group By', desc: 'Step-by-step' },
+                { href: '/guides/open-1gb-csv-in-browser', title: 'Open 1GB CSV', desc: 'Large files' },
+            ],
+        },
+        ko: {
+            category: 'CSV',
+            title: 'CSV 그룹화',
+            description: 'CSV를 컬럼 기준으로 그룹화해 카운트합니다.',
+            intro: '엑셀 없이 대용량 CSV를 국가/상태 등으로 요약하세요.',
+            howItWorks: [
+                'CSV를 GigaSieve에 엽니다.',
+                '그룹 기준 컬럼을 선택합니다.',
+                'Insights에 집계가 표시됩니다.',
+                '상위 그룹을 확인합니다.',
+            ],
+            input: [
+                'country,amount',
+                'US,100',
+                'KR,40',
+                'US,55',
+            ],
+            output: [
+                'US: 2',
+                'KR: 1',
+            ],
+            tip: {
+                tone: 'amber',
+                body: '카디널리티가 낮은 컬럼이 가장 빠릅니다.',
+            },
+            relatedRecipes: [
+                { href: '/recipes/csv/top-values', title: '상위 값', desc: '빠른 요약' },
+                { href: '/recipes/csv/filter-rows', title: '행 필터', desc: '조건 좁히기' },
+            ],
+            relatedGuides: [
+                { href: '/guides/csv-group-by-in-browser', title: 'CSV 그룹화 가이드', desc: '단계별' },
+                { href: '/guides/open-1gb-csv-in-browser', title: '1GB CSV 열기', desc: '대용량 팁' },
+            ],
+        },
+        es: {
+            category: 'CSV',
+            title: 'Group By (CSV)',
+            description: 'Agrupa un CSV por columna y cuenta filas.',
+            intro: 'Resume CSV grandes por categoría sin Excel.',
+            howItWorks: [
+                'Abre el CSV en GigaSieve.',
+                'Elige la columna de agrupación.',
+                'Los conteos aparecen en Insights.',
+                'Ordena para ver los top grupos.',
+            ],
+            input: [
+                'country,amount',
+                'US,100',
+                'KR,40',
+                'US,55',
+            ],
+            output: [
+                'US: 2',
+                'KR: 1',
+            ],
+            tip: {
+                tone: 'amber',
+                body: 'Columnas con baja cardinalidad funcionan mejor.',
+            },
+            relatedRecipes: [
+                { href: '/recipes/csv/top-values', title: 'Top valores', desc: 'Resumen rápido' },
+                { href: '/recipes/csv/filter-rows', title: 'Filtrar filas', desc: 'Acotar' },
+            ],
+            relatedGuides: [
+                { href: '/guides/csv-group-by-in-browser', title: 'Guía Group By', desc: 'Paso a paso' },
+                { href: '/guides/open-1gb-csv-in-browser', title: 'Abrir CSV 1GB', desc: 'Consejos' },
+            ],
+        },
+        ja: {
+            category: 'CSV',
+            title: 'CSVグループ化',
+            description: 'CSVを列でグループ化して件数を集計。',
+            intro: 'Excelなしで大きなCSVを要約します。',
+            howItWorks: [
+                'CSVをGigaSieveで開く。',
+                'グループ化する列を選ぶ。',
+                'Insightsに件数が表示。',
+                '上位グループを確認。',
+            ],
+            input: [
+                'country,amount',
+                'US,100',
+                'KR,40',
+                'US,55',
+            ],
+            output: [
+                'US: 2',
+                'KR: 1',
+            ],
+            tip: {
+                tone: 'amber',
+                body: '低カードinality列が最速です。',
+            },
+            relatedRecipes: [
+                { href: '/recipes/csv/top-values', title: 'トップ値', desc: 'クイック要約' },
+                { href: '/recipes/csv/filter-rows', title: '行フィルタ', desc: '絞り込み' },
+            ],
+            relatedGuides: [
+                { href: '/guides/csv-group-by-in-browser', title: 'CSVグループ化ガイド', desc: '手順' },
+                { href: '/guides/open-1gb-csv-in-browser', title: '1GB CSVを開く', desc: '大容量' },
+            ],
+        },
+        zh: {
+            category: 'CSV',
+            title: 'CSV 分组',
+            description: '按列分组并统计行数。',
+            intro: '无需 Excel 汇总大 CSV。',
+            howItWorks: [
+                '在 GigaSieve 打开 CSV。',
+                '选择分组列。',
+                'Insights 显示计数。',
+                '查看高频分组。',
+            ],
+            input: [
+                'country,amount',
+                'US,100',
+                'KR,40',
+                'US,55',
+            ],
+            output: [
+                'US: 2',
+                'KR: 1',
+            ],
+            tip: {
+                tone: 'amber',
+                body: '低基数列更快。',
+            },
+            relatedRecipes: [
+                { href: '/recipes/csv/top-values', title: '高频值', desc: '快速汇总' },
+                { href: '/recipes/csv/filter-rows', title: '行过滤', desc: '缩小范围' },
+            ],
+            relatedGuides: [
+                { href: '/guides/csv-group-by-in-browser', title: 'CSV 分组指南', desc: '步骤' },
+                { href: '/guides/open-1gb-csv-in-browser', title: '打开 1GB CSV', desc: '大文件' },
+            ],
+        },
+    },
+    'csv/dedupe-rows': {
+        en: {
+            category: 'CSV',
+            title: 'Remove Duplicate Rows',
+            description: 'Find and remove duplicate rows by key fields.',
+            intro: 'Clean your CSV by removing duplicate records based on one or more columns.',
+            howItWorks: [
+                'Load the CSV in GigaSieve.',
+                'Choose a key column (e.g., email).',
+                'Identify duplicates and keep the first occurrence.',
+                'Export the cleaned results.',
+            ],
+            input: [
+                'email,plan',
+                'a@example.com,pro',
+                'b@example.com,free',
+                'a@example.com,pro',
+            ],
+            output: [
+                'a@example.com,pro',
+                'b@example.com,free',
+            ],
+            tip: {
+                tone: 'amber',
+                body: 'Sort by timestamp first if you want deterministic deduplication.',
+            },
+            relatedRecipes: [
+                { href: '/recipes/csv/group-by', title: 'Group By', desc: 'Counts per key' },
+                { href: '/recipes/csv/filter-rows', title: 'Filter Rows', desc: 'Limit candidates' },
+            ],
+            relatedGuides: [
+                { href: '/guides/open-1gb-csv-in-browser', title: 'Open 1GB CSV', desc: 'Large file tips' },
+                { href: '/guides/why-csv-is-slow', title: 'Why CSV is Slow', desc: 'Parsing costs' },
+            ],
+        },
+        ko: {
+            category: 'CSV',
+            title: '중복 행 제거',
+            description: '키 컬럼 기준으로 중복 행을 제거합니다.',
+            intro: '중복 레코드를 제거해 CSV를 정리하세요.',
+            howItWorks: [
+                'CSV를 GigaSieve에 로드합니다.',
+                '키 컬럼(예: 이메일)을 선택합니다.',
+                '중복을 식별하고 첫 행을 유지합니다.',
+                '정리된 결과를 내보냅니다.',
+            ],
+            input: [
+                'email,plan',
+                'a@example.com,pro',
+                'b@example.com,free',
+                'a@example.com,pro',
+            ],
+            output: [
+                'a@example.com,pro',
+                'b@example.com,free',
+            ],
+            tip: {
+                tone: 'amber',
+                body: '정렬 후 중복 제거하면 결과가 안정적입니다.',
+            },
+            relatedRecipes: [
+                { href: '/recipes/csv/group-by', title: 'CSV 그룹화', desc: '키별 집계' },
+                { href: '/recipes/csv/filter-rows', title: '행 필터', desc: '후보 좁히기' },
+            ],
+            relatedGuides: [
+                { href: '/guides/open-1gb-csv-in-browser', title: '1GB CSV 열기', desc: '대용량 팁' },
+                { href: '/guides/why-csv-is-slow', title: 'CSV가 느린 이유', desc: '파싱 비용' },
+            ],
+        },
+        es: {
+            category: 'CSV',
+            title: 'Eliminar filas duplicadas',
+            description: 'Encuentra y elimina duplicados por clave.',
+            intro: 'Limpia el CSV eliminando registros duplicados.',
+            howItWorks: [
+                'Carga el CSV en GigaSieve.',
+                'Elige la columna clave (p. ej., email).',
+                'Identifica duplicados y conserva el primero.',
+                'Exporta el resultado limpio.',
+            ],
+            input: [
+                'email,plan',
+                'a@example.com,pro',
+                'b@example.com,free',
+                'a@example.com,pro',
+            ],
+            output: [
+                'a@example.com,pro',
+                'b@example.com,free',
+            ],
+            tip: {
+                tone: 'amber',
+                body: 'Ordena por fecha para una deduplicación estable.',
+            },
+            relatedRecipes: [
+                { href: '/recipes/csv/group-by', title: 'Group By', desc: 'Conteos por clave' },
+                { href: '/recipes/csv/filter-rows', title: 'Filtrar filas', desc: 'Acotar' },
+            ],
+            relatedGuides: [
+                { href: '/guides/open-1gb-csv-in-browser', title: 'Abrir CSV 1GB', desc: 'Consejos' },
+                { href: '/guides/why-csv-is-slow', title: 'Por qué CSV es lento', desc: 'Costes de parseo' },
+            ],
+        },
+        ja: {
+            category: 'CSV',
+            title: '重複行の削除',
+            description: 'キー列で重複行を削除します。',
+            intro: '重複レコードを除去してCSVを整理します。',
+            howItWorks: [
+                'CSVをGigaSieveに読み込む。',
+                'キー列（例: email）を選択。',
+                '重複を検出し最初の行を残す。',
+                'クリーンな結果を出力。',
+            ],
+            input: [
+                'email,plan',
+                'a@example.com,pro',
+                'b@example.com,free',
+                'a@example.com,pro',
+            ],
+            output: [
+                'a@example.com,pro',
+                'b@example.com,free',
+            ],
+            tip: {
+                tone: 'amber',
+                body: '先に並べ替えると安定します。',
+            },
+            relatedRecipes: [
+                { href: '/recipes/csv/group-by', title: 'CSVグループ化', desc: 'キー別集計' },
+                { href: '/recipes/csv/filter-rows', title: '行フィルタ', desc: '絞り込み' },
+            ],
+            relatedGuides: [
+                { href: '/guides/open-1gb-csv-in-browser', title: '1GB CSVを開く', desc: '大容量' },
+                { href: '/guides/why-csv-is-slow', title: 'CSVが遅い理由', desc: 'パース負荷' },
+            ],
+        },
+        zh: {
+            category: 'CSV',
+            title: '移除重复行',
+            description: '按关键列去重。',
+            intro: '移除重复记录，清理 CSV。',
+            howItWorks: [
+                '在 GigaSieve 加载 CSV。',
+                '选择关键列（如 email）。',
+                '识别重复并保留第一行。',
+                '导出清理结果。',
+            ],
+            input: [
+                'email,plan',
+                'a@example.com,pro',
+                'b@example.com,free',
+                'a@example.com,pro',
+            ],
+            output: [
+                'a@example.com,pro',
+                'b@example.com,free',
+            ],
+            tip: {
+                tone: 'amber',
+                body: '先排序再去重更稳定。',
+            },
+            relatedRecipes: [
+                { href: '/recipes/csv/group-by', title: 'CSV 分组', desc: '按键统计' },
+                { href: '/recipes/csv/filter-rows', title: '行过滤', desc: '缩小范围' },
+            ],
+            relatedGuides: [
+                { href: '/guides/open-1gb-csv-in-browser', title: '打开 1GB CSV', desc: '大文件' },
+                { href: '/guides/why-csv-is-slow', title: 'CSV 为什么慢', desc: '解析成本' },
+            ],
+        },
+    },
+    'csv/date-range-filter': {
+        en: {
+            category: 'CSV',
+            title: 'Date Range Filter',
+            description: 'Filter a CSV by date range without Excel.',
+            intro: 'Keep only rows that fall within a specific date range.',
+            howItWorks: [
+                'Open the CSV in GigaSieve.',
+                'Pick the date column (YYYY-MM-DD recommended).',
+                'Filter by start and end dates.',
+                'Export the matching rows.',
+            ],
+            input: [
+                'date,amount',
+                '2026-01-01,100',
+                '2026-02-01,120',
+            ],
+            output: [
+                '2026-01-01,100',
+            ],
+            tip: {
+                tone: 'amber',
+                body: 'Normalize dates before filtering to avoid locale issues.',
+            },
+            relatedRecipes: [
+                { href: '/recipes/csv/filter-rows', title: 'Filter Rows', desc: 'Contains / matches' },
+                { href: '/recipes/csv/top-values', title: 'Column Top Values', desc: 'Quick summaries' },
+            ],
+            relatedGuides: [
+                { href: '/guides/open-1gb-csv-in-browser', title: 'Open 1GB CSV', desc: 'Large files' },
+                { href: '/guides/why-csv-is-slow', title: 'Why CSV is Slow', desc: 'Performance' },
+            ],
+        },
+        ko: {
+            category: 'CSV',
+            title: '기간 필터',
+            description: '엑셀 없이 날짜 구간으로 CSV를 필터합니다.',
+            intro: '지정한 날짜 범위에 해당하는 행만 남깁니다.',
+            howItWorks: [
+                'CSV를 GigaSieve에 엽니다.',
+                '날짜 컬럼을 선택합니다.',
+                '시작/종료 날짜로 필터합니다.',
+                '결과를 내보냅니다.',
+            ],
+            input: [
+                'date,amount',
+                '2026-01-01,100',
+                '2026-02-01,120',
+            ],
+            output: [
+                '2026-01-01,100',
+            ],
+            tip: {
+                tone: 'amber',
+                body: '날짜 형식을 먼저 정규화하세요.',
+            },
+            relatedRecipes: [
+                { href: '/recipes/csv/filter-rows', title: '행 필터', desc: '조건 필터' },
+                { href: '/recipes/csv/top-values', title: '상위 값', desc: '빠른 요약' },
+            ],
+            relatedGuides: [
+                { href: '/guides/open-1gb-csv-in-browser', title: '1GB CSV 열기', desc: '대용량 팁' },
+                { href: '/guides/why-csv-is-slow', title: 'CSV가 느린 이유', desc: '성능' },
+            ],
+        },
+        es: {
+            category: 'CSV',
+            title: 'Filtro por rango de fechas',
+            description: 'Filtra un CSV por rango de fechas sin Excel.',
+            intro: 'Conserva solo las filas dentro del rango.',
+            howItWorks: [
+                'Abre el CSV en GigaSieve.',
+                'Elige la columna de fecha.',
+                'Filtra por fecha inicio/fin.',
+                'Exporta el resultado.',
+            ],
+            input: [
+                'date,amount',
+                '2026-01-01,100',
+                '2026-02-01,120',
+            ],
+            output: [
+                '2026-01-01,100',
+            ],
+            tip: {
+                tone: 'amber',
+                body: 'Normaliza el formato de fecha antes.',
+            },
+            relatedRecipes: [
+                { href: '/recipes/csv/filter-rows', title: 'Filtrar filas', desc: 'Condiciones' },
+                { href: '/recipes/csv/top-values', title: 'Top valores', desc: 'Resumen rápido' },
+            ],
+            relatedGuides: [
+                { href: '/guides/open-1gb-csv-in-browser', title: 'Abrir CSV 1GB', desc: 'Consejos' },
+                { href: '/guides/why-csv-is-slow', title: 'Por qué CSV es lento', desc: 'Rendimiento' },
+            ],
+        },
+        ja: {
+            category: 'CSV',
+            title: '日付範囲フィルタ',
+            description: 'Excelなしで日付範囲フィルタ。',
+            intro: '指定した範囲の行だけ残します。',
+            howItWorks: [
+                'CSVをGigaSieveで開く。',
+                '日付列を選択。',
+                '開始/終了日でフィルタ。',
+                '結果を出力。',
+            ],
+            input: [
+                'date,amount',
+                '2026-01-01,100',
+                '2026-02-01,120',
+            ],
+            output: [
+                '2026-01-01,100',
+            ],
+            tip: {
+                tone: 'amber',
+                body: '日付形式を統一してから実行。',
+            },
+            relatedRecipes: [
+                { href: '/recipes/csv/filter-rows', title: '行フィルタ', desc: '条件' },
+                { href: '/recipes/csv/top-values', title: 'トップ値', desc: '要約' },
+            ],
+            relatedGuides: [
+                { href: '/guides/open-1gb-csv-in-browser', title: '1GB CSVを開く', desc: '大容量' },
+                { href: '/guides/why-csv-is-slow', title: 'CSVが遅い理由', desc: '性能' },
+            ],
+        },
+        zh: {
+            category: 'CSV',
+            title: '日期范围过滤',
+            description: '无需 Excel 按日期范围过滤 CSV。',
+            intro: '仅保留指定日期范围内的行。',
+            howItWorks: [
+                '在 GigaSieve 打开 CSV。',
+                '选择日期列。',
+                '设置开始/结束日期。',
+                '导出结果。',
+            ],
+            input: [
+                'date,amount',
+                '2026-01-01,100',
+                '2026-02-01,120',
+            ],
+            output: [
+                '2026-01-01,100',
+            ],
+            tip: {
+                tone: 'amber',
+                body: '先统一日期格式。',
+            },
+            relatedRecipes: [
+                { href: '/recipes/csv/filter-rows', title: '行过滤', desc: '条件过滤' },
+                { href: '/recipes/csv/top-values', title: '高频值', desc: '快速汇总' },
+            ],
+            relatedGuides: [
+                { href: '/guides/open-1gb-csv-in-browser', title: '打开 1GB CSV', desc: '大文件' },
+                { href: '/guides/why-csv-is-slow', title: 'CSV 为什么慢', desc: '性能' },
+            ],
+        },
+    },
+    'jsonl/flatten-nested': {
+        en: {
+            category: 'JSONL',
+            title: 'Flatten Nested JSONL',
+            description: 'Flatten nested objects to dot-notation columns.',
+            intro: 'Turn nested JSON objects into a flat structure for easier filtering.',
+            howItWorks: [
+                'Load JSONL in GigaSieve.',
+                'Choose a nested key (e.g., user.name).',
+                'Flatten to dot-notation fields.',
+                'Filter or export the flattened view.',
+            ],
+            input: [
+                '{\"user\": {\"id\": 1, \"name\": \"Ada\"}, \"event\": \"login\"}',
+                '{\"user\": {\"id\": 2, \"name\": \"Lin\"}, \"event\": \"logout\"}',
+            ],
+            output: [
+                'user.id=1, user.name=Ada, event=login',
+                'user.id=2, user.name=Lin, event=logout',
+            ],
+            tip: {
+                tone: 'amber',
+                body: 'Keep only the fields you need to reduce memory usage.',
+            },
+            relatedRecipes: [
+                { href: '/recipes/jsonl/extract-keys', title: 'Extract Keys', desc: 'Discover schema' },
+                { href: '/recipes/jsonl/top-values', title: 'Top Values', desc: 'Frequent fields' },
+            ],
+            relatedGuides: [
+                { href: '/guides/jsonl-schema-from-logs', title: 'JSONL Schema from Logs', desc: 'Field discovery' },
+                { href: '/guides/json-vs-jsonl', title: 'JSON vs JSONL', desc: 'Format choice' },
+            ],
+        },
+        ko: {
+            category: 'JSONL',
+            title: 'JSONL 중첩 평탄화',
+            description: '중첩 객체를 dot 표기로 평탄화합니다.',
+            intro: '중첩 JSON을 평탄화해 필터링을 쉽게 합니다.',
+            howItWorks: [
+                'JSONL을 로드합니다.',
+                '중첩 키(예: user.name)를 선택합니다.',
+                'dot 표기로 평탄화합니다.',
+                '필터/내보내기를 수행합니다.',
+            ],
+            input: [
+                '{\"user\": {\"id\": 1, \"name\": \"Ada\"}, \"event\": \"login\"}',
+                '{\"user\": {\"id\": 2, \"name\": \"Lin\"}, \"event\": \"logout\"}',
+            ],
+            output: [
+                'user.id=1, user.name=Ada, event=login',
+                'user.id=2, user.name=Lin, event=logout',
+            ],
+            tip: {
+                tone: 'amber',
+                body: '필요한 필드만 남겨 메모리 사용을 줄이세요.',
+            },
+            relatedRecipes: [
+                { href: '/recipes/jsonl/extract-keys', title: '키 추출', desc: '스키마 확인' },
+                { href: '/recipes/jsonl/top-values', title: '상위 값', desc: '빈도 확인' },
+            ],
+            relatedGuides: [
+                { href: '/guides/jsonl-schema-from-logs', title: 'JSONL 스키마', desc: '필드 발견' },
+                { href: '/guides/json-vs-jsonl', title: 'JSON vs JSONL', desc: '형식 선택' },
+            ],
+        },
+        es: {
+            category: 'JSONL',
+            title: 'Aplanar JSONL anidado',
+            description: 'Aplana objetos anidados a notación con puntos.',
+            intro: 'Convierte JSON anidado en estructura plana para filtrar mejor.',
+            howItWorks: [
+                'Carga JSONL en GigaSieve.',
+                'Elige una clave anidada.',
+                'Aplana a dot-notation.',
+                'Filtra o exporta.',
+            ],
+            input: [
+                '{\"user\": {\"id\": 1, \"name\": \"Ada\"}, \"event\": \"login\"}',
+                '{\"user\": {\"id\": 2, \"name\": \"Lin\"}, \"event\": \"logout\"}',
+            ],
+            output: [
+                'user.id=1, user.name=Ada, event=login',
+                'user.id=2, user.name=Lin, event=logout',
+            ],
+            tip: {
+                tone: 'amber',
+                body: 'Conserva solo los campos necesarios para ahorrar memoria.',
+            },
+            relatedRecipes: [
+                { href: '/recipes/jsonl/extract-keys', title: 'Extraer claves', desc: 'Esquema' },
+                { href: '/recipes/jsonl/top-values', title: 'Top valores', desc: 'Frecuencias' },
+            ],
+            relatedGuides: [
+                { href: '/guides/jsonl-schema-from-logs', title: 'Esquema JSONL', desc: 'Descubrir campos' },
+                { href: '/guides/json-vs-jsonl', title: 'JSON vs JSONL', desc: 'Formato' },
+            ],
+        },
+        ja: {
+            category: 'JSONL',
+            title: 'JSONLのネスト平坦化',
+            description: 'ネストされたオブジェクトをドット表記に変換。',
+            intro: 'ネストJSONを平坦化してフィルタしやすくします。',
+            howItWorks: [
+                'JSONLを読み込む。',
+                'ネストキーを選択。',
+                'ドット表記に変換。',
+                'フィルタ/出力。',
+            ],
+            input: [
+                '{\"user\": {\"id\": 1, \"name\": \"Ada\"}, \"event\": \"login\"}',
+                '{\"user\": {\"id\": 2, \"name\": \"Lin\"}, \"event\": \"logout\"}',
+            ],
+            output: [
+                'user.id=1, user.name=Ada, event=login',
+                'user.id=2, user.name=Lin, event=logout',
+            ],
+            tip: {
+                tone: 'amber',
+                body: '必要なフィールドだけ残すと軽くなります。',
+            },
+            relatedRecipes: [
+                { href: '/recipes/jsonl/extract-keys', title: 'キー抽出', desc: 'スキーマ' },
+                { href: '/recipes/jsonl/top-values', title: 'トップ値', desc: '頻度' },
+            ],
+            relatedGuides: [
+                { href: '/guides/jsonl-schema-from-logs', title: 'JSONLスキーマ', desc: 'フィールド探索' },
+                { href: '/guides/json-vs-jsonl', title: 'JSON vs JSONL', desc: '形式' },
+            ],
+        },
+        zh: {
+            category: 'JSONL',
+            title: 'JSONL 嵌套平坦化',
+            description: '将嵌套对象转换为点号字段。',
+            intro: '把嵌套 JSON 扁平化，便于过滤。',
+            howItWorks: [
+                '加载 JSONL。',
+                '选择嵌套键。',
+                '转换为点号字段。',
+                '过滤或导出。',
+            ],
+            input: [
+                '{\"user\": {\"id\": 1, \"name\": \"Ada\"}, \"event\": \"login\"}',
+                '{\"user\": {\"id\": 2, \"name\": \"Lin\"}, \"event\": \"logout\"}',
+            ],
+            output: [
+                'user.id=1, user.name=Ada, event=login',
+                'user.id=2, user.name=Lin, event=logout',
+            ],
+            tip: {
+                tone: 'amber',
+                body: '仅保留必要字段可节省内存。',
+            },
+            relatedRecipes: [
+                { href: '/recipes/jsonl/extract-keys', title: '提取键', desc: '结构' },
+                { href: '/recipes/jsonl/top-values', title: '高频值', desc: '频次' },
+            ],
+            relatedGuides: [
+                { href: '/guides/jsonl-schema-from-logs', title: 'JSONL 结构', desc: '字段发现' },
+                { href: '/guides/json-vs-jsonl', title: 'JSON vs JSONL', desc: '格式' },
+            ],
+        },
+    },
+    'jsonl/filter-by-key': {
+        en: {
+            category: 'JSONL',
+            title: 'Filter by Key Value',
+            description: 'Keep only JSONL lines that match a key/value.',
+            intro: 'Filter JSONL by a specific key, such as event=signup or level=error.',
+            howItWorks: [
+                'Open JSONL in GigaSieve.',
+                'Select the key you want to filter.',
+                'Enter the target value.',
+                'Keep only matching objects.',
+            ],
+            input: [
+                '{\"event\":\"signup\",\"user\":\"a\"}',
+                '{\"event\":\"login\",\"user\":\"b\"}',
+            ],
+            output: [
+                '{\"event\":\"signup\",\"user\":\"a\"}',
+            ],
+            tip: {
+                tone: 'amber',
+                body: 'Use contains filters for partial matches like tags or prefixes.',
+            },
+            relatedRecipes: [
+                { href: '/recipes/jsonl/error-objects', title: 'Error Objects Only', desc: 'Only errors' },
+                { href: '/recipes/jsonl/top-values', title: 'Top Values', desc: 'Count by value' },
+            ],
+            relatedGuides: [
+                { href: '/guides/jsonl-schema-from-logs', title: 'JSONL Schema from Logs', desc: 'Field discovery' },
+                { href: '/guides/remove-pii-from-logs', title: 'Remove PII', desc: 'Safe sharing' },
+            ],
+        },
+        ko: {
+            category: 'JSONL',
+            title: '키 값 필터',
+            description: '특정 키/값과 일치하는 JSONL만 남깁니다.',
+            intro: 'event=signup, level=error 같은 조건으로 필터링하세요.',
+            howItWorks: [
+                'JSONL을 GigaSieve에 엽니다.',
+                '필터할 키를 선택합니다.',
+                '대상 값을 입력합니다.',
+                '일치하는 객체만 남깁니다.',
+            ],
+            input: [
+                '{\"event\":\"signup\",\"user\":\"a\"}',
+                '{\"event\":\"login\",\"user\":\"b\"}',
+            ],
+            output: [
+                '{\"event\":\"signup\",\"user\":\"a\"}',
+            ],
+            tip: {
+                tone: 'amber',
+                body: '부분 일치가 필요하면 contains 필터를 사용하세요.',
+            },
+            relatedRecipes: [
+                { href: '/recipes/jsonl/error-objects', title: '오류 객체', desc: '오류만' },
+                { href: '/recipes/jsonl/top-values', title: '상위 값', desc: '빈도' },
+            ],
+            relatedGuides: [
+                { href: '/guides/jsonl-schema-from-logs', title: 'JSONL 스키마', desc: '필드 발견' },
+                { href: '/guides/remove-pii-from-logs', title: 'PII 제거', desc: '안전 공유' },
+            ],
+        },
+        es: {
+            category: 'JSONL',
+            title: 'Filtrar por clave/valor',
+            description: 'Mantén solo líneas JSONL que coincidan.',
+            intro: 'Filtra por una clave específica, p. ej., event=signup.',
+            howItWorks: [
+                'Abre JSONL en GigaSieve.',
+                'Selecciona la clave a filtrar.',
+                'Introduce el valor objetivo.',
+                'Conserva solo coincidencias.',
+            ],
+            input: [
+                '{\"event\":\"signup\",\"user\":\"a\"}',
+                '{\"event\":\"login\",\"user\":\"b\"}',
+            ],
+            output: [
+                '{\"event\":\"signup\",\"user\":\"a\"}',
+            ],
+            tip: {
+                tone: 'amber',
+                body: 'Usa contains para coincidencias parciales.',
+            },
+            relatedRecipes: [
+                { href: '/recipes/jsonl/error-objects', title: 'Solo errores', desc: 'Errores' },
+                { href: '/recipes/jsonl/top-values', title: 'Top valores', desc: 'Frecuencias' },
+            ],
+            relatedGuides: [
+                { href: '/guides/jsonl-schema-from-logs', title: 'Esquema JSONL', desc: 'Campos' },
+                { href: '/guides/remove-pii-from-logs', title: 'Eliminar PII', desc: 'Seguro' },
+            ],
+        },
+        ja: {
+            category: 'JSONL',
+            title: 'キー値フィルタ',
+            description: '指定キー/値に一致する行だけ残す。',
+            intro: 'event=signup などで絞り込みます。',
+            howItWorks: [
+                'JSONLをGigaSieveで開く。',
+                'フィルタするキーを選択。',
+                '対象値を入力。',
+                '一致行のみ残す。',
+            ],
+            input: [
+                '{\"event\":\"signup\",\"user\":\"a\"}',
+                '{\"event\":\"login\",\"user\":\"b\"}',
+            ],
+            output: [
+                '{\"event\":\"signup\",\"user\":\"a\"}',
+            ],
+            tip: {
+                tone: 'amber',
+                body: '部分一致は contains を使用。',
+            },
+            relatedRecipes: [
+                { href: '/recipes/jsonl/error-objects', title: 'エラーのみ', desc: 'エラー抽出' },
+                { href: '/recipes/jsonl/top-values', title: 'トップ値', desc: '頻度' },
+            ],
+            relatedGuides: [
+                { href: '/guides/jsonl-schema-from-logs', title: 'JSONLスキーマ', desc: 'フィールド' },
+                { href: '/guides/remove-pii-from-logs', title: 'PII削除', desc: '安全共有' },
+            ],
+        },
+        zh: {
+            category: 'JSONL',
+            title: '按键值过滤',
+            description: '仅保留匹配的 JSONL 行。',
+            intro: '按 event=signup 等条件过滤。',
+            howItWorks: [
+                '在 GigaSieve 打开 JSONL。',
+                '选择要过滤的键。',
+                '输入目标值。',
+                '仅保留匹配对象。',
+            ],
+            input: [
+                '{\"event\":\"signup\",\"user\":\"a\"}',
+                '{\"event\":\"login\",\"user\":\"b\"}',
+            ],
+            output: [
+                '{\"event\":\"signup\",\"user\":\"a\"}',
+            ],
+            tip: {
+                tone: 'amber',
+                body: '需要部分匹配时用 contains。',
+            },
+            relatedRecipes: [
+                { href: '/recipes/jsonl/error-objects', title: '错误对象', desc: '仅错误' },
+                { href: '/recipes/jsonl/top-values', title: '高频值', desc: '频次' },
+            ],
+            relatedGuides: [
+                { href: '/guides/jsonl-schema-from-logs', title: 'JSONL 结构', desc: '字段发现' },
+                { href: '/guides/remove-pii-from-logs', title: '移除 PII', desc: '安全分享' },
+            ],
+        },
+    },
+    'jsonl/regex-extract': {
+        en: {
+            category: 'JSONL',
+            title: 'Regex Extract in JSONL',
+            description: 'Extract patterns from JSONL fields using regex.',
+            intro: 'Pull IDs, emails, or tokens from JSONL fields without scripts.',
+            howItWorks: [
+                'Load JSONL in GigaSieve.',
+                'Pick the target field (e.g., message).',
+                'Apply a regex pattern to extract values.',
+                'Review the extracted results.',
+            ],
+            input: [
+                '{\"msg\":\"user=a@example.com signed in\"}',
+                '{\"msg\":\"user=b@example.com failed\"}',
+            ],
+            output: [
+                'a@example.com',
+                'b@example.com',
+            ],
+            tip: {
+                tone: 'amber',
+                body: 'Use preview mode on a small sample before running on the full file.',
+            },
+            relatedRecipes: [
+                { href: '/recipes/jsonl/extract-keys', title: 'Extract Keys', desc: 'Schema discovery' },
+                { href: '/recipes/jsonl/filter-by-key', title: 'Filter by Key', desc: 'Narrow objects' },
+            ],
+            relatedGuides: [
+                { href: '/guides/regex-extract-from-log', title: 'Regex Extract', desc: 'Pattern extraction' },
+                { href: '/guides/remove-pii-from-logs', title: 'Remove PII', desc: 'Mask sensitive data' },
+            ],
+        },
+        ko: {
+            category: 'JSONL',
+            title: 'JSONL 정규식 추출',
+            description: '정규식으로 JSONL 필드에서 패턴을 추출합니다.',
+            intro: 'ID, 이메일, 토큰 등을 스크립트 없이 뽑아낼 수 있습니다.',
+            howItWorks: [
+                'JSONL을 GigaSieve에 로드합니다.',
+                '대상 필드(예: message)를 선택합니다.',
+                '정규식을 적용해 값을 추출합니다.',
+                '결과를 확인합니다.',
+            ],
+            input: [
+                '{\"msg\":\"user=a@example.com signed in\"}',
+                '{\"msg\":\"user=b@example.com failed\"}',
+            ],
+            output: [
+                'a@example.com',
+                'b@example.com',
+            ],
+            tip: {
+                tone: 'amber',
+                body: '샘플로 미리보기 후 전체에 적용하세요.',
+            },
+            relatedRecipes: [
+                { href: '/recipes/jsonl/extract-keys', title: '키 추출', desc: '스키마 확인' },
+                { href: '/recipes/jsonl/filter-by-key', title: '키 필터', desc: '범위 축소' },
+            ],
+            relatedGuides: [
+                { href: '/guides/regex-extract-from-log', title: '정규식 추출', desc: '패턴 추출' },
+                { href: '/guides/remove-pii-from-logs', title: 'PII 제거', desc: '민감 정보 마스킹' },
+            ],
+        },
+        es: {
+            category: 'JSONL',
+            title: 'Extracción regex en JSONL',
+            description: 'Extrae patrones con regex desde campos JSONL.',
+            intro: 'Obtén IDs, emails o tokens sin scripts.',
+            howItWorks: [
+                'Carga JSONL en GigaSieve.',
+                'Elige el campo objetivo.',
+                'Aplica una regex.',
+                'Revisa resultados.',
+            ],
+            input: [
+                '{\"msg\":\"user=a@example.com signed in\"}',
+                '{\"msg\":\"user=b@example.com failed\"}',
+            ],
+            output: [
+                'a@example.com',
+                'b@example.com',
+            ],
+            tip: {
+                tone: 'amber',
+                body: 'Prueba primero en una muestra pequeña.',
+            },
+            relatedRecipes: [
+                { href: '/recipes/jsonl/extract-keys', title: 'Extraer claves', desc: 'Esquema' },
+                { href: '/recipes/jsonl/filter-by-key', title: 'Filtrar por clave', desc: 'Reducir' },
+            ],
+            relatedGuides: [
+                { href: '/guides/regex-extract-from-log', title: 'Extracción regex', desc: 'Patrones' },
+                { href: '/guides/remove-pii-from-logs', title: 'Eliminar PII', desc: 'Enmascarar' },
+            ],
+        },
+        ja: {
+            category: 'JSONL',
+            title: 'JSONL 正規表現抽出',
+            description: 'JSONLフィールドからregexでパターン抽出。',
+            intro: 'ID/メール/トークンをスクリプトなしで抽出。',
+            howItWorks: [
+                'JSONLを読み込む。',
+                '対象フィールドを選択。',
+                '正規表現を適用。',
+                '結果を確認。',
+            ],
+            input: [
+                '{\"msg\":\"user=a@example.com signed in\"}',
+                '{\"msg\":\"user=b@example.com failed\"}',
+            ],
+            output: [
+                'a@example.com',
+                'b@example.com',
+            ],
+            tip: {
+                tone: 'amber',
+                body: '小さなサンプルで確認してから実行。',
+            },
+            relatedRecipes: [
+                { href: '/recipes/jsonl/extract-keys', title: 'キー抽出', desc: 'スキーマ' },
+                { href: '/recipes/jsonl/filter-by-key', title: 'キーでフィルタ', desc: '絞り込み' },
+            ],
+            relatedGuides: [
+                { href: '/guides/regex-extract-from-log', title: '正規表現抽出', desc: 'パターン' },
+                { href: '/guides/remove-pii-from-logs', title: 'PII削除', desc: 'マスキング' },
+            ],
+        },
+        zh: {
+            category: 'JSONL',
+            title: 'JSONL 正则提取',
+            description: '用正则从 JSONL 字段提取模式。',
+            intro: '无需脚本提取 ID/邮箱/令牌。',
+            howItWorks: [
+                '加载 JSONL。',
+                '选择目标字段。',
+                '应用正则表达式。',
+                '查看结果。',
+            ],
+            input: [
+                '{\"msg\":\"user=a@example.com signed in\"}',
+                '{\"msg\":\"user=b@example.com failed\"}',
+            ],
+            output: [
+                'a@example.com',
+                'b@example.com',
+            ],
+            tip: {
+                tone: 'amber',
+                body: '先在小样本预览再执行。',
+            },
+            relatedRecipes: [
+                { href: '/recipes/jsonl/extract-keys', title: '提取键', desc: '结构' },
+                { href: '/recipes/jsonl/filter-by-key', title: '按键过滤', desc: '缩小范围' },
+            ],
+            relatedGuides: [
+                { href: '/guides/regex-extract-from-log', title: '正则提取', desc: '模式' },
+                { href: '/guides/remove-pii-from-logs', title: '移除 PII', desc: '脱敏' },
             ],
         },
     },

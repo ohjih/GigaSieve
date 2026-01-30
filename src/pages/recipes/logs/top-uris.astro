@@ -1,0 +1,87 @@
+---
+import Layout from '../../../layouts/Layout.astro';
+---
+
+<Layout title="Top Requested URIs - GigaSieve Recipe" description="Find the most requested endpoints in your access logs.">
+    <section class="container mx-auto px-4 py-12 max-w-3xl">
+        <nav class="text-sm text-slate-500 mb-6">
+            <a href="/recipes" class="hover:text-emerald-400">Recipes</a>
+            <span class="mx-2">/</span>
+            <a href="/recipes" class="hover:text-emerald-400">Logs</a>
+            <span class="mx-2">/</span>
+            <span class="text-slate-400">Top Requested URIs</span>
+        </nav>
+
+        <h1 class="text-3xl font-extrabold text-slate-200 mb-4">Top Requested URIs</h1>
+        <p class="text-slate-400 mb-8">
+            See which URLs get the most traffic so you can spot hot endpoints, abuse, or broken links.
+        </p>
+
+        <a href="/app" class="inline-flex items-center gap-2 bg-gradient-to-r from-emerald-500 to-cyan-500 text-white font-bold py-3 px-6 rounded-xl shadow-lg shadow-emerald-500/30 hover:shadow-emerald-500/50 transition-all mb-8">
+            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path>
+            </svg>
+            Open in App
+        </a>
+
+        <div class="bg-slate-900 rounded-xl border border-slate-800 p-6 mb-8">
+            <h2 class="text-lg font-bold text-slate-300 mb-4">How it works</h2>
+            <ol class="list-decimal list-inside space-y-2 text-slate-400 text-sm">
+                <li>Drop your access.log file into GigaSieve.</li>
+                <li>The parser extracts request paths from each line.</li>
+                <li>URIs are grouped and ranked by frequency.</li>
+                <li>Open any URI to inspect surrounding lines.</li>
+            </ol>
+        </div>
+
+        <div class="bg-slate-900 rounded-xl border border-slate-800 p-6 mb-8">
+            <h2 class="text-lg font-bold text-slate-300 mb-4">Sample Input and Output</h2>
+            <div class="grid md:grid-cols-2 gap-4 text-sm font-mono">
+                <div>
+                    <p class="text-slate-500 mb-2">Input</p>
+                    <pre class="bg-slate-950 p-3 rounded-lg text-slate-400 overflow-x-auto">203.0.113.10 - - "GET /api/users" 200 1200
+203.0.113.11 - - "GET /" 200 800
+203.0.113.10 - - "GET /api/users" 200 900
+203.0.113.12 - - "GET /pricing" 404 10</pre>
+                </div>
+                <div>
+                    <p class="text-slate-500 mb-2">Output</p>
+                    <pre class="bg-slate-950 p-3 rounded-lg text-slate-400">/api/users: 2
+/: 1
+/pricing: 1</pre>
+                </div>
+            </div>
+        </div>
+
+        <div class="bg-amber-500/10 border border-amber-500/30 rounded-xl p-6 mb-8">
+            <h2 class="text-lg font-bold text-amber-400 mb-2">Tip</h2>
+            <p class="text-slate-400 text-sm">
+                Filter by status code (404/500) to find broken or failing URLs faster.
+            </p>
+        </div>
+
+        <h2 class="text-xl font-bold text-slate-300 mb-4">Related Recipes</h2>
+        <div class="grid md:grid-cols-2 gap-4 mb-8">
+            <a href="/recipes/logs/nginx-status-codes" class="bg-slate-900 hover:bg-slate-800 rounded-xl p-4 border border-slate-800 transition-all">
+                <h3 class="font-semibold text-slate-300">nginx Status Codes</h3>
+                <p class="text-xs text-slate-600 mt-1">Find error spikes</p>
+            </a>
+            <a href="/recipes/logs/top-ips" class="bg-slate-900 hover:bg-slate-800 rounded-xl p-4 border border-slate-800 transition-all">
+                <h3 class="font-semibold text-slate-300">Top IPs</h3>
+                <p class="text-xs text-slate-600 mt-1">Find noisy clients</p>
+            </a>
+        </div>
+
+        <h2 class="text-xl font-bold text-slate-300 mb-4">Related Guides</h2>
+        <div class="grid md:grid-cols-2 gap-4">
+            <a href="/guides/analyze-nginx-access-log" class="bg-slate-900 hover:bg-slate-800 rounded-xl p-4 border border-slate-800 transition-all">
+                <h3 class="font-semibold text-slate-300">Analyze nginx Access Log</h3>
+                <p class="text-xs text-slate-600 mt-1">Step-by-step</p>
+            </a>
+            <a href="/guides/regex-extract-from-log" class="bg-slate-900 hover:bg-slate-800 rounded-xl p-4 border border-slate-800 transition-all">
+                <h3 class="font-semibold text-slate-300">Regex Extract</h3>
+                <p class="text-xs text-slate-600 mt-1">Pull patterns</p>
+            </a>
+        </div>
+    </section>
+</Layout>
