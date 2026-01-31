@@ -81,20 +81,22 @@ const hreflangs = supportedLangs.map((l) => {
                     <a href={buildLangPath('/recipes', lang)} class="hidden md:block px-4 py-2 rounded-full hover:bg-slate-800 transition-all hover:text-emerald-400">{t('nav.recipes')}</a>
                     <a href={buildLangPath('/guides', lang)} class="hidden md:block px-4 py-2 rounded-full hover:bg-slate-800 transition-all hover:text-emerald-400">{t('nav.guides')}</a>
                     <a href={buildLangPath('/privacy', lang)} class="hidden md:block px-4 py-2 rounded-full hover:bg-slate-800 transition-all hover:text-emerald-400">{t('nav.privacy')}</a>
-                    <div class="relative hidden sm:block">
-                        <button class="px-3 py-2 rounded-full bg-slate-800 text-slate-300 text-xs font-semibold">
+                    <div class="relative hidden sm:block group">
+                        <button class="px-3 py-2 rounded-full bg-slate-800 text-slate-300 text-xs font-semibold group-hover:bg-slate-700">
                             {languages[lang]}
                         </button>
-                        <div class="absolute right-0 mt-2 w-28 rounded-xl bg-slate-900 border border-slate-800 shadow-lg overflow-hidden">
-                            {supportedLangs.map((l) => (
-                                <a
-                                    href={buildLangPath(cleanPath, l)}
-                                    data-lang-switch={l}
-                                    class={`block px-3 py-2 text-xs hover:bg-slate-800 ${l === lang ? 'text-emerald-300' : 'text-slate-300'}`}
-                                >
-                                    {languages[l]}
-                                </a>
-                            ))}
+                        <div class="absolute right-0 top-full pt-2 w-28 hidden group-hover:block z-50">
+                            <div class="rounded-xl bg-slate-900 border border-slate-800 shadow-lg overflow-hidden">
+                                {supportedLangs.map((l) => (
+                                    <a
+                                        href={buildLangPath(cleanPath, l)}
+                                        data-lang-switch={l}
+                                        class={`block px-3 py-2 text-xs hover:bg-slate-800 ${l === lang ? 'text-emerald-300' : 'text-slate-300'}`}
+                                    >
+                                        {languages[l]}
+                                    </a>
+                                ))}
+                            </div>
                         </div>
                     </div>
                 </nav>
