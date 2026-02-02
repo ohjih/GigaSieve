@@ -133,9 +133,10 @@ const hreflangs = supportedLangs.map((l) => {
             const detected = (preferred || browserLang || '').slice(0, 2);
             const path = window.location.pathname;
             const hasLangPrefix = supportedLangs.some((l) => path.startsWith(`/${l}/`) || path === `/${l}`);
-            if (path === '/' && !hasLangPrefix && detected && detected !== defaultLang && supportedLangs.includes(detected)) {
-                window.location.replace(`/${detected}/`);
-            }
+              // Keep the root page (/) in English. Auto-detect only for non-root paths.
+              if (path !== '/' && !hasLangPrefix && detected && detected !== defaultLang && supportedLangs.includes(detected)) {
+                  window.location.replace(`/${detected}${path}`);
+              }
             document.querySelectorAll('[data-lang-switch]').forEach((el) => {
                 el.addEventListener('click', () => {
                     const lang = el.getAttribute('data-lang-switch');
