@@ -1,4 +1,8 @@
 const siteUrl = (import.meta.env.PUBLIC_SITE_URL ?? 'http://localhost:4321').replace(/\/+$/, '');
+const ensureTrailingSlash = (path: string) => {
+    if (path === '/') return '/';
+    return path.endsWith('/') ? path : `${path}/`;
+};
 
 const baseRoutes = [
     '/',
@@ -50,9 +54,12 @@ const localizedRoutes = baseRoutes;
 const extraLangs = ['ko', 'es', 'ja', 'zh'];
 
 const routes = [
-    ...baseRoutes,
+    ...baseRoutes.map((route) => ensureTrailingSlash(route)),
     ...extraLangs.flatMap((lang) =>
-        localizedRoutes.map((route) => (route === '/' ? `/${lang}/` : `/${lang}${route}`))
+        localizedRoutes.map((route) => {
+            const normalized = ensureTrailingSlash(route);
+            return normalized === '/' ? `/${lang}/` : `/${lang}${normalized}`;
+        })
     ),
 ];
 

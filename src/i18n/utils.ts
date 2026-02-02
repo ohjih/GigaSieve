@@ -16,6 +16,7 @@ export function useTranslations(lang: keyof typeof ui) {
 
 export function buildLangPath(path: string, lang: string) {
     const cleanPath = path.startsWith('/') ? path : `/${path}`;
-    if (lang === defaultLang) return cleanPath;
-    return `/${lang}${cleanPath === '/' ? '/' : cleanPath}`;
+    const withSlash = cleanPath === '/' ? '/' : `${cleanPath.replace(/\/+$/, '')}/`;
+    if (lang === defaultLang) return withSlash;
+    return `/${lang}${withSlash === '/' ? '/' : withSlash}`;
 }
