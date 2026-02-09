@@ -1,2 +1,5 @@
 # Redirect non-www to www
 https://gigasievepages.com/* https://www.gigasievepages.com/:splat 301!
+
+# /en/* -> root (default locale at root; English pages use root paths)
+/en/* /:splat 301!

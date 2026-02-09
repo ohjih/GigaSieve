@@ -1,4 +1,4 @@
-﻿
+
 ---
 import Layout from '../../../layouts/Layout.astro';
 import { ui, defaultLang } from '../../../i18n/ui';
@@ -19,9 +19,11 @@ export async function getStaticPaths() {
         'jsonl-schema-from-logs',
         'convert-csv-to-jsonl',
     ];
-    return Object.keys(ui).flatMap((lang) =>
-        guideSlugs.map((slug) => ({ params: { lang, slug } }))
-    );
+    return Object.keys(ui)
+        .filter((lang) => lang !== defaultLang)
+        .flatMap((lang) =>
+            guideSlugs.map((slug) => ({ params: { lang, slug } }))
+        );
 }
 
 const { lang, slug } = Astro.params;
