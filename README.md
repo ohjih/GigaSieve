@@ -41,6 +41,17 @@ All commands are run from the root of the project, from a terminal:
 | `npm run astro ...`       | Run CLI commands like `astro add`, `astro check` |
 | `npm run astro -- --help` | Get help using the Astro CLI                     |
 
+## Deploy (Cloudflare Pages)
+
+Push to `main` triggers auto-deploy when the repo is connected in Cloudflare Pages.
+
+- **Build command:** `npm run build`
+- **Build output directory:** `dist`
+- **Root directory:** (leave empty)
+- **Framework preset:** Astro (optional; same as above)
+
+Connect: [Cloudflare Dashboard](https://dash.cloudflare.com) → Pages → Create project → Connect to Git → `ohjih/GigaSieve` → set build command and output as above.
+
 ## 👀 Want to learn more?
 
 Feel free to check [our documentation](https://docs.astro.build) or jump into our [Discord server](https://astro.build/chat).
