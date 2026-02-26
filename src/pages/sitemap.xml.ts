@@ -1,4 +1,4 @@
-const siteUrl = (import.meta.env.PUBLIC_SITE_URL ?? 'http://localhost:4321').replace(/\/+$/, '');
+const siteUrl = (import.meta.env.PUBLIC_SITE_URL ?? 'https://www.gigasievepages.com').replace(/\/+$/, '');
 const ensureTrailingSlash = (path: string) => {
     if (path === '/') return '/';
     return path.endsWith('/') ? path : `${path}/`;
